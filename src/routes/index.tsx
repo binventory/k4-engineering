@@ -4,19 +4,13 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ParticleField } from "@/components/ParticleField";
 import heroBg from "@/assets/hero-bg.jpg";
-import treeBoothHauraton from "@/assets/tree/booth-hauraton.jpg.asset.json";
-import tree3dModel from "@/assets/tree/3d-model.jpg.asset.json";
 import treeBoothIris3 from "@/assets/tree/booth-iris3.jpg.asset.json";
 import treePrototype from "@/assets/tree/prototype.jpg.asset.json";
 import treePrint from "@/assets/tree/print.jpg.asset.json";
-import treeIlluminated from "@/assets/tree/illuminated.jpg.asset.json";
 
 const treeGallery = [
-  { src: treeIlluminated.url, caption: "Illuminated prototype — RGB sap-flow visualization" },
   { src: treePrototype.url, caption: "Translucent trunk housing with sensor electronics" },
-  { src: tree3dModel.url, caption: "Parametric 3D model — bark topology in CAD" },
   { src: treePrint.url, caption: "Vase-mode FDM print in progress" },
-  { src: treeBoothHauraton.url, caption: "Exhibited at Hauraton — Baumpflegetage 2026" },
   { src: treeBoothIris3.url, caption: "Live demo at the IRIS3 Baum booth" },
 ];
 import {
@@ -147,30 +141,6 @@ function Landing() {
               tree in real-time. The system generates a comprehensive digital health profile for the
               tree and automatically controls precise watering and supplement values.
             </p>
-          </div>
-
-          <div className="reveal mt-12 grid gap-6 lg:grid-cols-5">
-            <figure className="lg:col-span-3 rounded-xl overflow-hidden border border-border bg-card/60 relative">
-              <img
-                src={treeIlluminated.url}
-                alt="Illuminated 3D-printed Smart Tree prototype showing RGB sap-flow visualization"
-                loading="lazy"
-                className="w-full h-full max-h-[520px] object-cover"
-              />
-              <figcaption className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-background/90 to-transparent p-4 text-sm">
-                Live RGB visualization of sap-flow data inside the translucent trunk
-              </figcaption>
-            </figure>
-            <div className="lg:col-span-2 grid gap-6">
-              <figure className="rounded-xl overflow-hidden border border-border bg-card/60">
-                <img src={tree3dModel.url} alt="CAD render of the parametric tree trunk geometry" loading="lazy" className="w-full h-48 object-cover" />
-                <figcaption className="p-3 text-xs text-muted-foreground">Parametric CAD — bark topology</figcaption>
-              </figure>
-              <figure className="rounded-xl overflow-hidden border border-border bg-card/60">
-                <img src={treeBoothHauraton.url} alt="Smart Tree on display at the Hauraton booth" loading="lazy" className="w-full h-48 object-cover" />
-                <figcaption className="p-3 text-xs text-muted-foreground">Exhibited at Hauraton — Baumpflegetage 2026</figcaption>
-              </figure>
-            </div>
           </div>
 
           {/* Project gallery */}
