@@ -3,20 +3,26 @@ import { useReveal } from "@/hooks/use-reveal";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ParticleField } from "@/components/ParticleField";
+import { useState } from "react";
 import heroBg from "@/assets/hero-bg.jpg";
 import treeBoothIris3 from "@/assets/tree/booth-iris3.jpg.asset.json";
 import treePrototype from "@/assets/tree/prototype.jpg.asset.json";
 import treePrint from "@/assets/tree/print.jpg.asset.json";
+import treeBoothHauraton from "@/assets/tree/booth-hauraton.jpg.asset.json";
+import tree3dModel from "@/assets/tree/3d-model.jpg.asset.json";
 
 const treeGallery = [
   { src: treePrototype.url, caption: "Translucent trunk housing with sensor electronics" },
   { src: treePrint.url, caption: "Vase-mode FDM print in progress" },
   { src: treeBoothIris3.url, caption: "Live demo at the IRIS3 Baum booth" },
+  { src: treeBoothHauraton.url, caption: "Exhibited at Hauraton — Baumpflegetage 2026" },
+  { src: tree3dModel.url, caption: "Parametric CAD — bark topology" },
 ];
 import {
   Boxes, Printer, Cpu, Radio, Sparkles, ArrowRight, Lightbulb,
-  PenTool, Cog, Wifi, LineChart,
+  PenTool, Cog, Wifi, LineChart, ChevronLeft, ChevronRight,
 } from "lucide-react";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -48,7 +54,11 @@ const steps = [
 
 function Landing() {
   useReveal();
+  const [idx, setIdx] = useState(0);
+  const prev = () => setIdx((i) => (i - 1 + treeGallery.length) % treeGallery.length);
+  const next = () => setIdx((i) => (i + 1) % treeGallery.length);
   return (
+
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
 
@@ -143,26 +153,63 @@ function Landing() {
             </p>
           </div>
 
-          {/* Project gallery */}
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {treeGallery.map((g, i) => (
-              <figure
-                key={g.src}
-                className="reveal group rounded-xl overflow-hidden border border-border bg-card/60 hover:border-primary/50 transition"
-                style={{ transitionDelay: `${i * 60}ms` }}
+          {/* Project gallery — carousel */}
+          <div className="reveal mt-10 relative">
+            <div className="relative overflow-hidden rounded-xl border border-border bg-card/60">
+              <div
+                className="flex transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${idx * 100}%)` }}
               >
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={g.src}
-                    alt={g.caption}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                  />
-                </div>
-                <figcaption className="p-3 text-xs text-muted-foreground">{g.caption}</figcaption>
-              </figure>
-            ))}
+                {treeGallery.map((g) => (
+                  <figure key={g.src} className="w-full shrink-0">
+                    <div className="aspect-[16/10] sm:aspect-[16/9] overflow-hidden bg-background">
+                      <img
+                        src={g.src}
+                        alt={g.caption}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <figcaption className="p-4 text-sm text-muted-foreground text-center">
+                      {g.caption}
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={prev}
+                aria-label="Previous image"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/70 backdrop-blur border border-border hover:border-primary/60 hover:text-primary flex items-center justify-center transition"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={next}
+                aria-label="Next image"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/70 backdrop-blur border border-border hover:border-primary/60 hover:text-primary flex items-center justify-center transition"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="mt-4 flex justify-center gap-2">
+              {treeGallery.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setIdx(i)}
+                  aria-label={`Go to image ${i + 1}`}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === idx ? "w-8 bg-primary" : "w-3 bg-border hover:bg-primary/50"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
+
         </div>
       </section>
 
