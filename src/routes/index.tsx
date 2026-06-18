@@ -4,8 +4,21 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ParticleField } from "@/components/ParticleField";
 import heroBg from "@/assets/hero-bg.jpg";
-import smartTreeModel from "@/assets/smart-tree-model.jpg";
-import smartTreeField from "@/assets/smart-tree-field.jpg";
+import treeBoothHauraton from "@/assets/tree/booth-hauraton.jpg.asset.json";
+import tree3dModel from "@/assets/tree/3d-model.jpg.asset.json";
+import treeBoothIris3 from "@/assets/tree/booth-iris3.jpg.asset.json";
+import treePrototype from "@/assets/tree/prototype.jpg.asset.json";
+import treePrint from "@/assets/tree/print.jpg.asset.json";
+import treeIlluminated from "@/assets/tree/illuminated.jpg.asset.json";
+
+const treeGallery = [
+  { src: treeIlluminated.url, caption: "Illuminated prototype — RGB sap-flow visualization" },
+  { src: treePrototype.url, caption: "Translucent trunk housing with sensor electronics" },
+  { src: tree3dModel.url, caption: "Parametric 3D model — bark topology in CAD" },
+  { src: treePrint.url, caption: "Vase-mode FDM print in progress" },
+  { src: treeBoothHauraton.url, caption: "Exhibited at Hauraton — Baumpflegetage 2026" },
+  { src: treeBoothIris3.url, caption: "Live demo at the IRIS3 Baum booth" },
+];
 import {
   Boxes, Printer, Cpu, Radio, Sparkles, ArrowRight, Lightbulb,
   PenTool, Cog, Wifi, LineChart,
@@ -137,26 +150,48 @@ function Landing() {
           </div>
 
           <div className="reveal mt-12 grid gap-6 lg:grid-cols-5">
-            <div className="lg:col-span-3 aspect-video rounded-xl border border-border bg-card/60 grid-bg flex items-center justify-center text-center px-6 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent" />
-              <div className="relative">
-                <div className="mx-auto w-14 h-14 rounded-full border border-primary/50 flex items-center justify-center text-primary mb-3">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                </div>
-                <p className="text-sm text-muted-foreground">[ YouTube Video Embedding Placeholder ]</p>
-                <p className="text-base font-semibold mt-1">Smart Tree Demo</p>
-              </div>
-            </div>
+            <figure className="lg:col-span-3 rounded-xl overflow-hidden border border-border bg-card/60 relative">
+              <img
+                src={treeIlluminated.url}
+                alt="Illuminated 3D-printed Smart Tree prototype showing RGB sap-flow visualization"
+                loading="lazy"
+                className="w-full h-full max-h-[520px] object-cover"
+              />
+              <figcaption className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-background/90 to-transparent p-4 text-sm">
+                Live RGB visualization of sap-flow data inside the translucent trunk
+              </figcaption>
+            </figure>
             <div className="lg:col-span-2 grid gap-6">
               <figure className="rounded-xl overflow-hidden border border-border bg-card/60">
-                <img src={smartTreeModel} alt="3D-printed tree model with embedded IoT sensors" loading="lazy" width={1280} height={960} className="w-full h-48 object-cover" />
-                <figcaption className="p-3 text-xs text-muted-foreground">3D-printed sensor housing — cross-section model</figcaption>
+                <img src={tree3dModel.url} alt="CAD render of the parametric tree trunk geometry" loading="lazy" className="w-full h-48 object-cover" />
+                <figcaption className="p-3 text-xs text-muted-foreground">Parametric CAD — bark topology</figcaption>
               </figure>
               <figure className="rounded-xl overflow-hidden border border-border bg-card/60">
-                <img src={smartTreeField} alt="Sensor deployed on a real tree in the field" loading="lazy" width={1280} height={960} className="w-full h-48 object-cover" />
-                <figcaption className="p-3 text-xs text-muted-foreground">Field deployment — live telemetry from the trunk</figcaption>
+                <img src={treeBoothHauraton.url} alt="Smart Tree on display at the Hauraton booth" loading="lazy" className="w-full h-48 object-cover" />
+                <figcaption className="p-3 text-xs text-muted-foreground">Exhibited at Hauraton — Baumpflegetage 2026</figcaption>
               </figure>
             </div>
+          </div>
+
+          {/* Project gallery */}
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {treeGallery.map((g, i) => (
+              <figure
+                key={g.src}
+                className="reveal group rounded-xl overflow-hidden border border-border bg-card/60 hover:border-primary/50 transition"
+                style={{ transitionDelay: `${i * 60}ms` }}
+              >
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={g.src}
+                    alt={g.caption}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                </div>
+                <figcaption className="p-3 text-xs text-muted-foreground">{g.caption}</figcaption>
+              </figure>
+            ))}
           </div>
         </div>
       </section>
