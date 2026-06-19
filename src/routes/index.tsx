@@ -16,19 +16,19 @@ import {
 } from "lucide-react";
 
 const treeGallery = [
-  { src: treeOff, caption: "Translucent vase-mode trunk — sensor electronics housed inside" },
+  { src: treeOff, caption: "Translucent vase-mode trunk â€” sensor electronics housed inside" },
   { src: treeGreenRed, caption: "Live sap-flow visualization glowing through the printed trunk" },
-  { src: treePink, caption: "Real-time status lighting — the trunk glows with live tree data" },
-  { src: treeBoothIris3, caption: "On show at the IRIS3 Baum · MegaCAD stand" },
-  { src: treeBoothHauraton, caption: "Exhibited at the Hauraton stand — Baumpflegetage 2026" },
+  { src: treePink, caption: "Real-time status lighting â€” the trunk glows with live tree data" },
+  { src: treeBoothIris3, caption: "On show at the IRIS3 Baum Â· MegaCAD stand" },
+  { src: treeBoothHauraton, caption: "Exhibited at the Hauraton stand â€” Baumpflegetage 2026" },
 ];
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "K4-Engineering — Making the Invisible Visible" },
+      { title: "K4-Engineering â€” Making the Invisible Visible" },
       { name: "description", content: "An engineering & design firm blending 3D design, 3D printing, mechatronics, IoT and art. Founded by a former Airbus Manufacturing & Automation Engineer." },
-      { property: "og:title", content: "K4-Engineering — Making the Invisible Visible" },
+      { property: "og:title", content: "K4-Engineering â€” Making the Invisible Visible" },
       { property: "og:description", content: "Hardware. Software. IoT. Art. Engineered in Europe." },
     ],
   }),
@@ -44,11 +44,11 @@ const expertise = [
 ];
 
 const steps = [
-  { icon: Lightbulb, title: "01 — Discover", text: "Workshop the problem, the audience and the invisible signal to surface." },
-  { icon: PenTool, title: "02 — Design", text: "Mechanical CAD, PCB schematics and software architecture in parallel." },
-  { icon: Cog, title: "03 — Fabricate", text: "3D-print enclosures, assemble electronics, flash firmware, iterate fast." },
-  { icon: Wifi, title: "04 — Connect", text: "Wire up IoT telemetry, cloud sync and control logic." },
-  { icon: LineChart, title: "05 — Reveal", text: "Ship a tangible, interactive model with live data — public-ready." },
+  { icon: Lightbulb, title: "01 â€” Discover", text: "Workshop the problem, the audience and the invisible signal to surface." },
+  { icon: PenTool, title: "02 â€” Design", text: "Mechanical CAD, PCB schematics and software architecture in parallel." },
+  { icon: Cog, title: "03 â€” Fabricate", text: "3D-print enclosures, assemble electronics, flash firmware, iterate fast." },
+  { icon: Wifi, title: "04 â€” Connect", text: "Wire up IoT telemetry, cloud sync and control logic." },
+  { icon: LineChart, title: "05 â€” Reveal", text: "Ship a tangible, interactive model with live data â€” public-ready." },
 ];
 
 function Landing() {
@@ -87,10 +87,10 @@ function Landing() {
             </h1>
             <p className="reveal mt-6 text-lg text-muted-foreground max-w-2xl">
               Bridging the gap between physical reality and digital insight through
-              3D Design, 3D Printing, Hardware, Software, IoT — and a touch of Art.
+              3D Design, 3D Printing, Hardware, Software, IoT â€” and a touch of Art.
             </p>
             <div className="reveal mt-10 flex flex-wrap gap-3">
-              
+              <a
                 href="#projects"
                 className="group inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110 transition"
               >
@@ -115,7 +115,7 @@ function Landing() {
             <p className="text-xs uppercase tracking-[0.25em] text-primary">Our Expertise</p>
             <h2 className="mt-3 text-3xl sm:text-4xl font-bold">A studio at the intersection of disciplines.</h2>
             <p className="mt-4 text-muted-foreground">
-              Five capabilities, one toolkit — from first sketch to a connected, physical artefact.
+              Five capabilities, one toolkit â€” from first sketch to a connected, physical artefact.
             </p>
           </div>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -152,7 +152,7 @@ function Landing() {
             </p>
           </div>
 
-          {/* Project gallery — carousel */}
+          {/* Project gallery â€” carousel */}
           <div className="reveal mt-10 relative max-w-3xl mx-auto">
             <div className="relative overflow-hidden rounded-xl border border-border bg-card/60">
               <div
