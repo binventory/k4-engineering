@@ -7,6 +7,10 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Force Nitro on and target Netlify for self-hosted deploys (outside Lovable).
+  // Lovable's wrapper defaults to a Vite-only build when self-deployed, which would
+  // skip the SSR server bundle TanStack Start needs — so we pin the preset here.
+  nitro: { preset: "netlify" },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
