@@ -5,24 +5,23 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { ParticleField } from "@/components/ParticleField";
 import { useState } from "react";
 import heroBg from "@/assets/hero-bg.jpg";
-import treeBoothIris3 from "@/assets/tree/booth-iris3.jpg.asset.json";
-import treePrototype from "@/assets/tree/prototype.jpg.asset.json";
-import treePrint from "@/assets/tree/print.jpg.asset.json";
-import treeBoothHauraton from "@/assets/tree/booth-hauraton.jpg.asset.json";
-import tree3dModel from "@/assets/tree/3d-model.jpg.asset.json";
-
-const treeGallery = [
-  { src: treePrototype.url, caption: "Translucent trunk housing with sensor electronics" },
-  { src: treePrint.url, caption: "Vase-mode FDM print in progress" },
-  { src: treeBoothIris3.url, caption: "Live demo at the IRIS3 Baum booth" },
-  { src: treeBoothHauraton.url, caption: "Exhibited at Hauraton — Baumpflegetage 2026" },
-  { src: tree3dModel.url, caption: "Parametric CAD — bark topology" },
-];
+import treeOff from "@/assets/tree/20260504_112703.jpg";
+import treeGreenRed from "@/assets/tree/20260504_112729.jpg";
+import treePink from "@/assets/tree/20260504_112739.jpg";
+import treeBoothIris3 from "@/assets/tree/20260505_095335.jpg";
+import treeBoothHauraton from "@/assets/tree/20260505_102836.jpg";
 import {
   Boxes, Printer, Cpu, Radio, Sparkles, ArrowRight, Lightbulb,
   PenTool, Cog, Wifi, LineChart, ChevronLeft, ChevronRight,
 } from "lucide-react";
 
+const treeGallery = [
+  { src: treeOff, caption: "Translucent vase-mode trunk — sensor electronics housed inside" },
+  { src: treeGreenRed, caption: "Live sap-flow visualization glowing through the printed trunk" },
+  { src: treePink, caption: "Real-time status lighting — the trunk glows with live tree data" },
+  { src: treeBoothIris3, caption: "On show at the IRIS3 Baum · MegaCAD stand" },
+  { src: treeBoothHauraton, caption: "Exhibited at the Hauraton stand — Baumpflegetage 2026" },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -91,7 +90,7 @@ function Landing() {
               3D Design, 3D Printing, Hardware, Software, IoT — and a touch of Art.
             </p>
             <div className="reveal mt-10 flex flex-wrap gap-3">
-              <a
+              
                 href="#projects"
                 className="group inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110 transition"
               >
@@ -154,7 +153,7 @@ function Landing() {
           </div>
 
           {/* Project gallery — carousel */}
-          <div className="reveal mt-10 relative">
+          <div className="reveal mt-10 relative max-w-3xl mx-auto">
             <div className="relative overflow-hidden rounded-xl border border-border bg-card/60">
               <div
                 className="flex transition-transform duration-500 ease-out"
@@ -162,12 +161,12 @@ function Landing() {
               >
                 {treeGallery.map((g) => (
                   <figure key={g.src} className="w-full shrink-0">
-                    <div className="aspect-[16/10] sm:aspect-[16/9] overflow-hidden bg-background">
+                    <div className="bg-background flex items-center justify-center" style={{ maxHeight: "60vh" }}>
                       <img
                         src={g.src}
                         alt={g.caption}
                         loading="lazy"
-                        className="w-full h-full object-cover"
+                        className="w-full h-auto max-h-[60vh] object-contain"
                       />
                     </div>
                     <figcaption className="p-4 text-sm text-muted-foreground text-center">
@@ -251,7 +250,7 @@ function Landing() {
                 Let's design the hardware, the software, and the story around it.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <a href="mailto:hello@k4-engineering.eu" className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:brightness-110 transition">
+                <a href="mailto:kareem@k4-engineering.eu" className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:brightness-110 transition">
                   Start a Project
                 </a>
                 <Link to="/proposals" className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-sm font-semibold hover:border-primary/60 hover:text-primary transition">
