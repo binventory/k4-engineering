@@ -19,7 +19,7 @@ export function SiteHeader() {
           <a href="/#process" className="hover:text-foreground transition">Process</a>
           <Link to="/proposals" className="hover:text-foreground transition">Proposals</Link>
         </nav>
-        
+        <a
           href="mailto:kareem@k4-engineering.eu"
           className="hidden sm:inline-flex items-center text-sm px-4 py-2 rounded-md border border-primary/40 text-primary hover:bg-primary hover:text-primary-foreground transition"
         >
