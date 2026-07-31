@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProposalsRouteImport } from './routes/proposals'
+import { Route as AtecOfferRouteImport } from './routes/atec-offer'
 import { Route as IndexRouteImport } from './routes/index'
 
 const ProposalsRoute = ProposalsRouteImport.update({
   id: '/proposals',
   path: '/proposals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtecOfferRoute = AtecOfferRouteImport.update({
+  id: '/atec-offer',
+  path: '/atec-offer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/atec-offer': typeof AtecOfferRoute
   '/proposals': typeof ProposalsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/atec-offer': typeof AtecOfferRoute
   '/proposals': typeof ProposalsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/atec-offer': typeof AtecOfferRoute
   '/proposals': typeof ProposalsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/proposals'
+  fullPaths: '/' | '/atec-offer' | '/proposals'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/proposals'
-  id: '__root__' | '/' | '/proposals'
+  to: '/' | '/atec-offer' | '/proposals'
+  id: '__root__' | '/' | '/atec-offer' | '/proposals'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AtecOfferRoute: typeof AtecOfferRoute
   ProposalsRoute: typeof ProposalsRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/proposals'
       fullPath: '/proposals'
       preLoaderRoute: typeof ProposalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/atec-offer': {
+      id: '/atec-offer'
+      path: '/atec-offer'
+      fullPath: '/atec-offer'
+      preLoaderRoute: typeof AtecOfferRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AtecOfferRoute: AtecOfferRoute,
   ProposalsRoute: ProposalsRoute,
 }
 export const routeTree = rootRouteImport
