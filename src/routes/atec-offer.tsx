@@ -377,10 +377,21 @@ function AtecOffer() {
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
           <Heading id="portfolio">{c.portfolioTitle}</Heading>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {["tree-1.jpg", "tree-2.jpg", "tree-3.jpg", "tree-4.jpg"].map((f) => (
-              <Slot key={f} filename={f} />
-            ))}
+          <div className="mt-10 grid items-stretch gap-5 lg:grid-cols-2">
+            <div
+              role="img"
+              aria-label="tree-video.mp4"
+              className="flex min-h-[280px] flex-col items-center justify-center gap-3 border-2 border-dashed border-border bg-muted text-muted-foreground"
+            >
+              <Play className="h-8 w-8" />
+              <span className="px-2 text-center text-xs font-semibold tracking-[0.12em]">
+                tree-video.mp4
+              </span>
+            </div>
+            <div className="grid gap-5">
+              <Slot filename="tree-1.jpg" ratio="aspect-[16/10]" />
+              <Slot filename="tree-2.jpg" ratio="aspect-[16/10]" />
+            </div>
           </div>
           <p className="mt-8 text-sm text-muted-foreground">{c.portfolioL1}</p>
           <p className="mt-1 text-sm text-muted-foreground">{c.portfolioL2}</p>
