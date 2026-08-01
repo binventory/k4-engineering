@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Check,
   Minus,
+  Play,
 } from "lucide-react";
 
 export const Route = createFileRoute("/atec-offer")({
