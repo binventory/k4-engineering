@@ -81,6 +81,8 @@ const t = {
     nav: ["Portfolio", "Workflow", "Kompetenzen", "Preise", "Recht", "Kontakt"],
     heroSub: "Maßgeschneiderte Industrie-Showcase-Lösungen für ATEC Pharmatechnik GmbH",
     heroValue: "Komplexe Prozessanlagen als präzise, interaktive Messemodelle.",
+    heroCap1: "Konzeptmodell der ATEC-Anlage — Gegenstand dieses Angebots.",
+    heroCap2: "Referenzmodell: Smart-Sensor-Baum für die Baumpflegetage-Messe.",
     portfolioTitle: "Case Study: Interaktives Smart-Sensor-Baummodell (Baumpflegetage Augsburg, Mai 2026)",
     portfolioL1: "Eingebettete Sensoren erfassten den Saftfluss im Baumstamm.",
     portfolioL2: "Die Messwerte wurden live in sichtbare Daten übersetzt.",
