@@ -566,6 +566,21 @@ function AtecOffer() {
           </p>
         </div>
       </footer>
+
+      <Dialog open={!!lightboxSrc} onOpenChange={(open) => !open && setLightboxSrc(null)}>
+        <DialogContent className="max-w-5xl w-full bg-transparent border-none shadow-none p-0">
+          <DialogTitle className="sr-only">Full size image</DialogTitle>
+          {lightboxSrc && (
+            <img
+              src={lightboxSrc}
+              alt=""
+              onClick={() => setLightboxSrc(null)}
+              className="w-full h-auto max-h-[85vh] object-contain"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
+    </LightboxContext.Provider>
   );
 }
