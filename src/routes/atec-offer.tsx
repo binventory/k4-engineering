@@ -1,19 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import {
+  Boxes,
+  Cog,
+  Droplets,
+  Layers,
+  Radio,
+  Languages,
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  Minus,
+} from "lucide-react";
 
 export const Route = createFileRoute("/atec-offer")({
   head: () => ({
     meta: [
       { title: "ATEC Pharmatechnik Offer — K4-Engineering Scale Models" },
+      { name: "robots", content: "noindex,nofollow" },
       {
         name: "description",
         content:
-          "Project offer for ATEC Pharmatechnik GmbH: custom exhibition scale models and interactive prototypes of industrial process skids by K4-Engineering.",
+          "Private project offer for ATEC Pharmatechnik GmbH: custom exhibition scale models and interactive prototypes by K4-Engineering.",
       },
       { property: "og:title", content: "ATEC Pharmatechnik Offer — K4-Engineering" },
       {
         property: "og:description",
-        content:
-          "Custom exhibition scale models, modular pricing tiers and terms for ATEC Pharmatechnik GmbH.",
+        content: "Custom exhibition scale models and interactive prototypes for ATEC Pharmatechnik GmbH.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -22,393 +35,437 @@ export const Route = createFileRoute("/atec-offer")({
   component: AtecOffer,
 });
 
-/* ---------- Placeholder slots (swap real files in later) ---------- */
-const LOGO1 = "LOGO1";
-const LOGO_ATEC = "LOGO_ATEC";
-const IMG_HERO = "IMG_HERO";
-const IMG_P1 = "IMG_P1";
-const IMG_P2 = "IMG_P2";
-const IMG_P3 = "IMG_P3";
-const IMG_P4 = "IMG_P4";
-const VID_P1 = "VID_P1";
-const IMG_EVO1 = "IMG_EVO1";
-const IMG_EVO2 = "IMG_EVO2";
-const IMG_EVO3 = "IMG_EVO3";
-const IMG_SCOPE = "IMG_SCOPE";
-const IMG_PRICE1 = "IMG_PRICE1";
-const IMG_PRICE2 = "IMG_PRICE2";
-const IMG_PRICE3 = "IMG_PRICE3";
-const IMG_CLIENTSITE = "IMG_CLIENTSITE";
-const EMAIL = "{{EMAIL}}";
-const PHONE = "{{PHONE}}";
-
-const ORANGE = "#F68518";
+/* ---------------- image slot ---------------- */
 
 function Slot({
-  name,
-  className = "",
+  filename,
   ratio = "aspect-[4/3]",
-  dark = false,
+  className = "",
+  alt,
 }: {
-  name: string;
-  className?: string;
+  filename: string;
   ratio?: string;
-  dark?: boolean;
+  className?: string;
+  alt?: string;
 }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <div
+        role="img"
+        aria-label={filename}
+        className={`${ratio} ${className} flex items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/40 text-muted-foreground`}
+      >
+        <span className="px-2 text-center text-xs font-semibold tracking-[0.12em]">{filename}</span>
+      </div>
+    );
+  }
   return (
-    <div
-      role="img"
-      aria-label={name}
-      className={`${ratio} ${className} flex items-center justify-center border-2 border-dashed`}
-      style={{
-        background: dark ? "#4A4A4A" : "#EDEDED",
-        borderColor: dark ? "#6A6A6A" : "#BFBFBF",
-        color: dark ? "#EDEDED" : "#7A7A7A",
-      }}
-    >
-      <span className="text-xs sm:text-sm font-semibold tracking-[0.15em]">{name}</span>
-    </div>
+    <img
+      src={`/images/atec/${filename}`}
+      alt={alt ?? filename}
+      loading="lazy"
+      onError={() => setFailed(true)}
+      className={`${ratio} ${className} w-full rounded-lg border border-border object-cover`}
+    />
   );
 }
 
-function Bar() {
-  return <span className="block w-1 self-stretch shrink-0" style={{ background: ORANGE }} />;
-}
+/* ---------------- copy ---------------- */
 
-function Heading({ children, id }: { children: React.ReactNode; id?: string }) {
-  return (
-    <div id={id} className="flex gap-4 items-stretch scroll-mt-24">
-      <Bar />
-      <h2 className="text-2xl sm:text-3xl font-bold leading-tight" style={{ color: ORANGE }}>
-        {children}
-      </h2>
-    </div>
-  );
-}
+const t = {
+  de: {
+    nav: ["Portfolio", "Workflow", "Kompetenzen", "Preise", "Recht", "Kontakt"],
+    heroSub: "Maßgeschneiderte Industrie-Showcase-Lösungen für ATEC Pharmatechnik GmbH",
+    heroValue: "Komplexe Prozessanlagen als präzise, interaktive Messemodelle.",
+    portfolioTitle: "Case Study: Interaktives Smart-Sensor-Baummodell (Baumpflegetage Augsburg, Mai 2026)",
+    portfolioL1: "Eingebettete Sensoren erfassten den Saftfluss im Baumstamm.",
+    portfolioL2: "Die Messwerte wurden live in sichtbare Daten übersetzt.",
+    capsTitle: "Kompetenzen",
+    caps: [
+      "PETG-Druck, Schleifen, Metallic-Finish.",
+      "Getriebe, Motoren, präzise Bewegung.",
+      "Sichtbare Fluidwege mit Lichtreaktion.",
+      "Epoxidharz-Optik und Verbundwerkstoffe.",
+      "MQTT-Cloud und QR-Code-Besuchersteuerung.",
+      "Audioguide in mehreren Sprachen.",
+    ],
+    capTitles: [
+      "Additive Fertigung & Finish",
+      "Mechatronik & Antriebstechnik",
+      "Fluiddynamik & Reaktionslicht",
+      "Epoxy-Art & Composites",
+      "IoT & Cloud (MQTT, QR-Code)",
+      "Mehrsprachiger Audioguide",
+    ],
+    workflowTitle: "Ideen sichtbar machen, bevor die Produktion beginnt",
+    phases: [
+      { t: "Phase 1 — KI-Konzeptrendering", d: "Erstes Bildkonzept nach Ihrem Anlagenlayout." },
+      { t: "Phase 2 — CAD-Optimierung", d: "Wandstärken, Statik und Druckbarkeit angepasst." },
+      { t: "Phase 3 — Fertiges Modell", d: "Gedruckt, lackiert, montiert und geprüft." },
+    ],
+    phaseNote:
+      "Zwischen Phase 1 und Phase 3 treten geringe Geometrieänderungen auf — für Festigkeit und Transportsicherheit.",
+    scopeTitle: "ATEC Projektumfang",
+    scope: [
+      "Hängender konischer Reaktorbehälter auf auskragender C-Arm-Stütze.",
+      "Grundplatte: Holzkern mit 3 mm Aluminium-Verbundplatte (Dibond / RAL9006 Silber-Metallic).",
+      "CNC-graviertes ATEC-Logo in der Grundplatte.",
+    ],
+    pricingTitle: "Modulare Preisstufen",
+    tiers: ["Essential 3D", "Dynamic Rotation", "Ultimate Interactive"],
+    tierPrices: ["4.650 € – 5.160 €", "5.450 € – 5.960 €", "Individuelles Angebot"],
+    features: [
+      "PETG 3D-Druck",
+      "Silber-Metallic-Finish",
+      "Aluminium-Basis + CNC-Logo",
+      "Manuelles C-Arm- & Tank-Layout",
+      "Automatische 45°-Tankrotation",
+      "Custom-Getriebe & Mikromotor",
+      "Transparente Fluidleitungen + LED/Optik",
+      "Taster-Steuerung in der Basis",
+    ],
+    priceNote:
+      "+800 € Designpauschale nur, wenn keine druckfertigen 3D-CAD-Dateien von ATEC bereitgestellt werden.",
+    legalTitle: "Zahlung & Rechtliches",
+    legal: [
+      "40 % Anzahlung bei Projektstart.",
+      "60 % nach Endabnahme, vor Lieferung.",
+      "Freiberufliche Ingenieurdienstleistungen.",
+      "Werkvertrag / Dienstvertrag nach deutschem BGB.",
+    ],
+    preparedFor: "Erstellt für ATEC Pharmatechnik GmbH (atec-pharma.com)",
+    firm: "K4-Engineering | Freiberufliches Ingenieurbüro, Augsburg",
+    accept: "ANGEBOT ANNEHMEN / RÜCKRUF",
+    pdf: "PDF-ANGEBOT LADEN",
+    prev: "Vorheriges Bild",
+    next: "Nächstes Bild",
+  },
+  en: {
+    nav: ["Portfolio", "Workflow", "Capabilities", "Pricing", "Legal", "Contact"],
+    heroSub: "Tailored Industrial Showcase Solutions for ATEC Pharmatechnik GmbH",
+    heroValue: "Complex process plants turned into precise, interactive exhibition models.",
+    portfolioTitle: "Case Study: Interactive Smart Sensor Tree Model (Baumpflegetage Augsburg, May 2026)",
+    portfolioL1: "Embedded sensors measured sap flow inside the trunk.",
+    portfolioL2: "Readings were translated into live, visible data.",
+    capsTitle: "Capabilities",
+    caps: [
+      "PETG printing, sanding, metallic finish.",
+      "Gearboxes, motors, precise motion.",
+      "Visible fluid paths with reactive light.",
+      "Epoxy finishes and composite parts.",
+      "MQTT cloud and QR-code visitor control.",
+      "Audio guide in multiple languages.",
+    ],
+    capTitles: [
+      "Additive Manufacturing & Finishing",
+      "Mechatronics & Motion Control",
+      "Fluid Dynamics & Reaction Lighting",
+      "Epoxy Art & Composites",
+      "IoT & Cloud (MQTT, QR-code)",
+      "Multilingual Audio Guide",
+    ],
+    workflowTitle: "Visualizing Ideas Before Production Begins",
+    phases: [
+      { t: "Phase 1 — AI Conceptual Rendering", d: "First visual concept from your plant layout." },
+      { t: "Phase 2 — CAD Optimization", d: "Wall thickness, stability and printability tuned." },
+      { t: "Phase 3 — Final Realized Model", d: "Printed, painted, assembled and inspected." },
+    ],
+    phaseNote:
+      "Minor geometry changes occur between Phase 1 and Phase 3 for structural strength and safe transport.",
+    scopeTitle: "ATEC Project Scope",
+    scope: [
+      "Suspended conical reactor tank on a cantilevered C-arm support.",
+      "Baseplate: wooden core with 3mm Aluminium Composite Panel (Dibond / RAL9006 silver metallic).",
+      "CNC-engraved ATEC logo in the baseplate.",
+    ],
+    pricingTitle: "Modular Pricing Tiers",
+    tiers: ["Essential 3D", "Dynamic Rotation", "Ultimate Interactive"],
+    tierPrices: ["4,650 € – 5,160 €", "5,450 € – 5,960 €", "Custom Offer"],
+    features: [
+      "PETG 3D Printing",
+      "Silver Metallic Finish",
+      "Aluminium Base + CNC Logo",
+      "Manual C-Arm & Tank Layout",
+      "Automated 45° Tank Rotation",
+      "Custom Gearbox & Micro-Motor",
+      "Transparent Fluid Piping + LED/Optics",
+      "Base Push-Button Control",
+    ],
+    priceNote:
+      "+800 € design fee applies only if print-ready 3D CAD files are not supplied by ATEC.",
+    legalTitle: "Payment & Legal",
+    legal: [
+      "40% down payment at kick-off.",
+      "60% on final inspection before delivery.",
+      "Freiberufliche Ingenieurdienstleistungen.",
+      "Werkvertrag / Dienstvertrag per German BGB.",
+    ],
+    preparedFor: "Prepared for ATEC Pharmatechnik GmbH (atec-pharma.com)",
+    firm: "K4-Engineering | Freiberufliches Ingenieurbüro, Augsburg",
+    accept: "ACCEPT OFFER / REQUEST CALL",
+    pdf: "DOWNLOAD PDF PROPOSAL",
+    prev: "Previous image",
+    next: "Next image",
+  },
+} as const;
 
-const nav = [
-  { label: "Portfolio", href: "#portfolio" },
-  { label: "Scope", href: "#scope" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Terms", href: "#terms" },
-  { label: "Contact", href: "#contact" },
+const navIds = ["portfolio", "workflow", "capabilities", "pricing", "legal", "contact"];
+const capIcons = [Boxes, Cog, Droplets, Layers, Radio, Languages];
+
+const matrix: boolean[][] = [
+  [true, true, true],
+  [true, true, true],
+  [true, true, true],
+  [true, false, false],
+  [false, true, true],
+  [false, true, true],
+  [false, false, true],
+  [false, false, true],
 ];
 
-function AtecOffer() {
+function Heading({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
-    <div style={{ background: "#FFFFFF", color: "#333333" }} className="min-h-screen font-sans">
-      {/* HEADER */}
-      <header
-        className="sticky top-0 z-50 border-b"
-        style={{ background: "#FFFFFF", borderColor: "#E3E3E3" }}
-      >
-        <div className="mx-auto max-w-6xl px-6 h-20 flex items-center justify-between gap-6">
-          {/* LOGO1 */}
-          <Slot name={LOGO1} ratio="h-10 w-28" />
-          <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
-            {nav.map((n) => (
+    <div id={id} className="flex scroll-mt-24 items-stretch gap-4">
+      <span className="block w-1 shrink-0 self-stretch bg-primary" />
+      <h2 className="text-2xl font-bold leading-tight text-primary sm:text-3xl">{children}</h2>
+    </div>
+  );
+}
+
+function TierGallery({ files, labels }: { files: [string, string]; labels: { prev: string; next: string } }) {
+  const [i, setI] = useState(0);
+  return (
+    <div className="mt-6">
+      <Slot filename={files[i]} ratio="aspect-[16/9]" />
+      <div className="mt-3 flex items-center justify-between">
+        <button
+          type="button"
+          aria-label={labels.prev}
+          onClick={() => setI((v) => (v === 0 ? 1 : 0))}
+          className="rounded-md border border-border p-2 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        <div className="flex gap-2">
+          {[0, 1].map((d) => (
+            <span
+              key={d}
+              className={`h-1.5 w-1.5 rounded-full ${d === i ? "bg-primary" : "bg-border"}`}
+            />
+          ))}
+        </div>
+        <button
+          type="button"
+          aria-label={labels.next}
+          onClick={() => setI((v) => (v === 0 ? 1 : 0))}
+          className="rounded-md border border-border p-2 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AtecOffer() {
+  const [lang, setLang] = useState<"de" | "en">("de");
+  const c = t[lang];
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      {/* 1 — TOP BAR */}
+      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
+        <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-6 px-6">
+          <Slot filename="logo-k4.png" ratio="h-10" className="w-28 object-contain" />
+          <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
+            {c.nav.map((label, i) => (
               <a
-                key={n.href}
-                href={n.href}
-                className="transition-colors"
-                style={{ color: "#333333" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = ORANGE)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#333333")}
+                key={navIds[i]}
+                href={`#${navIds[i]}`}
+                className="text-muted-foreground transition-colors hover:text-primary"
               >
-                {n.label}
+                {label}
               </a>
             ))}
           </nav>
           <button
             type="button"
-            className="text-xs font-semibold tracking-wider px-3 py-1.5 border"
-            style={{ borderColor: ORANGE, color: ORANGE }}
+            onClick={() => setLang(lang === "de" ? "en" : "de")}
+            aria-label="Switch language"
+            className="border border-primary px-3 py-1.5 text-xs font-semibold tracking-wider text-primary"
           >
-            DE / EN
+            {lang === "de" ? "DE / EN" : "EN / DE"}
           </button>
         </div>
       </header>
 
-      {/* HERO */}
-      <section className="relative overflow-hidden" style={{ background: "#F4F4F4" }}>
-        <div className="absolute inset-0 opacity-30">
-          {/* IMG_HERO */}
-          <Slot name={IMG_HERO} ratio="h-full w-full" />
-        </div>
-        <div className="relative mx-auto max-w-6xl px-6 py-24 sm:py-32">
-          <div className="flex gap-4 items-stretch">
-            <Bar />
+      {/* 2 — HERO */}
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+          <div className="flex items-stretch gap-4">
+            <span className="block w-1 shrink-0 self-stretch bg-primary" />
             <div>
-              <h1 className="text-3xl sm:text-5xl font-bold leading-tight" style={{ color: "#333333" }}>
+              <h1 className="text-3xl font-bold leading-tight sm:text-5xl">
                 K4-Engineering |{" "}
-                <span style={{ color: ORANGE }}>
+                <span className="text-primary">
                   Custom Exhibition Scale Models &amp; Interactive Prototypes
                 </span>
               </h1>
-              <p className="mt-6 text-base sm:text-lg max-w-2xl" style={{ color: "#555555" }}>
-                Tailored Industrial Showcase Solutions for ATEC Pharmatechnik GmbH
-              </p>
+              <p className="mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">{c.heroSub}</p>
+              <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{c.heroValue}</p>
             </div>
+          </div>
+          <div className="mt-12 grid gap-5 sm:grid-cols-2">
+            <Slot filename="hero-1.jpg" ratio="aspect-[16/10]" />
+            <Slot filename="hero-2.jpg" ratio="aspect-[16/10]" />
           </div>
         </div>
       </section>
 
-      {/* SECTION 1 — PORTFOLIO */}
+      {/* 3 — PORTFOLIO + CAPABILITIES */}
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
-          <Heading id="portfolio">Bringing Industrial Process Skids to Life</Heading>
-          <p className="mt-6 max-w-3xl leading-8">
-            As a specialized engineering partner, we transform complex industrial process plants
-            into high-precision, tactile scale models built specifically for trade show floors and
-            corporate showrooms.
-          </p>
-
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {/* IMG_P1 IMG_P2 IMG_P3 IMG_P4 */}
-            <Slot name={IMG_P1} />
-            <Slot name={IMG_P2} />
-            <Slot name={IMG_P3} />
-            <Slot name={IMG_P4} />
-            {/* VID_P1 — 16:9 video player slot */}
-            <Slot name={VID_P1} ratio="aspect-video" className="sm:col-span-2" />
+          <Heading id="portfolio">{c.portfolioTitle}</Heading>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {["tree-1.jpg", "tree-2.jpg", "tree-3.jpg", "tree-4.jpg"].map((f) => (
+              <Slot key={f} filename={f} />
+            ))}
           </div>
+          <p className="mt-8 text-sm text-muted-foreground">{c.portfolioL1}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{c.portfolioL2}</p>
 
-          <div className="mt-20">
-            <div className="flex gap-4 items-stretch">
-              <Bar />
-              <h3 className="text-xl font-bold" style={{ color: ORANGE }}>
-                Evolution of a Model
-              </h3>
-            </div>
-            <p className="mt-5 max-w-3xl leading-8">
-              This transparency highlights how designs evolve for optimal additive manufacturing and
-              physical stability.
-            </p>
-
-            <div className="mt-10 flex flex-col md:flex-row md:items-start gap-6">
-              {[
-                { img: IMG_EVO1, title: "Phase 1 — AI Conceptual Rendering", cap: "Initial visual concept generated and refined against the client's plant layout." },
-                { img: IMG_EVO2, title: "Phase 2 — Design Adaptation", cap: "CAD adaptation for printability, wall thickness and structural stability." },
-                { img: IMG_EVO3, title: "Phase 3 — Final Realized Model", cap: "Printed, sanded, primed and metallic-finished physical exhibition model." },
-              ].map((p, i) => (
-                <div key={p.img} className="flex-1 flex flex-col md:flex-row items-center gap-6">
-                  <div className="w-full">
-                    <Slot name={p.img} />
-                    <h4 className="mt-4 text-sm font-bold" style={{ color: "#333333" }}>
-                      {p.title}
-                    </h4>
-                    <p className="mt-2 text-sm leading-7" style={{ color: "#666666" }}>
-                      {p.cap}
-                    </p>
+          <div id="capabilities" className="mt-20 scroll-mt-24">
+            <Heading>{c.capsTitle}</Heading>
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {c.capTitles.map((title, i) => {
+                const Icon = capIcons[i];
+                return (
+                  <div key={title} className="rounded-lg border border-border bg-card p-6">
+                    <Icon className="h-5 w-5 text-primary" />
+                    <h3 className="mt-4 text-base font-bold">{title}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{c.caps[i]}</p>
                   </div>
-                  {i < 2 && (
-                    <span
-                      aria-hidden
-                      className="text-3xl font-light rotate-90 md:rotate-0 self-center"
-                      style={{ color: ORANGE }}
-                    >
-                      →
-                    </span>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
       </section>
 
-      {/* SECTION 2 — SCOPE */}
-      <section className="py-20 sm:py-24" style={{ background: "#F4F4F4" }}>
+      {/* 4 — WORKFLOW */}
+      <section className="border-y border-border py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
-          <Heading id="scope">Proposed Exhibition Model for ATEC Process Skid</Heading>
-          <div className="mt-10 grid gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-2 grid gap-6 sm:grid-cols-2">
-              {[
-                {
-                  t: "Manufacturing Technique",
-                  d: "Built using high-grade PETG via advanced 3D printing, finished with intensive hand-sanding, primer filler spray, and multi-stage metallic silver painting to mimic true stainless steel industrial equipment.",
-                },
-                {
-                  t: "Baseplate Integration",
-                  d: "Mounted on a sturdy wooden base skinned with a premium 3mm Aluminium Composite Panel (Dibond / RAL9006 silver metallic), featuring CNC-engraved company logos for a high-end corporate presentation finish.",
-                },
-              ].map((c) => (
-                <div key={c.t} className="border p-7" style={{ background: "#FFFFFF", borderColor: "#E3E3E3" }}>
-                  <div className="w-10 h-1 mb-5" style={{ background: ORANGE }} />
-                  <h3 className="text-lg font-bold" style={{ color: "#333333" }}>{c.t}</h3>
-                  <p className="mt-3 text-sm leading-7">{c.d}</p>
-                </div>
-              ))}
-            </div>
-            {/* IMG_SCOPE */}
-            <Slot name={IMG_SCOPE} ratio="aspect-[3/4]" />
+          <Heading id="workflow">{c.workflowTitle}</Heading>
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {c.phases.map((p, i) => (
+              <div key={p.t} className="rounded-lg border border-border bg-card p-6">
+                <Slot filename={`phase-${i + 1}.jpg`} ratio="aspect-[16/10]" />
+                <h3 className="mt-5 text-base font-bold">{p.t}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{p.d}</p>
+              </div>
+            ))}
           </div>
+          <p className="mt-8 text-xs text-muted-foreground">{c.phaseNote}</p>
         </div>
       </section>
 
-      {/* SECTION 3 — PRICING */}
+      {/* 5 — ATEC SCOPE */}
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
-          <Heading id="pricing">Transparent Pricing &amp; Customization Tiers</Heading>
+          <Heading>{c.scopeTitle}</Heading>
+          <div className="mt-10 grid gap-8 lg:grid-cols-2">
+            <ul className="space-y-4">
+              {c.scope.map((s) => (
+                <li key={s} className="border-l-2 border-primary pl-4 text-sm leading-7 text-muted-foreground">
+                  {s}
+                </li>
+              ))}
+            </ul>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Slot filename="skid-1.jpg" />
+              <Slot filename="skid-2.jpg" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6 — PRICING */}
+      <section className="border-y border-border py-20 sm:py-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <Heading id="pricing">{c.pricingTitle}</Heading>
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
-            {/* Base */}
-            <div className="border p-8 flex flex-col" style={{ borderColor: "#D8D8D8", borderTopWidth: 4, borderTopColor: "#333333" }}>
-              <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: "#888888" }}>
-                Base Model
-              </p>
-              <h3 className="mt-2 text-xl font-bold" style={{ color: "#333333" }}>
-                Mechanical &amp; Aesthetic Finish
-              </h3>
-              {/* IMG_PRICE1 */}
-              <Slot name={IMG_PRICE1} ratio="aspect-[16/9]" className="mt-6" />
-              <p className="mt-6 text-sm leading-7 flex-1">
-                Full 3D physical representation of the skid, PETG printing, professional
-                sanding/painting, aluminum composite baseplate with CNC engraving of the ATEC logo,
-                and manual structural layout.
-              </p>
-              <p className="mt-6 text-3xl font-bold" style={{ color: ORANGE }}>4,650 € – 5,160 €</p>
-              <p className="mt-4 text-xs leading-6" style={{ color: "#777777" }}>
-                Base price applies if a clean, print-ready 3D CAD model is provided. If full 3D
-                redesign/editing is required from drawings or references, an additional design fee
-                of +800 € applies.
-              </p>
-            </div>
-
-            {/* Upgrade 1 */}
-            <div className="border p-8 flex flex-col" style={{ borderColor: "#D8D8D8", borderTopWidth: 4, borderTopColor: ORANGE }}>
-              <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: ORANGE }}>
-                Upgrade
-              </p>
-              <h3 className="mt-2 text-xl font-bold" style={{ color: "#333333" }}>
-                LED &amp; Fiber-Optic Lighting
-              </h3>
-              {/* IMG_PRICE2 */}
-              <Slot name={IMG_PRICE2} ratio="aspect-[16/9]" className="mt-6" />
-              <p className="mt-6 text-sm leading-7 flex-1">
-                Integration of transparent fluid-path piping filled with internal LED strips or
-                optical fibers to visually simulate active chemical/fluid flow, controlled via an
-                integrated base power switch.
-              </p>
-              <p className="mt-6 text-lg font-semibold" style={{ color: ORANGE }}>
-                Configured per custom layout package
-              </p>
-            </div>
-
-            {/* Upgrade 2 */}
-            <div className="border p-8 flex flex-col" style={{ borderColor: "#D8D8D8", borderTopWidth: 4, borderTopColor: ORANGE }}>
-              <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: ORANGE }}>
-                Upgrade
-              </p>
-              <h3 className="mt-2 text-xl font-bold" style={{ color: "#333333" }}>
-                Fully Automated Motorized Rotation System
-              </h3>
-              {/* IMG_PRICE3 */}
-              <Slot name={IMG_PRICE3} ratio="aspect-[16/9]" className="mt-6" />
-              <p className="mt-6 text-sm leading-7 flex-1">
-                Integration of custom internal gears, a micro-electric motor, control electronics,
-                and automated programming to allow the main front reactor tank to smoothly rotate
-                45° right and left automatically (zero manual movement required).
-              </p>
-              <p className="mt-6 text-3xl font-bold" style={{ color: ORANGE }}>+800 €</p>
-            </div>
+            {c.tiers.map((tier, ti) => (
+              <div
+                key={tier}
+                className="flex flex-col rounded-lg border border-border border-t-4 border-t-primary bg-card p-7"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  Tier {ti + 1}
+                </p>
+                <h3 className="mt-2 text-xl font-bold">{tier}</h3>
+                <p className="mt-3 text-2xl font-bold text-primary">{c.tierPrices[ti]}</p>
+                <TierGallery
+                  files={[`tier${ti + 1}-a.jpg`, `tier${ti + 1}-b.jpg`]}
+                  labels={{ prev: c.prev, next: c.next }}
+                />
+                <ul className="mt-6 space-y-3">
+                  {c.features.map((f, fi) => (
+                    <li key={f} className="flex items-start gap-3 text-sm">
+                      {matrix[fi][ti] ? (
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-label="included" />
+                      ) : (
+                        <Minus className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" aria-label="not included" />
+                      )}
+                      <span className={matrix[fi][ti] ? "" : "text-muted-foreground"}>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
+          <p className="mt-8 text-xs text-muted-foreground">{c.priceNote}</p>
         </div>
       </section>
 
-      {/* SECTION 4 — TERMS */}
-      <section className="py-20 sm:py-24" style={{ background: "#F4F4F4" }}>
-        <div className="mx-auto max-w-6xl px-6">
-          <Heading id="terms">Project Terms &amp; Conditions (Freiberufler Ingenieurbüro)</Heading>
-
-          <div className="mt-12 grid gap-12 lg:grid-cols-2">
-            <div>
-              <h3 className="text-lg font-bold" style={{ color: "#333333" }}>Payment Terms</h3>
-              <div className="mt-6 space-y-6">
-                {[
-                  { t: "40% Down Payment", d: "Due upon project start to secure raw materials, components, and immediate production scheduling." },
-                  { t: "60% Final Payment", d: "Due upon successful completion and delivery approval prior to shipping/handover." },
-                ].map((p) => (
-                  <div key={p.t} className="pl-5 border-l-4" style={{ borderColor: ORANGE }}>
-                    <p className="font-semibold" style={{ color: "#333333" }}>{p.t}</p>
-                    <p className="mt-2 text-sm leading-7">{p.d}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-bold" style={{ color: "#333333" }}>
-                Legal Status &amp; Contract Structure
-              </h3>
-              <div className="mt-6 space-y-6">
-                {[
-                  { t: "Contract Classification", d: "In accordance with German tax and commercial law, this contract falls under the legal framework for Freiberufliche Ingenieurdienstleistungen (Freelance Engineering Services) operated via an Ingenieurbüro." },
-                  { t: "Contract Subject", d: "The formal scope of work is defined as the engineering, customized 3D design adaptation, and physical prototype creation of a bespoke technical scale model (\u201CEntwurf und Erstellung eines kundenspezifischen 3D-Modells und Funktionsprototypen\u201D)." },
-                  { t: "Legal Compliance Notice", d: "This offer and subsequent project execution comply fully with German regulations concerning independent engineering freelancers (Selbstständige Freiberufler / Ingenieure), ensuring an independent service contract (Dienst- / Werkvertrag) tailored for professional B2B technical deliverables." },
-                ].map((p) => (
-                  <div key={p.t}>
-                    <p className="font-semibold text-sm" style={{ color: ORANGE }}>{p.t}</p>
-                    <p className="mt-2 text-sm leading-7">{p.d}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CLIENT REFERENCE */}
+      {/* 7 — LEGAL */}
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
-          <Heading>Prepared for</Heading>
-          <div className="mt-10 flex flex-col sm:flex-row items-center gap-8">
-            {/* LOGO_ATEC */}
-            <Slot name={LOGO_ATEC} ratio="h-24 w-56" />
-            <p className="text-sm leading-7 max-w-xl">
-              ATEC Pharmatechnik GmbH — process plant engineering for the pharmaceutical and
-              chemical industries.
-            </p>
-          </div>
-          <figure className="mt-10">
-            {/* IMG_CLIENTSITE */}
-            <Slot name={IMG_CLIENTSITE} ratio="aspect-[21/9]" />
-            <figcaption className="mt-3 text-xs" style={{ color: "#777777" }}>
-              ATEC Pharmatechnik GmbH — atec-pharma.com
-            </figcaption>
-          </figure>
+          <Heading id="legal">{c.legalTitle}</Heading>
+          <ul className="mt-10 grid gap-4 sm:grid-cols-2">
+            {c.legal.map((l) => (
+              <li key={l} className="border-l-2 border-primary pl-4 text-sm leading-7 text-muted-foreground">
+                {l}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* CTA */}
-      <section id="contact" className="py-16 scroll-mt-24" style={{ background: "#F4F4F4" }}>
-        <div className="mx-auto max-w-6xl px-6 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button
-            type="button"
-            className="px-8 py-4 text-sm font-semibold tracking-wide"
-            style={{ background: ORANGE, color: "#FFFFFF" }}
-          >
-            Accept Offer / Contact Us
-          </button>
-          <button
-            type="button"
-            className="px-8 py-4 text-sm font-semibold tracking-wide border-2"
-            style={{ borderColor: ORANGE, color: ORANGE }}
-          >
-            Download PDF
-          </button>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer style={{ background: "#3A3A3A", color: "#E5E5E5" }} className="py-14">
-        <div className="mx-auto max-w-6xl px-6 grid gap-8 sm:grid-cols-3 items-start">
-          {/* LOGO1 (light version) */}
-          <Slot name={LOGO1} ratio="h-12 w-32" dark />
-          <div className="text-sm leading-7">
-            <p>{EMAIL}</p>
-            <p>{PHONE}</p>
+      {/* 8 — FOOTER */}
+      <footer id="contact" className="scroll-mt-24 border-t border-border bg-card">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="grid gap-8 lg:grid-cols-3">
+            <Slot filename="logo-atec.png" ratio="h-20" className="w-48 object-contain" />
+            <Slot filename="clientsite.jpg" ratio="aspect-[16/9]" className="lg:col-span-2" />
           </div>
-          <p className="text-xs sm:text-right" style={{ color: "#B5B5B5" }}>
+          <p className="mt-8 text-sm text-muted-foreground">{c.preparedFor}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{c.firm}</p>
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <a
+              href="mailto:kareem@k4-engineering.eu"
+              className="bg-primary px-8 py-4 text-center text-sm font-semibold tracking-wide text-primary-foreground"
+            >
+              {c.accept}
+            </a>
+            <a
+              href="/images/atec/atec-offer.pdf"
+              className="border-2 border-primary px-8 py-4 text-center text-sm font-semibold tracking-wide text-primary"
+            >
+              {c.pdf}
+            </a>
+          </div>
+          <p className="mt-10 text-xs text-muted-foreground">
             © 2026 K4-Engineering — Freiberufliches Ingenieurbüro
           </p>
         </div>
