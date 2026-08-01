@@ -43,11 +43,13 @@ function Slot({
   ratio = "aspect-[4/3]",
   className = "",
   alt,
+  fit = "object-cover",
 }: {
   filename: string;
   ratio?: string;
   className?: string;
   alt?: string;
+  fit?: string;
 }) {
   const [failed, setFailed] = useState(false);
   if (failed) {
@@ -67,7 +69,7 @@ function Slot({
       alt={alt ?? filename}
       loading="lazy"
       onError={() => setFailed(true)}
-      className={`${ratio} ${className} w-full border border-border object-cover`}
+      className={`${ratio} ${className} w-full border border-border ${fit}`}
     />
   );
 }
@@ -79,6 +81,8 @@ const t = {
     nav: ["Portfolio", "Workflow", "Kompetenzen", "Preise", "Recht", "Kontakt"],
     heroSub: "Maßgeschneiderte Industrie-Showcase-Lösungen für ATEC Pharmatechnik GmbH",
     heroValue: "Komplexe Prozessanlagen als präzise, interaktive Messemodelle.",
+    heroCap1: "Konzeptmodell der ATEC-Anlage — Gegenstand dieses Angebots.",
+    heroCap2: "Referenzmodell: Smart-Sensor-Baum für die Baumpflegetage-Messe.",
     portfolioTitle: "Case Study: Interaktives Smart-Sensor-Baummodell (Baumpflegetage Augsburg, Mai 2026)",
     portfolioL1: "Eingebettete Sensoren erfassten den Saftfluss im Baumstamm.",
     portfolioL2: "Die Messwerte wurden live in sichtbare Daten übersetzt.",
@@ -146,6 +150,8 @@ const t = {
     nav: ["Portfolio", "Workflow", "Capabilities", "Pricing", "Legal", "Contact"],
     heroSub: "Tailored Industrial Showcase Solutions for ATEC Pharmatechnik GmbH",
     heroValue: "Complex process plants turned into precise, interactive exhibition models.",
+    heroCap1: "Concept model of the ATEC plant — the subject of this offer.",
+    heroCap2: "Reference model: smart sensor tree built for the Baumpflegetage fair.",
     portfolioTitle: "Case Study: Interactive Smart Sensor Tree Model (Baumpflegetage Augsburg, May 2026)",
     portfolioL1: "Embedded sensors measured sap flow inside the trunk.",
     portfolioL2: "Readings were translated into live, visible data.",
@@ -355,8 +361,14 @@ function AtecOffer() {
             </div>
           </div>
           <div className="mt-12 grid gap-5 sm:grid-cols-2">
-            <Slot filename="hero-1.png" ratio="aspect-[16/10]" />
-            <Slot filename="hero-2.png" ratio="aspect-[16/10]" />
+            <figure>
+              <Slot filename="hero-1.png" ratio="" fit="object-contain" className="h-auto bg-card" alt={c.heroCap1} />
+              <figcaption className="mt-3 text-xs leading-6 text-muted-foreground">{c.heroCap1}</figcaption>
+            </figure>
+            <figure>
+              <Slot filename="hero-2.png" ratio="" fit="object-contain" className="h-auto bg-card" alt={c.heroCap2} />
+              <figcaption className="mt-3 text-xs leading-6 text-muted-foreground">{c.heroCap2}</figcaption>
+            </figure>
           </div>
         </div>
       </section>
