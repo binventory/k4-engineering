@@ -361,8 +361,14 @@ function AtecOffer() {
             </div>
           </div>
           <div className="mt-12 grid gap-5 sm:grid-cols-2">
-            <Slot filename="hero-1.png" ratio="aspect-[16/10]" />
-            <Slot filename="hero-2.png" ratio="aspect-[16/10]" />
+            <figure>
+              <Slot filename="hero-1.png" ratio="" fit="object-contain" className="h-auto bg-card" alt={c.heroCap1} />
+              <figcaption className="mt-3 text-xs leading-6 text-muted-foreground">{c.heroCap1}</figcaption>
+            </figure>
+            <figure>
+              <Slot filename="hero-2.png" ratio="" fit="object-contain" className="h-auto bg-card" alt={c.heroCap2} />
+              <figcaption className="mt-3 text-xs leading-6 text-muted-foreground">{c.heroCap2}</figcaption>
+            </figure>
           </div>
         </div>
       </section>
