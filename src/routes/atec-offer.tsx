@@ -150,6 +150,8 @@ const t = {
     nav: ["Portfolio", "Workflow", "Capabilities", "Pricing", "Legal", "Contact"],
     heroSub: "Tailored Industrial Showcase Solutions for ATEC Pharmatechnik GmbH",
     heroValue: "Complex process plants turned into precise, interactive exhibition models.",
+    heroCap1: "Concept model of the ATEC plant — the subject of this offer.",
+    heroCap2: "Reference model: smart sensor tree built for the Baumpflegetage fair.",
     portfolioTitle: "Case Study: Interactive Smart Sensor Tree Model (Baumpflegetage Augsburg, May 2026)",
     portfolioL1: "Embedded sensors measured sap flow inside the trunk.",
     portfolioL2: "Readings were translated into live, visible data.",
