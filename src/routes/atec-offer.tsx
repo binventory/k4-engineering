@@ -317,9 +317,11 @@ function TierGallery({ files, labels }: { files: [string, string]; labels: { pre
 
 function AtecOffer() {
   const [lang, setLang] = useState<"de" | "en">("de");
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const c = t[lang];
 
   return (
+    <LightboxContext.Provider value={setLightboxSrc}>
     <div
       className="min-h-screen bg-background text-foreground"
       style={
