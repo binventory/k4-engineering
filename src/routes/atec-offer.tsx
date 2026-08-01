@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import atecLogo from "@/assets/atec-logo.png.asset.json";
 import {
   Boxes,
   Cog,
