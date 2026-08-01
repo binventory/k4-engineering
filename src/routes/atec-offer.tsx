@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import atecLogo from "@/assets/atec-logo.png.asset.json";
 import {
   Boxes,
   Cog,
@@ -54,7 +55,7 @@ function Slot({
       <div
         role="img"
         aria-label={filename}
-        className={`${ratio} ${className} flex items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/40 text-muted-foreground`}
+        className={`${ratio} ${className} flex items-center justify-center border-2 border-dashed border-border bg-muted text-muted-foreground`}
       >
         <span className="px-2 text-center text-xs font-semibold tracking-[0.12em]">{filename}</span>
       </div>
@@ -66,7 +67,7 @@ function Slot({
       alt={alt ?? filename}
       loading="lazy"
       onError={() => setFailed(true)}
-      className={`${ratio} ${className} w-full rounded-lg border border-border object-cover`}
+      className={`${ratio} ${className} w-full border border-border object-cover`}
     />
   );
 }
@@ -224,10 +225,21 @@ const matrix: boolean[][] = [
   [false, false, true],
 ];
 
+function K4Logo() {
+  return (
+    <span className="flex items-center gap-3">
+      <span className="flex h-10 w-10 items-center justify-center bg-primary text-sm font-bold tracking-tight text-primary-foreground">
+        K4
+      </span>
+      <span className="text-base font-bold tracking-tight text-foreground">Engineering</span>
+    </span>
+  );
+}
+
 function Heading({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
     <div id={id} className="flex scroll-mt-24 items-stretch gap-4">
-      <span className="block w-1 shrink-0 self-stretch bg-primary" />
+      <span className="block w-1 shrink-0 self-stretch bg-foreground" />
       <h2 className="text-2xl font-bold leading-tight text-primary sm:text-3xl">{children}</h2>
     </div>
   );
@@ -243,7 +255,7 @@ function TierGallery({ files, labels }: { files: [string, string]; labels: { pre
           type="button"
           aria-label={labels.prev}
           onClick={() => setI((v) => (v === 0 ? 1 : 0))}
-          className="rounded-md border border-border p-2 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="border border-border p-2 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -259,7 +271,7 @@ function TierGallery({ files, labels }: { files: [string, string]; labels: { pre
           type="button"
           aria-label={labels.next}
           onClick={() => setI((v) => (v === 0 ? 1 : 0))}
-          className="rounded-md border border-border p-2 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="border border-border p-2 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -273,17 +285,40 @@ function AtecOffer() {
   const c = t[lang];
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div
+      className="min-h-screen bg-background text-foreground"
+      style={
+        {
+          "--background": "#FFFFFF",
+          "--foreground": "#333333",
+          "--card": "#F6F6F6",
+          "--card-foreground": "#333333",
+          "--popover": "#FFFFFF",
+          "--popover-foreground": "#333333",
+          "--primary": "#F68518",
+          "--primary-foreground": "#FFFFFF",
+          "--secondary": "#404040",
+          "--secondary-foreground": "#FFFFFF",
+          "--muted": "#F6F6F6",
+          "--muted-foreground": "#6D6D6D",
+          "--accent": "#F68518",
+          "--accent-foreground": "#FFFFFF",
+          "--border": "#E8E8E8",
+          "--input": "#E8E8E8",
+          "--ring": "#F68518",
+        } as React.CSSProperties
+      }
+    >
       {/* 1 — TOP BAR */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-border bg-background">
         <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-6 px-6">
-          <Slot filename="logo-k4.png" ratio="h-10" className="w-28 object-contain" />
-          <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
+          <K4Logo />
+          <nav className="hidden items-center gap-7 text-xs font-bold uppercase tracking-wider md:flex">
             {c.nav.map((label, i) => (
               <a
                 key={navIds[i]}
                 href={`#${navIds[i]}`}
-                className="text-muted-foreground transition-colors hover:text-primary"
+                className="text-foreground transition-colors hover:text-primary"
               >
                 {label}
               </a>
@@ -293,7 +328,7 @@ function AtecOffer() {
             type="button"
             onClick={() => setLang(lang === "de" ? "en" : "de")}
             aria-label="Switch language"
-            className="border border-primary px-3 py-1.5 text-xs font-semibold tracking-wider text-primary"
+            className="bg-secondary px-4 py-2 text-xs font-bold uppercase tracking-wider text-secondary-foreground"
           >
             {lang === "de" ? "DE / EN" : "EN / DE"}
           </button>
@@ -304,7 +339,7 @@ function AtecOffer() {
       <section className="border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-20 sm:py-24">
           <div className="flex items-stretch gap-4">
-            <span className="block w-1 shrink-0 self-stretch bg-primary" />
+            <span className="block w-1 shrink-0 self-stretch bg-foreground" />
             <div>
               <h1 className="text-3xl font-bold leading-tight sm:text-5xl">
                 K4-Engineering |{" "}
@@ -341,7 +376,7 @@ function AtecOffer() {
               {c.capTitles.map((title, i) => {
                 const Icon = capIcons[i];
                 return (
-                  <div key={title} className="rounded-lg border border-border bg-card p-6">
+                  <div key={title} className="border border-border bg-card p-6">
                     <Icon className="h-5 w-5 text-primary" />
                     <h3 className="mt-4 text-base font-bold">{title}</h3>
                     <p className="mt-2 text-sm text-muted-foreground">{c.caps[i]}</p>
@@ -359,7 +394,7 @@ function AtecOffer() {
           <Heading id="workflow">{c.workflowTitle}</Heading>
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {c.phases.map((p, i) => (
-              <div key={p.t} className="rounded-lg border border-border bg-card p-6">
+              <div key={p.t} className="border border-border bg-card p-6">
                 <Slot filename={`phase-${i + 1}.jpg`} ratio="aspect-[16/10]" />
                 <h3 className="mt-5 text-base font-bold">{p.t}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{p.d}</p>
@@ -398,7 +433,7 @@ function AtecOffer() {
             {c.tiers.map((tier, ti) => (
               <div
                 key={tier}
-                className="flex flex-col rounded-lg border border-border border-t-4 border-t-primary bg-card p-7"
+                className="flex flex-col border border-border border-t-4 border-t-primary bg-card p-7"
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   Tier {ti + 1}
@@ -446,7 +481,12 @@ function AtecOffer() {
       <footer id="contact" className="scroll-mt-24 border-t border-border bg-card">
         <div className="mx-auto max-w-6xl px-6 py-16">
           <div className="grid gap-8 lg:grid-cols-3">
-            <Slot filename="logo-atec.png" ratio="h-20" className="w-48 object-contain" />
+            <img
+              src={atecLogo.url}
+              alt="ATEC Pharmatechnik GmbH logo"
+              loading="lazy"
+              className="h-20 w-48 object-contain object-left"
+            />
             <Slot filename="clientsite.jpg" ratio="aspect-[16/9]" className="lg:col-span-2" />
           </div>
           <p className="mt-8 text-sm text-muted-foreground">{c.preparedFor}</p>
@@ -454,13 +494,13 @@ function AtecOffer() {
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <a
               href="mailto:kareem@k4-engineering.eu"
-              className="bg-primary px-8 py-4 text-center text-sm font-semibold tracking-wide text-primary-foreground"
+              className="bg-primary px-10 py-4 text-center text-sm font-bold uppercase tracking-wide text-primary-foreground"
             >
               {c.accept}
             </a>
             <a
               href="/images/atec/atec-offer.pdf"
-              className="border-2 border-primary px-8 py-4 text-center text-sm font-semibold tracking-wide text-primary"
+              className="bg-secondary px-10 py-4 text-center text-sm font-bold uppercase tracking-wide text-secondary-foreground"
             >
               {c.pdf}
             </a>
