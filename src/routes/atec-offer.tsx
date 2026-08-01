@@ -355,8 +355,8 @@ function AtecOffer() {
             </div>
           </div>
           <div className="mt-12 grid gap-5 sm:grid-cols-2">
-            <Slot filename="hero-1.jpg" ratio="aspect-[16/10]" />
-            <Slot filename="hero-2.jpg" ratio="aspect-[16/10]" />
+            <Slot filename="hero-1.png" ratio="aspect-[16/10]" />
+            <Slot filename="hero-2.png" ratio="aspect-[16/10]" />
           </div>
         </div>
       </section>
