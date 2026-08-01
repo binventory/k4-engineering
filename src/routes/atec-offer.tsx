@@ -430,7 +430,7 @@ function AtecOffer() {
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {c.phases.map((p, i) => (
               <div key={p.t} className="border border-border bg-card p-6">
-                <Slot filename={`phase-${i + 1}.jpg`} ratio="aspect-[16/10]" />
+                <Slot filename={`phase-${i + 1}.png`} ratio="aspect-[16/10]" />
                 <h3 className="mt-5 text-base font-bold">{p.t}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{p.d}</p>
               </div>
