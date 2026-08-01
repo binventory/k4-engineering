@@ -43,11 +43,13 @@ function Slot({
   ratio = "aspect-[4/3]",
   className = "",
   alt,
+  fit = "object-cover",
 }: {
   filename: string;
   ratio?: string;
   className?: string;
   alt?: string;
+  fit?: string;
 }) {
   const [failed, setFailed] = useState(false);
   if (failed) {
@@ -67,7 +69,7 @@ function Slot({
       alt={alt ?? filename}
       loading="lazy"
       onError={() => setFailed(true)}
-      className={`${ratio} ${className} w-full border border-border object-cover`}
+      className={`${ratio} ${className} w-full border border-border ${fit}`}
     />
   );
 }
