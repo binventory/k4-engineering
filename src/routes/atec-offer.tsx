@@ -39,6 +39,8 @@ export const Route = createFileRoute("/atec-offer")({
 
 /* ---------------- image slot ---------------- */
 
+const LightboxContext = createContext<(src: string) => void>(() => {});
+
 function Slot({
   filename,
   ratio,
@@ -53,6 +55,8 @@ function Slot({
   fit?: string;
 }) {
   const [failed, setFailed] = useState(false);
+  const openLightbox = useContext(LightboxContext);
+  const src = `/images/atec/${filename}`;
   if (failed) {
     return (
       <div
@@ -65,15 +69,26 @@ function Slot({
     );
   }
   return (
-    <img
-      src={`/images/atec/${filename}`}
-      alt={alt ?? filename}
-      loading="lazy"
-      onError={() => setFailed(true)}
-      className={`${ratio ?? ""} ${className} w-full border border-border ${fit}`}
-    />
+    <button
+      type="button"
+      aria-label="View full size image"
+      onClick={(e) => {
+        e.stopPropagation();
+        openLightbox(src);
+      }}
+      className={`${ratio ?? ""} ${className} block cursor-zoom-in p-0`}
+    >
+      <img
+        src={src}
+        alt={alt ?? filename}
+        loading="lazy"
+        onError={() => setFailed(true)}
+        className={`h-full w-full border border-border ${fit}`}
+      />
+    </button>
   );
 }
+
 
 /* ---------------- copy ---------------- */
 
