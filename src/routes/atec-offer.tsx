@@ -40,7 +40,7 @@ export const Route = createFileRoute("/atec-offer")({
 
 function Slot({
   filename,
-  ratio = "aspect-[4/3]",
+  ratio,
   className = "",
   alt,
   fit = "object-cover",
@@ -57,7 +57,7 @@ function Slot({
       <div
         role="img"
         aria-label={filename}
-        className={`${ratio} ${className} flex items-center justify-center border-2 border-dashed border-border bg-muted text-muted-foreground`}
+        className={`${ratio ?? ""} ${className} flex items-center justify-center border-2 border-dashed border-border bg-muted text-muted-foreground`}
       >
         <span className="px-2 text-center text-xs font-semibold tracking-[0.12em]">{filename}</span>
       </div>
@@ -69,7 +69,7 @@ function Slot({
       alt={alt ?? filename}
       loading="lazy"
       onError={() => setFailed(true)}
-      className={`${ratio} ${className} w-full border border-border ${fit}`}
+      className={`${ratio ?? ""} ${className} w-full border border-border ${fit}`}
     />
   );
 }
