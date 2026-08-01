@@ -376,7 +376,7 @@ function AtecOffer() {
               {c.capTitles.map((title, i) => {
                 const Icon = capIcons[i];
                 return (
-                  <div key={title} className="rounded-lg border border-border bg-card p-6">
+                  <div key={title} className="border border-border bg-card p-6">
                     <Icon className="h-5 w-5 text-primary" />
                     <h3 className="mt-4 text-base font-bold">{title}</h3>
                     <p className="mt-2 text-sm text-muted-foreground">{c.caps[i]}</p>
@@ -394,7 +394,7 @@ function AtecOffer() {
           <Heading id="workflow">{c.workflowTitle}</Heading>
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {c.phases.map((p, i) => (
-              <div key={p.t} className="rounded-lg border border-border bg-card p-6">
+              <div key={p.t} className="border border-border bg-card p-6">
                 <Slot filename={`phase-${i + 1}.jpg`} ratio="aspect-[16/10]" />
                 <h3 className="mt-5 text-base font-bold">{p.t}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{p.d}</p>
@@ -433,7 +433,7 @@ function AtecOffer() {
             {c.tiers.map((tier, ti) => (
               <div
                 key={tier}
-                className="flex flex-col rounded-lg border border-border border-t-4 border-t-primary bg-card p-7"
+                className="flex flex-col border border-border border-t-4 border-t-primary bg-card p-7"
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   Tier {ti + 1}
