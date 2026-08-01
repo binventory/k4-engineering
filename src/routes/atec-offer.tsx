@@ -453,8 +453,8 @@ function AtecOffer() {
               ))}
             </ul>
             <div className="grid gap-5 sm:grid-cols-2">
-              <Slot filename="skid-1.jpg" />
-              <Slot filename="skid-2.jpg" />
+              <Slot filename="skid-1.jpg" ratio="aspect-[4/3]" />
+              <Slot filename="skid-2.jpg" ratio="aspect-[4/3]" />
             </div>
           </div>
         </div>
