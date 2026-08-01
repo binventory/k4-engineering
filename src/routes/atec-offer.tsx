@@ -477,8 +477,8 @@ function AtecOffer() {
               ))}
             </ul>
             <div className="grid gap-5 sm:grid-cols-2">
-              <Slot filename="skid-1.jpg" ratio="aspect-[4/3]" />
-              <Slot filename="skid-2.jpg" ratio="aspect-[4/3]" />
+              <Slot filename="skid-1.png" ratio="aspect-[4/3]" />
+              <Slot filename="skid-2.png" ratio="aspect-[4/3]" />
             </div>
           </div>
         </div>
@@ -500,7 +500,7 @@ function AtecOffer() {
                 <h3 className="mt-2 text-xl font-bold">{tier}</h3>
                 <p className="mt-3 text-2xl font-bold text-primary">{c.tierPrices[ti]}</p>
                 <TierGallery
-                  files={[`tier${ti + 1}-a.jpg`, `tier${ti + 1}-b.jpg`]}
+                  files={[`tier${ti + 1}-a.png`, `tier${ti + 1}-b.png`]}
                   labels={{ prev: c.prev, next: c.next }}
                 />
                 <ul className="mt-6 space-y-3">
