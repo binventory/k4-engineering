@@ -87,6 +87,8 @@ const t = {
     portfolioTitle: "Case Study: Interaktives Smart-Sensor-Baummodell (Baumpflegetage Augsburg, Mai 2026)",
     portfolioL1: "Eingebettete Sensoren erfassten den Saftfluss im Baumstamm.",
     portfolioL2: "Die Messwerte wurden live in sichtbare Daten übersetzt.",
+    videoTitle: "In Aktion sehen",
+    videoSub: "Unsere interaktive Präsentation von den Deutschen Baumpflegetagen 2026.",
     capsTitle: "Kompetenzen",
     caps: [
       "PETG-Druck, Schleifen, Metallic-Finish.",
