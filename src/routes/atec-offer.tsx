@@ -158,6 +158,8 @@ const t = {
     portfolioTitle: "Case Study: Interactive Smart Sensor Tree Model (Baumpflegetage Augsburg, May 2026)",
     portfolioL1: "Embedded sensors measured sap flow inside the trunk.",
     portfolioL2: "Readings were translated into live, visible data.",
+    videoTitle: "Watch It In Action",
+    videoSub: "Our interactive presentation from Deutsche Baumpflegetage 2026.",
     capsTitle: "Capabilities",
     caps: [
       "PETG printing, sanding, metallic finish.",
