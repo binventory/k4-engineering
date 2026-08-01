@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import atecLogo from "@/assets/atec-logo.png.asset.json";
 import {
   Boxes,
@@ -38,6 +39,8 @@ export const Route = createFileRoute("/atec-offer")({
 
 /* ---------------- image slot ---------------- */
 
+const LightboxContext = createContext<(src: string) => void>(() => {});
+
 function Slot({
   filename,
   ratio,
@@ -52,6 +55,8 @@ function Slot({
   fit?: string;
 }) {
   const [failed, setFailed] = useState(false);
+  const openLightbox = useContext(LightboxContext);
+  const src = `/images/atec/${filename}`;
   if (failed) {
     return (
       <div
@@ -64,15 +69,26 @@ function Slot({
     );
   }
   return (
-    <img
-      src={`/images/atec/${filename}`}
-      alt={alt ?? filename}
-      loading="lazy"
-      onError={() => setFailed(true)}
-      className={`${ratio ?? ""} ${className} w-full border border-border ${fit}`}
-    />
+    <button
+      type="button"
+      aria-label="View full size image"
+      onClick={(e) => {
+        e.stopPropagation();
+        openLightbox(src);
+      }}
+      className={`${ratio ?? ""} ${className} block cursor-zoom-in p-0`}
+    >
+      <img
+        src={src}
+        alt={alt ?? filename}
+        loading="lazy"
+        onError={() => setFailed(true)}
+        className={`h-full w-full border border-border ${fit}`}
+      />
+    </button>
   );
 }
+
 
 /* ---------------- copy ---------------- */
 
@@ -267,7 +283,10 @@ function TierGallery({ files, labels }: { files: [string, string]; labels: { pre
         <button
           type="button"
           aria-label={labels.prev}
-          onClick={() => setI((v) => (v === 0 ? 1 : 0))}
+          onClick={(e) => {
+            e.stopPropagation();
+            setI((v) => (v === 0 ? 1 : 0));
+          }}
           className="border border-border p-2 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -283,7 +302,10 @@ function TierGallery({ files, labels }: { files: [string, string]; labels: { pre
         <button
           type="button"
           aria-label={labels.next}
-          onClick={() => setI((v) => (v === 0 ? 1 : 0))}
+          onClick={(e) => {
+            e.stopPropagation();
+            setI((v) => (v === 0 ? 1 : 0));
+          }}
           className="border border-border p-2 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <ChevronRight className="h-4 w-4" />
@@ -295,9 +317,11 @@ function TierGallery({ files, labels }: { files: [string, string]; labels: { pre
 
 function AtecOffer() {
   const [lang, setLang] = useState<"de" | "en">("de");
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const c = t[lang];
 
   return (
+    <LightboxContext.Provider value={setLightboxSrc}>
     <div
       className="min-h-screen bg-background text-foreground"
       style={
@@ -542,6 +566,21 @@ function AtecOffer() {
           </p>
         </div>
       </footer>
+
+      <Dialog open={!!lightboxSrc} onOpenChange={(open) => !open && setLightboxSrc(null)}>
+        <DialogContent className="max-w-5xl w-full bg-transparent border-none shadow-none p-0">
+          <DialogTitle className="sr-only">Full size image</DialogTitle>
+          {lightboxSrc && (
+            <img
+              src={lightboxSrc}
+              alt=""
+              onClick={() => setLightboxSrc(null)}
+              className="w-full h-auto max-h-[85vh] object-contain"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
+    </LightboxContext.Provider>
   );
 }
