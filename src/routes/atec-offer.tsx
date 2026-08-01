@@ -40,7 +40,7 @@ export const Route = createFileRoute("/atec-offer")({
 
 function Slot({
   filename,
-  ratio = "aspect-[4/3]",
+  ratio,
   className = "",
   alt,
   fit = "object-cover",
@@ -57,7 +57,7 @@ function Slot({
       <div
         role="img"
         aria-label={filename}
-        className={`${ratio} ${className} flex items-center justify-center border-2 border-dashed border-border bg-muted text-muted-foreground`}
+        className={`${ratio ?? ""} ${className} flex items-center justify-center border-2 border-dashed border-border bg-muted text-muted-foreground`}
       >
         <span className="px-2 text-center text-xs font-semibold tracking-[0.12em]">{filename}</span>
       </div>
@@ -69,7 +69,7 @@ function Slot({
       alt={alt ?? filename}
       loading="lazy"
       onError={() => setFailed(true)}
-      className={`${ratio} ${className} w-full border border-border ${fit}`}
+      className={`${ratio ?? ""} ${className} w-full border border-border ${fit}`}
     />
   );
 }
@@ -381,27 +381,25 @@ function AtecOffer() {
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
           <Heading id="portfolio">{c.portfolioTitle}</Heading>
-          <div className="mt-10 grid items-stretch gap-5 lg:grid-cols-2">
-            <div>
-              <h3 className="text-base font-bold text-foreground">{c.videoTitle}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{c.videoSub}</p>
-              <div className="mt-3 overflow-hidden border border-border bg-card">
-                <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-                  <iframe
-                    src="https://player.vimeo.com/video/1202992207?h=b4fa5205d2&title=0&byline=0&portrait=0"
-                    className="absolute inset-0 h-full w-full"
-                    title="IoT Interactive Presentation — Smart Tree Sensor by K4-Engineering"
-                    frameBorder="0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowFullScreen
-                    loading="lazy"
-                  />
-                </div>
+          <div className="mt-10">
+            <h3 className="text-base font-bold text-foreground">{c.videoTitle}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{c.videoSub}</p>
+            <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="relative w-full overflow-hidden border border-border bg-card" style={{ aspectRatio: "3 / 4" }}>
+                <iframe
+                  src="https://player.vimeo.com/video/1202992207?h=b4fa5205d2&title=0&byline=0&portrait=0"
+                  className="absolute inset-0 h-full w-full"
+                  title="IoT Interactive Presentation — Smart Tree Sensor by K4-Engineering"
+                  frameBorder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                />
               </div>
-            </div>
-            <div className="grid gap-5">
-              <Slot filename="tree-1.jpg" ratio="aspect-[16/10]" fit="object-contain" className="bg-card" />
-              <Slot filename="tree-2.jpg" ratio="aspect-[16/10]" />
+              <div className="grid grid-rows-2 gap-4" style={{ aspectRatio: "3 / 4" }}>
+                <Slot filename="tree-1.jpg" fit="object-contain" className="h-full w-full bg-card" />
+                <Slot filename="tree-2.jpg" className="h-full w-full" />
+              </div>
             </div>
           </div>
           <p className="mt-8 text-sm text-muted-foreground">{c.portfolioL1}</p>
@@ -455,8 +453,8 @@ function AtecOffer() {
               ))}
             </ul>
             <div className="grid gap-5 sm:grid-cols-2">
-              <Slot filename="skid-1.jpg" />
-              <Slot filename="skid-2.jpg" />
+              <Slot filename="skid-1.jpg" ratio="aspect-[4/3]" />
+              <Slot filename="skid-2.jpg" ratio="aspect-[4/3]" />
             </div>
           </div>
         </div>
