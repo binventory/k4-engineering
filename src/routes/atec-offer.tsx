@@ -481,7 +481,12 @@ function AtecOffer() {
       <footer id="contact" className="scroll-mt-24 border-t border-border bg-card">
         <div className="mx-auto max-w-6xl px-6 py-16">
           <div className="grid gap-8 lg:grid-cols-3">
-            <Slot filename="logo-atec.png" ratio="h-20" className="w-48 object-contain" />
+            <img
+              src={atecLogo.url}
+              alt="ATEC Pharmatechnik GmbH logo"
+              loading="lazy"
+              className="h-20 w-48 object-contain object-left"
+            />
             <Slot filename="clientsite.jpg" ratio="aspect-[16/9]" className="lg:col-span-2" />
           </div>
           <p className="mt-8 text-sm text-muted-foreground">{c.preparedFor}</p>
@@ -489,13 +494,13 @@ function AtecOffer() {
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <a
               href="mailto:kareem@k4-engineering.eu"
-              className="bg-primary px-8 py-4 text-center text-sm font-semibold tracking-wide text-primary-foreground"
+              className="bg-primary px-10 py-4 text-center text-sm font-bold uppercase tracking-wide text-primary-foreground"
             >
               {c.accept}
             </a>
             <a
               href="/images/atec/atec-offer.pdf"
-              className="border-2 border-primary px-8 py-4 text-center text-sm font-semibold tracking-wide text-primary"
+              className="bg-secondary px-10 py-4 text-center text-sm font-bold uppercase tracking-wide text-secondary-foreground"
             >
               {c.pdf}
             </a>
