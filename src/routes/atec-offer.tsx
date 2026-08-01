@@ -225,10 +225,21 @@ const matrix: boolean[][] = [
   [false, false, true],
 ];
 
+function K4Logo() {
+  return (
+    <span className="flex items-center gap-3">
+      <span className="flex h-10 w-10 items-center justify-center bg-primary text-sm font-bold tracking-tight text-primary-foreground">
+        K4
+      </span>
+      <span className="text-base font-bold tracking-tight text-foreground">Engineering</span>
+    </span>
+  );
+}
+
 function Heading({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
     <div id={id} className="flex scroll-mt-24 items-stretch gap-4">
-      <span className="block w-1 shrink-0 self-stretch bg-primary" />
+      <span className="block w-1 shrink-0 self-stretch bg-foreground" />
       <h2 className="text-2xl font-bold leading-tight text-primary sm:text-3xl">{children}</h2>
     </div>
   );
