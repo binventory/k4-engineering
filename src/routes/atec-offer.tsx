@@ -271,7 +271,7 @@ function TierGallery({ files, labels }: { files: [string, string]; labels: { pre
           type="button"
           aria-label={labels.next}
           onClick={() => setI((v) => (v === 0 ? 1 : 0))}
-          className="rounded-md border border-border p-2 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="border border-border p-2 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
