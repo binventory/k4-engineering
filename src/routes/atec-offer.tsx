@@ -55,7 +55,7 @@ function Slot({
       <div
         role="img"
         aria-label={filename}
-        className={`${ratio} ${className} flex items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/40 text-muted-foreground`}
+        className={`${ratio} ${className} flex items-center justify-center border-2 border-dashed border-border bg-muted text-muted-foreground`}
       >
         <span className="px-2 text-center text-xs font-semibold tracking-[0.12em]">{filename}</span>
       </div>
