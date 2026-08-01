@@ -430,7 +430,7 @@ function AtecOffer() {
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {c.phases.map((p, i) => (
               <div key={p.t} className="border border-border bg-card p-6">
-                <Slot filename={`phase-${i + 1}.jpg`} ratio="aspect-[16/10]" />
+                <Slot filename={`phase-${i + 1}.png`} ratio="aspect-[16/10]" />
                 <h3 className="mt-5 text-base font-bold">{p.t}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{p.d}</p>
               </div>
@@ -515,15 +515,12 @@ function AtecOffer() {
       {/* 8 — FOOTER */}
       <footer id="contact" className="scroll-mt-24 border-t border-border bg-card">
         <div className="mx-auto max-w-6xl px-6 py-16">
-          <div className="grid gap-8 lg:grid-cols-3">
-            <img
-              src={atecLogo.url}
-              alt="ATEC Pharmatechnik GmbH logo"
-              loading="lazy"
-              className="h-20 w-48 object-contain object-left"
-            />
-            <Slot filename="clientsite.jpg" ratio="aspect-[16/9]" className="lg:col-span-2" />
-          </div>
+          <img
+            src={atecLogo.url}
+            alt="ATEC Pharmatechnik GmbH logo"
+            loading="lazy"
+            className="h-20 w-48 object-contain object-left"
+          />
           <p className="mt-8 text-sm text-muted-foreground">{c.preparedFor}</p>
           <p className="mt-1 text-sm text-muted-foreground">{c.firm}</p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
