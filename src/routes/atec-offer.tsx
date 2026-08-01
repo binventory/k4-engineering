@@ -360,13 +360,13 @@ function AtecOffer() {
               <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{c.heroValue}</p>
             </div>
           </div>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2">
+          <div className="mt-12 grid items-start gap-5 sm:grid-cols-2">
             <figure>
-              <Slot filename="hero-1.png" ratio="" fit="object-contain" className="h-auto bg-card" alt={c.heroCap1} />
+              <Slot filename="hero-1.png" ratio="aspect-[4/3]" fit="object-contain" className="w-full bg-card" alt={c.heroCap1} />
               <figcaption className="mt-3 text-xs leading-6 text-muted-foreground">{c.heroCap1}</figcaption>
             </figure>
             <figure>
-              <Slot filename="hero-2.png" ratio="" fit="object-contain" className="h-auto bg-card" alt={c.heroCap2} />
+              <Slot filename="hero-2.png" ratio="aspect-[4/3]" fit="object-contain" className="w-full bg-card" alt={c.heroCap2} />
               <figcaption className="mt-3 text-xs leading-6 text-muted-foreground">{c.heroCap2}</figcaption>
             </figure>
           </div>
