@@ -67,7 +67,7 @@ function Slot({
       alt={alt ?? filename}
       loading="lazy"
       onError={() => setFailed(true)}
-      className={`${ratio} ${className} w-full rounded-lg border border-border object-cover`}
+      className={`${ratio} ${className} w-full border border-border object-cover`}
     />
   );
 }
