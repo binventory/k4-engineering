@@ -227,11 +227,14 @@ const matrix: boolean[][] = [
 
 function K4Logo() {
   return (
-    <span className="flex items-center gap-3">
-      <span className="flex h-10 w-10 items-center justify-center bg-primary text-sm font-bold tracking-tight text-primary-foreground">
+    <span className="flex items-center gap-3 font-bold text-lg">
+      <span
+        className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-primary text-base font-bold text-primary-foreground shadow-[0_0_16px_#F68518]"
+        style={{ fontFamily: "'Tinos', 'Times New Roman', serif", letterSpacing: "0.02em" }}
+      >
         K4
       </span>
-      <span className="text-base font-bold tracking-tight text-foreground">Engineering</span>
+      <span className="tracking-tight text-foreground">Engineering</span>
     </span>
   );
 }
