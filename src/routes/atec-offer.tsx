@@ -12,7 +12,6 @@ import {
   ChevronRight,
   Check,
   Minus,
-  Play,
 } from "lucide-react";
 
 export const Route = createFileRoute("/atec-offer")({
@@ -87,6 +86,8 @@ const t = {
     portfolioTitle: "Case Study: Interaktives Smart-Sensor-Baummodell (Baumpflegetage Augsburg, Mai 2026)",
     portfolioL1: "Eingebettete Sensoren erfassten den Saftfluss im Baumstamm.",
     portfolioL2: "Die Messwerte wurden live in sichtbare Daten übersetzt.",
+    videoTitle: "In Aktion sehen",
+    videoSub: "Unsere interaktive Präsentation von den Deutschen Baumpflegetagen 2026.",
     capsTitle: "Kompetenzen",
     caps: [
       "PETG-Druck, Schleifen, Metallic-Finish.",
@@ -156,6 +157,8 @@ const t = {
     portfolioTitle: "Case Study: Interactive Smart Sensor Tree Model (Baumpflegetage Augsburg, May 2026)",
     portfolioL1: "Embedded sensors measured sap flow inside the trunk.",
     portfolioL2: "Readings were translated into live, visible data.",
+    videoTitle: "Watch It In Action",
+    videoSub: "Our interactive presentation from Deutsche Baumpflegetage 2026.",
     capsTitle: "Capabilities",
     caps: [
       "PETG printing, sanding, metallic finish.",
@@ -379,18 +382,25 @@ function AtecOffer() {
         <div className="mx-auto max-w-6xl px-6">
           <Heading id="portfolio">{c.portfolioTitle}</Heading>
           <div className="mt-10 grid items-stretch gap-5 lg:grid-cols-2">
-            <div
-              role="img"
-              aria-label="tree-video.mp4"
-              className="flex min-h-[280px] flex-col items-center justify-center gap-3 border-2 border-dashed border-border bg-muted text-muted-foreground"
-            >
-              <Play className="h-8 w-8" />
-              <span className="px-2 text-center text-xs font-semibold tracking-[0.12em]">
-                tree-video.mp4
-              </span>
+            <div>
+              <h3 className="text-base font-bold text-foreground">{c.videoTitle}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{c.videoSub}</p>
+              <div className="mt-3 overflow-hidden border border-border bg-card">
+                <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                  <iframe
+                    src="https://player.vimeo.com/video/1202992207?h=b4fa5205d2&title=0&byline=0&portrait=0"
+                    className="absolute inset-0 h-full w-full"
+                    title="IoT Interactive Presentation — Smart Tree Sensor by K4-Engineering"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                </div>
+              </div>
             </div>
             <div className="grid gap-5">
-              <Slot filename="tree-1.jpg" ratio="aspect-[16/10]" />
+              <Slot filename="tree-1.jpg" ratio="aspect-[16/10]" fit="object-contain" className="bg-card" />
               <Slot filename="tree-2.jpg" ratio="aspect-[16/10]" />
             </div>
           </div>
