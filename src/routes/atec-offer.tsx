@@ -285,17 +285,40 @@ function AtecOffer() {
   const c = t[lang];
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div
+      className="min-h-screen bg-background text-foreground"
+      style={
+        {
+          "--background": "#FFFFFF",
+          "--foreground": "#333333",
+          "--card": "#F6F6F6",
+          "--card-foreground": "#333333",
+          "--popover": "#FFFFFF",
+          "--popover-foreground": "#333333",
+          "--primary": "#F68518",
+          "--primary-foreground": "#FFFFFF",
+          "--secondary": "#404040",
+          "--secondary-foreground": "#FFFFFF",
+          "--muted": "#F6F6F6",
+          "--muted-foreground": "#6D6D6D",
+          "--accent": "#F68518",
+          "--accent-foreground": "#FFFFFF",
+          "--border": "#E8E8E8",
+          "--input": "#E8E8E8",
+          "--ring": "#F68518",
+        } as React.CSSProperties
+      }
+    >
       {/* 1 — TOP BAR */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-border bg-background">
         <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-6 px-6">
-          <Slot filename="logo-k4.png" ratio="h-10" className="w-28 object-contain" />
-          <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
+          <K4Logo />
+          <nav className="hidden items-center gap-7 text-xs font-bold uppercase tracking-wider md:flex">
             {c.nav.map((label, i) => (
               <a
                 key={navIds[i]}
                 href={`#${navIds[i]}`}
-                className="text-muted-foreground transition-colors hover:text-primary"
+                className="text-foreground transition-colors hover:text-primary"
               >
                 {label}
               </a>
@@ -305,7 +328,7 @@ function AtecOffer() {
             type="button"
             onClick={() => setLang(lang === "de" ? "en" : "de")}
             aria-label="Switch language"
-            className="border border-primary px-3 py-1.5 text-xs font-semibold tracking-wider text-primary"
+            className="bg-secondary px-4 py-2 text-xs font-bold uppercase tracking-wider text-secondary-foreground"
           >
             {lang === "de" ? "DE / EN" : "EN / DE"}
           </button>
@@ -316,7 +339,7 @@ function AtecOffer() {
       <section className="border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-20 sm:py-24">
           <div className="flex items-stretch gap-4">
-            <span className="block w-1 shrink-0 self-stretch bg-primary" />
+            <span className="block w-1 shrink-0 self-stretch bg-foreground" />
             <div>
               <h1 className="text-3xl font-bold leading-tight sm:text-5xl">
                 K4-Engineering |{" "}
