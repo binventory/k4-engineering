@@ -165,7 +165,7 @@ const t = {
         items: [
           "PETG 3D-Druck & Montage: Hauptreaktorbehälter, C-Arm-Stütze und rückseitige Verrohrung in Industrie-PETG.",
           "Silber-Metallic-Finish: Handschleifen, Füllprimer, mehrstufige Silber-Metallic-Lackierung als Nachbildung von gebürstetem Edelstahl.",
-          "Aluminium-Verbundplatte: Basis mit Holzkern, beplankt mit 3 mm ACP (RAL9006 Silber-Metallic). CNC-Logogravur in dieser Stufe nicht enthalten.",
+          "Aluminium-Verbundplatte: Basis mit Holzkern, beplankt mit 3 mm ACP (RAL9006 Silber-Metallic). Logogravur in dieser Stufe nicht enthalten.",
           "C-Arm- & Tank-Aufbau: vollständige mechanische Montage des auskragenden C-Arms und des konischen Behälters.",
         ],
       },
@@ -173,7 +173,7 @@ const t = {
         intro: "Ergänzt automatisierte Bewegung und Firmenbranding auf der Basis.",
         items: [
           "Alle mechanischen und gestalterischen Merkmale aus Tier 1.",
-          "CNC-graviertes Firmenlogo, gefräst in die silberne ACP-Grundplatte.",
+          "Firmenlogo, gefräst in die silberne ACP-Grundplatte.",
           "Automatisierte Tankrotation: der vordere konische Tank schwenkt kontinuierlich nach links und rechts, ohne Handbewegung.",
           "Individuelles Getriebe & Bewegungsmechanik: internes Getriebe, Präzisionszahnräder und verdeckte Antriebsgestänge hinter der zentralen Wandplatte.",
         ],
