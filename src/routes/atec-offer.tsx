@@ -208,19 +208,59 @@ const t = {
     ],
     pricingTitle: "Modular Pricing Tiers",
     tiers: ["Essential 3D", "Dynamic Rotation", "Ultimate Interactive"],
-    tierPrices: ["4,650 € – 5,160 €", "5,450 € – 5,960 €", "Custom Offer"],
+    tierPrices: ["4,850 €", "5,850 €", "6,500 €"],
+    investLabel: "Investment (excl. VAT)",
+    recommended: "Recommended",
+    included: "Included",
+    inclNoLogo: "Incl. (No Logo)",
+    inclLogo: "Incl. (+ CNC Logo)",
     features: [
       "PETG 3D Printing",
       "Silver Metallic Finish",
-      "Aluminium Base + CNC Logo",
-      "Manual C-Arm & Tank Layout",
-      "Automated 45° Tank Rotation",
-      "Custom Gearbox & Micro-Motor",
-      "Transparent Fluid Piping + LED/Optics",
+      "Aluminium Composite Base",
+      "C-Arm & Tank Layout",
+      "Automated Tank Rotation",
+      "Custom Gearbox & Moving Mechanism",
+      "Transparent Fluid Piping + LED / Optics",
       "Base Push-Button Control",
     ],
-    priceNote:
-      "+800 € design fee applies only if print-ready 3D CAD files are not supplied by ATEC.",
+    scopeDetailTitle: "Detailed Scope of Work",
+    tierScopes: [
+      {
+        intro:
+          "High-precision static scale model, focused on surface finish and structural accuracy.",
+        items: [
+          "PETG 3D Printing & Assembly: main reactor tank, C-Arm support, rear piping in industrial PETG.",
+          "Silver Metallic Finish: hand-sanding, primer filler, multi-stage silver metallic paint simulating brushed stainless steel.",
+          "Aluminium Composite Base: wood-core base skinned with 3mm ACP (RAL9006 Silver Metallic). CNC logo engraving excluded in this tier.",
+          "C-Arm & Tank Layout: full mechanical mounting of cantilevered C-Arm and conical vessel.",
+        ],
+      },
+      {
+        intro: "Adds automated movement and corporate branding on the base.",
+        items: [
+          "All mechanical and aesthetic features from Tier 1.",
+          "CNC Engraved Company Logo milled into the silver ACP baseplate.",
+          "Automated Tank Rotation: front conical tank sweeps left and right in continuous motion, zero hand movement.",
+          "Custom Gearbox & Moving Mechanism: internal gearbox, precision gears and concealed drive linkages behind the central wall panel.",
+        ],
+      },
+      {
+        intro:
+          "The complete exhibition centerpiece: automated rotation plus dynamic process lighting.",
+        items: [
+          "All features from Tier 2.",
+          "Transparent Fluid Piping + LED / Optical Fibers: transparent pathways with internal LED strips and fiber optics simulating active fluid flow.",
+          "Base Push-Button Control: professional push-button unit on the display base so presenters or visitors can trigger lighting and rotation on demand.",
+        ],
+      },
+    ],
+    cadNote: [
+      "The stated base price applies if a clean, print-ready 3D CAD file is delivered without requiring structural modification.",
+      "If CAD editing is required to optimize files for additive manufacturing, an additional modification fee of up to a maximum of 800 € applies, billed depending on how many individual files and parts require modification.",
+      "All modified and optimized 3D CAD files will be delivered to you and remain your full property.",
+    ],
+
     legalTitle: "Payment & Legal",
     legal: [
       "40% down payment at kick-off.",
