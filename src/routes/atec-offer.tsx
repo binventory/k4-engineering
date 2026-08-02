@@ -19,6 +19,8 @@ import {
   ChevronRight,
   Check,
   Minus,
+  CreditCard,
+  ShieldCheck,
 } from "lucide-react";
 
 export const Route = createFileRoute("/atec-offer")({
