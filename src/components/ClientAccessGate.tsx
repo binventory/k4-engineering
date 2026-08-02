@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Lock, LoaderCircle } from "lucide-react";
 import { unlockProposal } from "@/lib/gate.functions";
+import atecLogo from "@/assets/atec-logo.png.asset.json";
 
 export function ClientAccessGate() {
   const router = useRouter();
@@ -63,6 +64,14 @@ export function ClientAccessGate() {
           <p className="mt-3 text-sm text-muted-foreground">
             Prepared exclusively for ATEC Pharmatechnik GmbH
           </p>
+          <div className="mt-6 flex w-full flex-col items-center border-t border-border pt-6">
+            <img
+              src={atecLogo.url}
+              alt="ATEC Pharmatechnik GmbH logo"
+              className="h-12 w-auto object-contain"
+            />
+          </div>
+
         </div>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-4">

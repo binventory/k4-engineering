@@ -22,7 +22,7 @@ import {
   CreditCard,
   ShieldCheck,
 } from "lucide-react";
-import { Lock } from "lucide-react";
+import { Lock, FileDown } from "lucide-react";
 import { getGateStatus } from "@/lib/gate.functions";
 import { ClientAccessGate } from "@/components/ClientAccessGate";
 
@@ -849,11 +849,16 @@ function AtecOffer() {
               {c.accept}
             </a>
             <a
-              href="/images/atec/atec-offer.pdf"
-              className="bg-secondary px-10 py-4 text-center text-sm font-bold uppercase tracking-wide text-secondary-foreground"
+              href="https://drive.google.com/uc?export=download&id=1cUwdNMjPgVfOgshVVLNr1aVZw6MeV2zX"
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+              className="group inline-flex items-center justify-center gap-2 bg-secondary px-10 py-4 text-center text-sm font-bold uppercase tracking-wide text-secondary-foreground transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_8px_28px_-8px_rgba(249,115,22,0.75)]"
             >
+              <FileDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
               {c.pdf}
             </a>
+
           </div>
           <p className="mt-10 text-xs text-muted-foreground">
             © 2026 K4-Engineering — Freiberufliches Ingenieurbüro
