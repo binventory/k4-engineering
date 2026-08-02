@@ -460,23 +460,24 @@ function AtecOffer() {
       className="min-h-screen bg-background text-foreground"
       style={
         {
-          "--background": "#FFFFFF",
-          "--foreground": "#333333",
-          "--card": "#F6F6F6",
-          "--card-foreground": "#333333",
+          "--background": "#F8F9FA",
+          "--foreground": "#1E293B",
+          "--card": "#FFFFFF",
+          "--card-foreground": "#1E293B",
           "--popover": "#FFFFFF",
-          "--popover-foreground": "#333333",
-          "--primary": "#F68518",
+          "--popover-foreground": "#1E293B",
+          "--primary": "#F97316",
           "--primary-foreground": "#FFFFFF",
-          "--secondary": "#404040",
+          "--secondary": "#334155",
           "--secondary-foreground": "#FFFFFF",
-          "--muted": "#F6F6F6",
-          "--muted-foreground": "#6D6D6D",
-          "--accent": "#F68518",
+          "--muted": "#F1F3F5",
+          "--muted-foreground": "#64748B",
+          "--accent": "#F97316",
           "--accent-foreground": "#FFFFFF",
-          "--border": "#E8E8E8",
-          "--input": "#E8E8E8",
-          "--ring": "#F68518",
+          "--border": "#E2E8F0",
+          "--input": "#E2E8F0",
+          "--ring": "#F97316",
+
         } as React.CSSProperties
       }
     >
