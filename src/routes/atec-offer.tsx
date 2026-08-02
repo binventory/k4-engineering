@@ -660,8 +660,11 @@ function AtecOffer() {
                     <th
                       key={tier}
                       className={`border border-border bg-card p-5 text-left align-top ${
-                        ti === 2 ? "border-t-8 border-t-primary" : "border-t-4 border-t-secondary"
+                        ti === 2
+                          ? "border-t-8 border-t-primary shadow-[0_0_28px_rgba(249,115,22,0.22)]"
+                          : "border-t-4 border-t-secondary"
                       }`}
+
                     >
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
