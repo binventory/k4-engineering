@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/atec-offer")({
+  loader: () => getGateStatus(),
   head: () => ({
     meta: [
       { title: "ATEC Pharmatechnik Offer — K4-Engineering Scale Models" },
