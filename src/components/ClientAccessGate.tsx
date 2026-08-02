@@ -28,19 +28,36 @@ export function ClientAccessGate() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-6 py-16">
-      <div className="grid-bg pointer-events-none absolute inset-0 opacity-60" />
-      <div className="pointer-events-none absolute inset-0 bg-[var(--gradient-hero)] opacity-80" />
-
-      <div className="relative w-full max-w-md animate-[reveal-up_0.7s_ease] rounded-2xl border border-border bg-card/80 p-8 shadow-[var(--shadow-elegant)] backdrop-blur-xl sm:p-10">
+    <div
+      className="relative flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground"
+      style={
+        {
+          "--background": "#F8F9FA",
+          "--foreground": "#1E293B",
+          "--card": "#FFFFFF",
+          "--card-foreground": "#1E293B",
+          "--primary": "#F97316",
+          "--primary-foreground": "#FFFFFF",
+          "--muted-foreground": "#64748B",
+          "--border": "#E2E8F0",
+          "--input": "#E2E8F0",
+          "--ring": "#F97316",
+          "--destructive": "#DC2626",
+        } as React.CSSProperties
+      }
+    >
+      <div className="relative w-full max-w-md animate-[reveal-up_0.7s_ease] rounded-2xl border border-border bg-card p-8 shadow-[0_20px_60px_-24px_rgba(30,41,59,0.28)] sm:p-10">
         <div className="flex flex-col items-center text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[var(--gradient-neon)] font-display text-xl font-bold text-primary-foreground shadow-[var(--shadow-glow)]">
+          <div
+            className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-xl font-bold text-primary-foreground shadow-[0_0_26px_rgba(249,115,22,0.55)]"
+            style={{ fontFamily: "'Tinos', 'Times New Roman', serif", letterSpacing: "0.02em" }}
+          >
             K4
           </div>
           <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-            K4-Engineering
+            K4 Engineering
           </p>
-          <h1 className="mt-6 font-display text-2xl font-bold sm:text-3xl">
+          <h1 className="mt-6 text-2xl font-bold sm:text-3xl">
             Confidential Engineering Proposal
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -63,7 +80,7 @@ export function ClientAccessGate() {
                 autoComplete="current-password"
                 placeholder="••••••••••••"
                 aria-invalid={error}
-                className="w-full rounded-lg border border-input bg-background/60 py-3 pl-10 pr-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-ring/40"
+                className="w-full rounded-lg border border-input bg-background py-3 pl-10 pr-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-ring/40"
               />
             </div>
           </label>
@@ -77,7 +94,7 @@ export function ClientAccessGate() {
           <button
             type="submit"
             disabled={busy}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--gradient-neon)] px-5 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground transition hover:opacity-90 disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-[0_8px_24px_-8px_rgba(249,115,22,0.7)] transition hover:opacity-90 disabled:opacity-60"
           >
             {busy && <LoaderCircle className="h-4 w-4 animate-spin" />}
             Unlock Proposal
