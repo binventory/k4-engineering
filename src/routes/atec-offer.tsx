@@ -22,6 +22,9 @@ import {
   CreditCard,
   ShieldCheck,
 } from "lucide-react";
+import { Lock } from "lucide-react";
+import { getGateStatus } from "@/lib/gate.functions";
+import { ClientAccessGate } from "@/components/ClientAccessGate";
 
 export const Route = createFileRoute("/atec-offer")({
   loader: () => getGateStatus(),
