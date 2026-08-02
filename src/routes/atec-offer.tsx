@@ -147,8 +147,6 @@ const t = {
     investLabel: "Investition (zzgl. MwSt.)",
     recommended: "Empfohlen",
     included: "Enthalten",
-    inclNoLogo: "Enthalten (ohne Logo)",
-    inclLogo: "Enthalten (+ CNC-Logo)",
     features: [
       "PETG 3D-Druck",
       "Silber-Metallic-Finish",
