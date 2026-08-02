@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Lock, LoaderCircle } from "lucide-react";
 import { unlockProposal } from "@/lib/gate.functions";
+import atecLogo from "@/assets/atec-logo.png.asset.json";
 
 export function ClientAccessGate() {
   const router = useRouter();
