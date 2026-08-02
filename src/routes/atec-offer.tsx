@@ -446,9 +446,12 @@ function TierGallery({ files, labels }: { files: [string, string]; labels: { pre
 }
 
 function AtecOffer() {
+  const { unlocked } = Route.useLoaderData();
   const [lang, setLang] = useState<"de" | "en">("de");
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const c = t[lang];
+
+  if (!unlocked) return <ClientAccessGate />;
 
   return (
     <LightboxContext.Provider value={setLightboxSrc}>
