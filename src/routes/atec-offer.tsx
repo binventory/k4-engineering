@@ -19,6 +19,8 @@ import {
   ChevronRight,
   Check,
   Minus,
+  CreditCard,
+  ShieldCheck,
 } from "lucide-react";
 
 export const Route = createFileRoute("/atec-offer")({
@@ -194,13 +196,27 @@ const t = {
       "Alle geänderten und optimierten 3D-CAD-Dateien werden an Sie übergeben und bleiben vollständig Ihr Eigentum.",
     ],
 
-    legalTitle: "Zahlung & Rechtliches",
-    legal: [
-      "40 % Anzahlung bei Projektstart.",
-      "60 % nach Endabnahme, vor Lieferung.",
-      "Freiberufliche Ingenieurdienstleistungen.",
-      "Werkvertrag / Dienstvertrag nach deutschem BGB.",
-    ],
+    legalTitle: "Projektbedingungen, Zahlung & Rechtliche Compliance",
+    legalSub: "Transparente kaufmännische Meilensteine & deutsches BGB-Ingenieurrahmenwerk",
+    legalPayment: {
+      header: "Zahlungsmeilensteine & Konditionen",
+      bullets: [
+        "25% Kick-Off Anzahlung: Fällig unmittelbar nach Vertragsabschluss zur Sicherung der Produktionsplanung, Materialbeschaffung und ersten 3D-CAD-Anpassung.",
+        "75% Schlusszahlung nach Abnahme: Fällig nach erfolgreicher visueller und physischer Inspektionsabnahme (Abnahme) vor endgültigem Versand oder Übergabe.",
+        "Transparente Nettopreise: Alle genannten Projektinvestitionsstufen sind Nettobeträge (zzgl. gesetzlicher USt).",
+        "Keine versteckten Kosten: Materialaufwand und Standard-Produktionskosten sind vollständig im Umfang der gewählten Stufe enthalten.",
+      ],
+    },
+    legalCompliance: {
+      header: "Rechtliche Einordnung (Freiberufliches Ingenieurbüro)",
+      bullets: [
+        "Vertragsart: Werkvertrag gem. § 631 BGB / Werklieferungsvertrag gem. § 650 BGB mit Erfolgsgarantie.",
+        "Freiberuflicher Status: Selbstständige Ingenieurdienstleistung (Ingenieurbüro gem. § 18 EStG).",
+        "Abnahme & Vergütung: 25% Anzahlung bei Start, 75% Schlusszahlung nach Endabnahme (gem. § 640 BGB) vor Übergabe.",
+        "Eigentums- & Nutzungsrechte: Vollständiger Übergang der CAD-Nutzungsrechte und des Modelleigentums nach vollständiger Bezahlung.",
+        "Compliance: Unabhängiger B2B-Dienstleister unter Ausschluss von Scheinselbstständigkeit.",
+      ],
+    },
     preparedFor: "Erstellt für ATEC Pharmatechnik GmbH (atec-pharma.com)",
     firm: "K4-Engineering | Freiberufliches Ingenieurbüro, Augsburg",
     accept: "ANGEBOT ANNEHMEN / RÜCKRUF",
@@ -303,13 +319,27 @@ const t = {
       "All modified and optimized 3D CAD files will be delivered to you and remain your full property.",
     ],
 
-    legalTitle: "Payment & Legal",
-    legal: [
-      "40% down payment at kick-off.",
-      "60% on final inspection before delivery.",
-      "Freiberufliche Ingenieurdienstleistungen.",
-      "Werkvertrag / Dienstvertrag per German BGB.",
-    ],
+    legalTitle: "Project Terms, Payment & Legal Compliance",
+    legalSub: "Transparent Commercial Milestones & German BGB Engineering Framework",
+    legalPayment: {
+      header: "Payment Milestones & Commercials",
+      bullets: [
+        "25% Kick-Off Deposit: Due immediately upon contract signing to secure production scheduling, raw material purchasing, and initial 3D CAD adaptation.",
+        "75% Final Approval Payment: Due upon successful visual and physical inspection approval (Abnahme) prior to final dispatch or handover.",
+        "Transparent Net Pricing: All listed project investment tiers are net amounts (excl. statutory VAT / zzgl. gesetzlicher USt).",
+        "No Hidden Fees: Material expenses and standard production costs are fully included within the selected tier scope.",
+      ],
+    },
+    legalCompliance: {
+      header: "Legal Classification (Freiberufliches Ingenieurbüro)",
+      bullets: [
+        "Contract Classification (Werkvertrag): Executed strictly as a project-based contract for work (Werkvertrag pursuant to § 631 / § 650 BGB), legally guaranteeing the delivery of a fully functional exhibition model to agreed specifications.",
+        "Freelance Engineering Status: All services are provided by an independent engineering office (Ingenieurbüro) in accordance with German tax law for independent professions (§ 18 EStG).",
+        "Formal Acceptance & Warranty: Final payment is linked to formal acceptance (Abnahme pursuant to § 640 BGB). Includes standard BGB statutory warranty (Gewährleistung) for technical prototypes.",
+        "Full IP & CAD Rights Transfer: Upon receipt of full payment, all customized 3D CAD files and physical model ownership rights transfer 100% to ATEC Pharmatechnik GmbH.",
+        "B2B Corporate Compliance: Executed as an autonomous business-to-business service contract using independent operating resources, fully compliant against false self-employment (Scheinselbstständigkeit).",
+      ],
+    },
     preparedFor: "Prepared for ATEC Pharmatechnik GmbH (atec-pharma.com)",
     firm: "K4-Engineering | Freiberufliches Ingenieurbüro, Augsburg",
     accept: "ACCEPT OFFER / REQUEST CALL",
@@ -731,16 +761,48 @@ function AtecOffer() {
 
 
       {/* 7 — LEGAL */}
-      <section className="py-20 sm:py-24">
+      <section className="border-y border-border py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
           <Heading id="legal">{c.legalTitle}</Heading>
-          <ul className="mt-10 grid gap-4 sm:grid-cols-2">
-            {c.legal.map((l) => (
-              <li key={l} className="border-l-2 border-primary pl-4 text-sm leading-7 text-muted-foreground">
-                {l}
-              </li>
-            ))}
-          </ul>
+          <p className="mt-4 max-w-3xl text-sm text-muted-foreground">{c.legalSub}</p>
+
+          <div className="mt-12 grid gap-6 lg:grid-cols-2">
+            {/* Column 1 — Payment */}
+            <div className="border border-border bg-card p-7">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center bg-secondary text-secondary-foreground">
+                  <CreditCard className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <h3 className="text-lg font-bold text-foreground">{c.legalPayment.header}</h3>
+              </div>
+              <ul className="mt-6 space-y-4">
+                {c.legalPayment.bullets.map((b) => (
+                  <li key={b} className="flex gap-3 text-sm leading-6 text-muted-foreground">
+                    <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 bg-primary" />
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Column 2 — Legal */}
+            <div className="border border-border bg-card p-7">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center bg-secondary text-secondary-foreground">
+                  <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <h3 className="text-lg font-bold text-foreground">{c.legalCompliance.header}</h3>
+              </div>
+              <ul className="mt-6 space-y-4">
+                {c.legalCompliance.bullets.map((b) => (
+                  <li key={b} className="flex gap-3 text-sm leading-6 text-muted-foreground">
+                    <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 bg-primary" />
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
