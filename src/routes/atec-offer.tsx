@@ -258,7 +258,7 @@ const t = {
     investLabel: "Investment (excl. VAT)",
     recommended: "Recommended",
     included: "Included",
-    inclNoLogo: "Incl. (No Logo)",
+    inclNoLogo: "_",
     inclLogo: "Incl. (+ CNC Logo)",
     features: [
       "PETG 3D Printing",
