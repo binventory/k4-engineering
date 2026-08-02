@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createContext, useContext, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import atecLogo from "@/assets/atec-logo.png.asset.json";
 import {
   Boxes,
@@ -137,19 +143,59 @@ const t = {
     ],
     pricingTitle: "Modulare Preisstufen",
     tiers: ["Essential 3D", "Dynamic Rotation", "Ultimate Interactive"],
-    tierPrices: ["4.650 € – 5.160 €", "5.450 € – 5.960 €", "Individuelles Angebot"],
+    tierPrices: ["4.850 €", "5.850 €", "6.500 €"],
+    investLabel: "Investition (zzgl. MwSt.)",
+    recommended: "Empfohlen",
+    included: "Enthalten",
+    inclNoLogo: "Enthalten (ohne Logo)",
+    inclLogo: "Enthalten (+ CNC-Logo)",
     features: [
       "PETG 3D-Druck",
       "Silber-Metallic-Finish",
-      "Aluminium-Basis + CNC-Logo",
-      "Manuelles C-Arm- & Tank-Layout",
-      "Automatische 45°-Tankrotation",
-      "Custom-Getriebe & Mikromotor",
-      "Transparente Fluidleitungen + LED/Optik",
-      "Taster-Steuerung in der Basis",
+      "Aluminium-Verbundplatte",
+      "C-Arm- & Tank-Aufbau",
+      "Automatisierte Tankrotation",
+      "Individuelles Getriebe & Bewegungsmechanik",
+      "Transparente Fluidleitungen + LED/Lichtfasern",
+      "Taster-Steuerung an der Basis",
     ],
-    priceNote:
-      "+800 € Designpauschale nur, wenn keine druckfertigen 3D-CAD-Dateien von ATEC bereitgestellt werden.",
+    scopeDetailTitle: "Detaillierter Leistungsumfang",
+    tierScopes: [
+      {
+        intro:
+          "Hochpräzises statisches Maßstabsmodell mit Fokus auf Oberflächenfinish und strukturelle Genauigkeit.",
+        items: [
+          "PETG 3D-Druck & Montage: Hauptreaktorbehälter, C-Arm-Stütze und rückseitige Verrohrung in Industrie-PETG.",
+          "Silber-Metallic-Finish: Handschleifen, Füllprimer, mehrstufige Silber-Metallic-Lackierung als Nachbildung von gebürstetem Edelstahl.",
+          "Aluminium-Verbundplatte: Basis mit Holzkern, beplankt mit 3 mm ACP (RAL9006 Silber-Metallic). CNC-Logogravur in dieser Stufe nicht enthalten.",
+          "C-Arm- & Tank-Aufbau: vollständige mechanische Montage des auskragenden C-Arms und des konischen Behälters.",
+        ],
+      },
+      {
+        intro: "Ergänzt automatisierte Bewegung und Firmenbranding auf der Basis.",
+        items: [
+          "Alle mechanischen und gestalterischen Merkmale aus Tier 1.",
+          "CNC-graviertes Firmenlogo, gefräst in die silberne ACP-Grundplatte.",
+          "Automatisierte Tankrotation: der vordere konische Tank schwenkt kontinuierlich nach links und rechts, ohne Handbewegung.",
+          "Individuelles Getriebe & Bewegungsmechanik: internes Getriebe, Präzisionszahnräder und verdeckte Antriebsgestänge hinter der zentralen Wandplatte.",
+        ],
+      },
+      {
+        intro:
+          "Das komplette Messe-Highlight: automatisierte Rotation plus dynamische Prozessbeleuchtung.",
+        items: [
+          "Alle Merkmale aus Tier 2.",
+          "Transparente Fluidleitungen + LED/Lichtfasern: transparente Wege mit internen LED-Streifen und Lichtfasern, die aktiven Fluidfluss simulieren.",
+          "Taster-Steuerung an der Basis: professionelle Tastereinheit auf der Displaybasis, damit Präsentierende oder Besucher Licht und Rotation auf Wunsch auslösen können.",
+        ],
+      },
+    ],
+    cadNote: [
+      "Der genannte Basispreis gilt, wenn eine saubere, druckfertige 3D-CAD-Datei ohne notwendige strukturelle Änderungen geliefert wird.",
+      "Ist eine CAD-Bearbeitung zur Optimierung der Dateien für die additive Fertigung erforderlich, fällt eine zusätzliche Bearbeitungsgebühr von maximal 800 € an, abgerechnet je nach Anzahl der zu ändernden Einzeldateien und Bauteile.",
+      "Alle geänderten und optimierten 3D-CAD-Dateien werden an Sie übergeben und bleiben vollständig Ihr Eigentum.",
+    ],
+
     legalTitle: "Zahlung & Rechtliches",
     legal: [
       "40 % Anzahlung bei Projektstart.",
@@ -208,19 +254,59 @@ const t = {
     ],
     pricingTitle: "Modular Pricing Tiers",
     tiers: ["Essential 3D", "Dynamic Rotation", "Ultimate Interactive"],
-    tierPrices: ["4,650 € – 5,160 €", "5,450 € – 5,960 €", "Custom Offer"],
+    tierPrices: ["4,850 €", "5,850 €", "6,500 €"],
+    investLabel: "Investment (excl. VAT)",
+    recommended: "Recommended",
+    included: "Included",
+    inclNoLogo: "Incl. (No Logo)",
+    inclLogo: "Incl. (+ CNC Logo)",
     features: [
       "PETG 3D Printing",
       "Silver Metallic Finish",
-      "Aluminium Base + CNC Logo",
-      "Manual C-Arm & Tank Layout",
-      "Automated 45° Tank Rotation",
-      "Custom Gearbox & Micro-Motor",
-      "Transparent Fluid Piping + LED/Optics",
+      "Aluminium Composite Base",
+      "C-Arm & Tank Layout",
+      "Automated Tank Rotation",
+      "Custom Gearbox & Moving Mechanism",
+      "Transparent Fluid Piping + LED / Optics",
       "Base Push-Button Control",
     ],
-    priceNote:
-      "+800 € design fee applies only if print-ready 3D CAD files are not supplied by ATEC.",
+    scopeDetailTitle: "Detailed Scope of Work",
+    tierScopes: [
+      {
+        intro:
+          "High-precision static scale model, focused on surface finish and structural accuracy.",
+        items: [
+          "PETG 3D Printing & Assembly: main reactor tank, C-Arm support, rear piping in industrial PETG.",
+          "Silver Metallic Finish: hand-sanding, primer filler, multi-stage silver metallic paint simulating brushed stainless steel.",
+          "Aluminium Composite Base: wood-core base skinned with 3mm ACP (RAL9006 Silver Metallic). CNC logo engraving excluded in this tier.",
+          "C-Arm & Tank Layout: full mechanical mounting of cantilevered C-Arm and conical vessel.",
+        ],
+      },
+      {
+        intro: "Adds automated movement and corporate branding on the base.",
+        items: [
+          "All mechanical and aesthetic features from Tier 1.",
+          "CNC Engraved Company Logo milled into the silver ACP baseplate.",
+          "Automated Tank Rotation: front conical tank sweeps left and right in continuous motion, zero hand movement.",
+          "Custom Gearbox & Moving Mechanism: internal gearbox, precision gears and concealed drive linkages behind the central wall panel.",
+        ],
+      },
+      {
+        intro:
+          "The complete exhibition centerpiece: automated rotation plus dynamic process lighting.",
+        items: [
+          "All features from Tier 2.",
+          "Transparent Fluid Piping + LED / Optical Fibers: transparent pathways with internal LED strips and fiber optics simulating active fluid flow.",
+          "Base Push-Button Control: professional push-button unit on the display base so presenters or visitors can trigger lighting and rotation on demand.",
+        ],
+      },
+    ],
+    cadNote: [
+      "The stated base price applies if a clean, print-ready 3D CAD file is delivered without requiring structural modification.",
+      "If CAD editing is required to optimize files for additive manufacturing, an additional modification fee of up to a maximum of 800 € applies, billed depending on how many individual files and parts require modification.",
+      "All modified and optimized 3D CAD files will be delivered to you and remain your full property.",
+    ],
+
     legalTitle: "Payment & Legal",
     legal: [
       "40% down payment at kick-off.",
@@ -240,16 +326,36 @@ const t = {
 const navIds = ["portfolio", "workflow", "capabilities", "pricing", "legal", "contact"];
 const capIcons = [Boxes, Cog, Droplets, Layers, Radio, Languages];
 
-const matrix: boolean[][] = [
+type CellValue = boolean | "noLogo" | "logo";
+
+const matrix: CellValue[][] = [
   [true, true, true],
   [true, true, true],
+  ["noLogo", "logo", "logo"],
   [true, true, true],
-  [true, false, false],
   [false, true, true],
   [false, true, true],
   [false, false, true],
   [false, false, true],
 ];
+
+function Cell({ value, c }: { value: CellValue; c: (typeof t)["de"] | (typeof t)["en"] }) {
+  if (value === true)
+    return (
+      <span className="flex items-center gap-2 text-sm">
+        <Check className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+        <span>{c.included}</span>
+      </span>
+    );
+  if (value === false)
+    return <Minus className="h-4 w-4 text-muted-foreground" aria-label="not included" />;
+  return (
+    <span className="text-sm font-semibold text-foreground">
+      {value === "noLogo" ? c.inclNoLogo : c.inclLogo}
+    </span>
+  );
+}
+
 
 function K4Logo() {
   return (
@@ -498,39 +604,141 @@ function AtecOffer() {
       <section className="border-y border-border py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
           <Heading id="pricing">{c.pricingTitle}</Heading>
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+
+          {/* Desktop comparison table */}
+          <div className="mt-12 hidden lg:block">
+            <table className="w-full table-fixed border-collapse border border-border text-sm">
+              <thead>
+                <tr>
+                  <th className="w-[26%] border border-border bg-background p-5 text-left align-top">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                      {c.investLabel}
+                    </p>
+                  </th>
+                  {c.tiers.map((tier, ti) => (
+                    <th
+                      key={tier}
+                      className={`border border-border bg-card p-5 text-left align-top ${
+                        ti === 2 ? "border-t-8 border-t-primary" : "border-t-4 border-t-secondary"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                          Tier {ti + 1}
+                        </p>
+                        {ti === 2 && (
+                          <span className="bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+                            {c.recommended}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="mt-2 text-lg font-bold">{tier}</h3>
+                      <p className="mt-2 text-2xl font-bold text-primary">{c.tierPrices[ti]}</p>
+                      <TierGallery
+                        files={[`tier${ti + 1}-a.png`, `tier${ti + 1}-b.png`]}
+                        labels={{ prev: c.prev, next: c.next }}
+                      />
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {c.features.map((f, fi) => (
+                  <tr key={f} className={fi % 2 === 1 ? "bg-card" : ""}>
+                    <th scope="row" className="border border-border p-4 text-left font-semibold">
+                      {f}
+                    </th>
+                    {[0, 1, 2].map((ti) => (
+                      <td key={ti} className="border border-border p-4 align-middle">
+                        <Cell value={matrix[fi][ti]} c={c} />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="mt-12 grid gap-6 lg:hidden">
             {c.tiers.map((tier, ti) => (
               <div
                 key={tier}
-                className="flex flex-col border border-border border-t-4 border-t-primary bg-card p-7"
+                className={`flex flex-col border border-border bg-card p-7 ${
+                  ti === 2 ? "border-t-8 border-t-primary" : "border-t-4 border-t-secondary"
+                }`}
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                  Tier {ti + 1}
-                </p>
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    Tier {ti + 1}
+                  </p>
+                  {ti === 2 && (
+                    <span className="bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+                      {c.recommended}
+                    </span>
+                  )}
+                </div>
                 <h3 className="mt-2 text-xl font-bold">{tier}</h3>
-                <p className="mt-3 text-2xl font-bold text-primary">{c.tierPrices[ti]}</p>
+                <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
+                  {c.investLabel}
+                </p>
+                <p className="mt-2 text-2xl font-bold text-primary">{c.tierPrices[ti]}</p>
                 <TierGallery
                   files={[`tier${ti + 1}-a.png`, `tier${ti + 1}-b.png`]}
                   labels={{ prev: c.prev, next: c.next }}
                 />
                 <ul className="mt-6 space-y-3">
                   {c.features.map((f, fi) => (
-                    <li key={f} className="flex items-start gap-3 text-sm">
-                      {matrix[fi][ti] ? (
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-label="included" />
-                      ) : (
-                        <Minus className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" aria-label="not included" />
-                      )}
-                      <span className={matrix[fi][ti] ? "" : "text-muted-foreground"}>{f}</span>
+                    <li key={f} className="flex items-start justify-between gap-3 text-sm">
+                      <span className={matrix[fi][ti] === false ? "text-muted-foreground" : ""}>{f}</span>
+                      <span className="shrink-0">
+                        <Cell value={matrix[fi][ti]} c={c} />
+                      </span>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
-          <p className="mt-8 text-xs text-muted-foreground">{c.priceNote}</p>
+
+          {/* Detailed scope accordion */}
+          <h3 className="mt-16 text-base font-bold text-foreground">{c.scopeDetailTitle}</h3>
+          <Accordion type="single" collapsible className="mt-4 border border-border bg-card">
+            {c.tierScopes.map((s, ti) => (
+              <AccordionItem key={c.tiers[ti]} value={`tier-${ti}`} className="px-6">
+                <AccordionTrigger className="text-left text-sm font-bold">
+                  {`Tier ${ti + 1} — ${c.tiers[ti]} (${c.tierPrices[ti]})`}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-sm text-muted-foreground">{s.intro}</p>
+                  <ul className="mt-4 space-y-3">
+                    {s.items.map((it) => (
+                      <li
+                        key={it}
+                        className="border-l-2 border-primary pl-4 text-sm leading-6 text-muted-foreground"
+                      >
+                        {it}
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+
+          {/* CAD note callout */}
+          <div className="mt-10 border-l-4 border-primary border border-border bg-card p-6">
+            <ul className="space-y-3">
+              {c.cadNote.map((n) => (
+                <li key={n} className="text-sm leading-6 text-muted-foreground">
+                  {n}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
+
 
       {/* 7 — LEGAL */}
       <section className="py-20 sm:py-24">
