@@ -322,12 +322,12 @@ const t = {
 const navIds = ["portfolio", "workflow", "capabilities", "pricing", "legal", "contact"];
 const capIcons = [Boxes, Cog, Droplets, Layers, Radio, Languages];
 
-type CellValue = boolean | "noLogo" | "logo";
+type CellValue = boolean;
 
 const matrix: CellValue[][] = [
   [true, true, true],
   [true, true, true],
-  ["noLogo", "logo", "logo"],
+  [false, true, true],
   [true, true, true],
   [false, true, true],
   [false, true, true],
@@ -343,13 +343,7 @@ function Cell({ value, c }: { value: CellValue; c: (typeof t)["de"] | (typeof t)
         <span>{c.included}</span>
       </span>
     );
-  if (value === false)
-    return <Minus className="h-4 w-4 text-muted-foreground" aria-label="not included" />;
-  return (
-    <span className="text-sm font-semibold text-foreground">
-      {value === "noLogo" ? c.inclNoLogo : c.inclLogo}
-    </span>
-  );
+  return <Minus className="h-4 w-4 text-muted-foreground" aria-label="not included" />;
 }
 
 
