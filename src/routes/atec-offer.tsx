@@ -482,7 +482,7 @@ function AtecOffer() {
       }
     >
       {/* 0 — CONFIDENTIALITY NOTICE */}
-      <div className="border-b border-border bg-[#EDEDED]">
+      <div className="border-b border-border bg-muted">
         <div className="mx-auto flex max-w-6xl items-start gap-2 px-6 py-2 text-[11px] leading-5 text-muted-foreground">
           <Lock className="mt-0.5 h-3 w-3 shrink-0" />
           <p>
