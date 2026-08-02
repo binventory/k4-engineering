@@ -498,39 +498,141 @@ function AtecOffer() {
       <section className="border-y border-border py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
           <Heading id="pricing">{c.pricingTitle}</Heading>
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+
+          {/* Desktop comparison table */}
+          <div className="mt-12 hidden lg:block">
+            <table className="w-full table-fixed border-collapse border border-border text-sm">
+              <thead>
+                <tr>
+                  <th className="w-[26%] border border-border bg-background p-5 text-left align-top">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                      {c.investLabel}
+                    </p>
+                  </th>
+                  {c.tiers.map((tier, ti) => (
+                    <th
+                      key={tier}
+                      className={`border border-border bg-card p-5 text-left align-top ${
+                        ti === 2 ? "border-t-8 border-t-primary" : "border-t-4 border-t-secondary"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                          Tier {ti + 1}
+                        </p>
+                        {ti === 2 && (
+                          <span className="bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+                            {c.recommended}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="mt-2 text-lg font-bold">{tier}</h3>
+                      <p className="mt-2 text-2xl font-bold text-primary">{c.tierPrices[ti]}</p>
+                      <TierGallery
+                        files={[`tier${ti + 1}-a.png`, `tier${ti + 1}-b.png`]}
+                        labels={{ prev: c.prev, next: c.next }}
+                      />
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {c.features.map((f, fi) => (
+                  <tr key={f} className={fi % 2 === 1 ? "bg-card" : ""}>
+                    <th scope="row" className="border border-border p-4 text-left font-semibold">
+                      {f}
+                    </th>
+                    {[0, 1, 2].map((ti) => (
+                      <td key={ti} className="border border-border p-4 align-middle">
+                        <Cell value={matrix[fi][ti]} c={c} />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="mt-12 grid gap-6 lg:hidden">
             {c.tiers.map((tier, ti) => (
               <div
                 key={tier}
-                className="flex flex-col border border-border border-t-4 border-t-primary bg-card p-7"
+                className={`flex flex-col border border-border bg-card p-7 ${
+                  ti === 2 ? "border-t-8 border-t-primary" : "border-t-4 border-t-secondary"
+                }`}
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                  Tier {ti + 1}
-                </p>
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    Tier {ti + 1}
+                  </p>
+                  {ti === 2 && (
+                    <span className="bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+                      {c.recommended}
+                    </span>
+                  )}
+                </div>
                 <h3 className="mt-2 text-xl font-bold">{tier}</h3>
-                <p className="mt-3 text-2xl font-bold text-primary">{c.tierPrices[ti]}</p>
+                <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
+                  {c.investLabel}
+                </p>
+                <p className="mt-2 text-2xl font-bold text-primary">{c.tierPrices[ti]}</p>
                 <TierGallery
                   files={[`tier${ti + 1}-a.png`, `tier${ti + 1}-b.png`]}
                   labels={{ prev: c.prev, next: c.next }}
                 />
                 <ul className="mt-6 space-y-3">
                   {c.features.map((f, fi) => (
-                    <li key={f} className="flex items-start gap-3 text-sm">
-                      {matrix[fi][ti] ? (
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-label="included" />
-                      ) : (
-                        <Minus className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" aria-label="not included" />
-                      )}
-                      <span className={matrix[fi][ti] ? "" : "text-muted-foreground"}>{f}</span>
+                    <li key={f} className="flex items-start justify-between gap-3 text-sm">
+                      <span className={matrix[fi][ti] === false ? "text-muted-foreground" : ""}>{f}</span>
+                      <span className="shrink-0">
+                        <Cell value={matrix[fi][ti]} c={c} />
+                      </span>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
-          <p className="mt-8 text-xs text-muted-foreground">{c.priceNote}</p>
+
+          {/* Detailed scope accordion */}
+          <h3 className="mt-16 text-base font-bold text-foreground">{c.scopeDetailTitle}</h3>
+          <Accordion type="single" collapsible className="mt-4 border border-border bg-card">
+            {c.tierScopes.map((s, ti) => (
+              <AccordionItem key={c.tiers[ti]} value={`tier-${ti}`} className="px-6">
+                <AccordionTrigger className="text-left text-sm font-bold">
+                  {`Tier ${ti + 1} — ${c.tiers[ti]} (${c.tierPrices[ti]})`}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-sm text-muted-foreground">{s.intro}</p>
+                  <ul className="mt-4 space-y-3">
+                    {s.items.map((it) => (
+                      <li
+                        key={it}
+                        className="border-l-2 border-primary pl-4 text-sm leading-6 text-muted-foreground"
+                      >
+                        {it}
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+
+          {/* CAD note callout */}
+          <div className="mt-10 border-l-4 border-primary border border-border bg-card p-6">
+            <ul className="space-y-3">
+              {c.cadNote.map((n) => (
+                <li key={n} className="text-sm leading-6 text-muted-foreground">
+                  {n}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
+
 
       {/* 7 — LEGAL */}
       <section className="py-20 sm:py-24">
