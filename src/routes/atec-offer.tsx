@@ -139,7 +139,7 @@ const t = {
     scope: [
       "Hängender konischer Reaktorbehälter auf auskragender C-Arm-Stütze.",
       "Grundplatte: Holzkern mit 3 mm Aluminium-Verbundplatte (Dibond / RAL9006 Silber-Metallic).",
-      "CNC-graviertes ATEC-Logo in der Grundplatte.",
+      "ATEC-Logo in der Grundplatte.",
     ],
     pricingTitle: "Modulare Preisstufen",
     tiers: ["Essential 3D", "Dynamic Rotation", "Ultimate Interactive"],
