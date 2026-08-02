@@ -274,7 +274,7 @@ const t = {
         items: [
           "PETG 3D Printing & Assembly: main reactor tank, C-Arm support, rear piping in industrial PETG.",
           "Silver Metallic Finish: hand-sanding, primer filler, multi-stage silver metallic paint simulating brushed stainless steel.",
-          "Aluminium Composite Base: wood-core base skinned with 3mm ACP (RAL9006 Silver Metallic). CNC logo engraving excluded in this tier.",
+          "Aluminium Composite Base: wood-core base skinned with 3mm ACP (RAL9006 Silver Metallic). Logo engraving excluded in this tier.",
           "C-Arm & Tank Layout: full mechanical mounting of cantilevered C-Arm and conical vessel.",
         ],
       },
@@ -282,7 +282,7 @@ const t = {
         intro: "Adds automated movement and corporate branding on the base.",
         items: [
           "All mechanical and aesthetic features from Tier 1.",
-          "CNC Engraved Company Logo milled into the silver ACP baseplate.",
+          "Company Logo milled into the silver ACP baseplate.",
           "Automated Tank Rotation: front conical tank sweeps left and right in continuous motion, zero hand movement.",
           "Custom Gearbox & Moving Mechanism: internal gearbox, precision gears and concealed drive linkages behind the central wall panel.",
         ],
