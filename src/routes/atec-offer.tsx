@@ -479,6 +479,18 @@ function AtecOffer() {
         } as React.CSSProperties
       }
     >
+      {/* 0 — CONFIDENTIALITY NOTICE */}
+      <div className="border-b border-border bg-[#EDEDED]">
+        <div className="mx-auto flex max-w-6xl items-start gap-2 px-6 py-2 text-[11px] leading-5 text-muted-foreground">
+          <Lock className="mt-0.5 h-3 w-3 shrink-0" />
+          <p>
+            <span className="font-bold uppercase tracking-wider">Confidential B2B Proposal</span> —
+            This document contains proprietary pricing and technical specifications for ATEC
+            Pharmatechnik GmbH internal evaluation only. Not for public distribution.
+          </p>
+        </div>
+      </div>
+
       {/* 1 — TOP BAR */}
       <header className="sticky top-0 z-50 border-b border-border bg-background">
         <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-6 px-6">
