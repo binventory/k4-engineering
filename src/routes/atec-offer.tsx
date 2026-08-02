@@ -210,11 +210,11 @@ const t = {
     legalCompliance: {
       header: "Rechtliche Einordnung (Freiberufliches Ingenieurbüro)",
       bullets: [
-        "Vertragsart: Werkvertrag gem. § 631 BGB / Werklieferungsvertrag gem. § 650 BGB mit Erfolgsgarantie.",
-        "Freiberuflicher Status: Selbstständige Ingenieurdienstleistung (Ingenieurbüro gem. § 18 EStG).",
-        "Abnahme & Vergütung: 25% Anzahlung bei Start, 75% Schlusszahlung nach Endabnahme (gem. § 640 BGB) vor Übergabe.",
-        "Eigentums- & Nutzungsrechte: Vollständiger Übergang der CAD-Nutzungsrechte und des Modelleigentums nach vollständiger Bezahlung.",
-        "Compliance: Unabhängiger B2B-Dienstleister unter Ausschluss von Scheinselbstständigkeit.",
+        "Vertragsart: Ingenieur-Werkvertrag gem. § 631 BGB zur kundenspezifischen Entwicklung, CAD-Anpassung und Erstellung eines technischen Funktionsprototypen / Messe-Demonstrators.",
+        "Freiberuflicher Status: Selbstständige Ingenieurdienstleistung (Ingenieurbüro gem. § 18 EStG). Die physische Modellfertigung und der 3D-Druck erfolgen als untergeordnete Hilfstätigkeit zur ingenieurmäßigen Entwicklungsleistung.",
+        "Abnahme & Vergütung: 25 % Anzahlung bei Start, 75 % Schlusszahlung nach Endabnahme (gem. § 640 BGB) vor Übergabe/Versand.",
+        "Eigentums- & Nutzungsrechte: Vollständiger Übergang der CAD-Nutzungsrechte und des Modelleigentums an die ATEC Pharmatechnik GmbH nach vollständiger Bezahlung.",
+        "B2B-Compliance: Unabhängige Leistungserbringung als B2B-Dienstleister mit eigenen Betriebsmitteln (Ausschluss von Scheinselbstständigkeit).",
       ],
     },
     preparedFor: "Erstellt für ATEC Pharmatechnik GmbH (atec-pharma.com)",
@@ -333,10 +333,10 @@ const t = {
     legalCompliance: {
       header: "Legal Classification (Freiberufliches Ingenieurbüro)",
       bullets: [
-        "Contract Classification (Werkvertrag): Executed strictly as a project-based contract for work (Werkvertrag pursuant to § 631 / § 650 BGB), legally guaranteeing the delivery of a fully functional exhibition model to agreed specifications.",
-        "Freelance Engineering Status: All services are provided by an independent engineering office (Ingenieurbüro) in accordance with German tax law for independent professions (§ 18 EStG).",
-        "Formal Acceptance & Warranty: Final payment is linked to formal acceptance (Abnahme pursuant to § 640 BGB). Includes standard BGB statutory warranty (Gewährleistung) for technical prototypes.",
-        "Full IP & CAD Rights Transfer: Upon receipt of full payment, all customized 3D CAD files and physical model ownership rights transfer 100% to ATEC Pharmatechnik GmbH.",
+        "Contract Classification (Ingenieur-Werkvertrag): Executed strictly as an engineering contract for work (Ingenieur-Werkvertrag pursuant to § 631 BGB) for the engineering development, CAD adaptation, and realization of a technical functional prototype.",
+        "Freelance Engineering Status: Services are provided by an independent engineering office (Ingenieurbüro gem. § 18 EStG). Physical manufacturing and 3D printing act strictly as an auxiliary activity subordinate to the primary engineering service (untergeordnete Hilfstätigkeit).",
+        "Formal Acceptance & Warranty: Final payment is linked to formal inspection approval (Abnahme pursuant to § 640 BGB). Includes standard BGB statutory warranty for technical prototypes.",
+        "Full IP & CAD Rights Transfer: Upon receipt of full payment, all customized 3D CAD files and physical prototype ownership transfer 100% to ATEC Pharmatechnik GmbH.",
         "B2B Corporate Compliance: Executed as an autonomous business-to-business service contract using independent operating resources, fully compliant against false self-employment (Scheinselbstständigkeit).",
       ],
     },
