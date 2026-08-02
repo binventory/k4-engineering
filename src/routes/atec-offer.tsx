@@ -385,13 +385,14 @@ function K4Logo() {
   return (
     <span className="flex items-center gap-3 font-bold text-lg">
       <span
-        className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-primary text-base font-bold text-primary-foreground shadow-[0_0_16px_#F68518]"
+        className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-base font-bold text-primary-foreground shadow-[0_0_18px_rgba(249,115,22,0.55)]"
         style={{ fontFamily: "'Tinos', 'Times New Roman', serif", letterSpacing: "0.02em" }}
       >
         K4
       </span>
-      <span className="tracking-tight text-foreground">Engineering</span>
+      <span className="font-bold tracking-tight text-foreground">Engineering</span>
     </span>
+
   );
 }
 
@@ -459,28 +460,29 @@ function AtecOffer() {
       className="min-h-screen bg-background text-foreground"
       style={
         {
-          "--background": "#FFFFFF",
-          "--foreground": "#333333",
-          "--card": "#F6F6F6",
-          "--card-foreground": "#333333",
+          "--background": "#F8F9FA",
+          "--foreground": "#1E293B",
+          "--card": "#FFFFFF",
+          "--card-foreground": "#1E293B",
           "--popover": "#FFFFFF",
-          "--popover-foreground": "#333333",
-          "--primary": "#F68518",
+          "--popover-foreground": "#1E293B",
+          "--primary": "#F97316",
           "--primary-foreground": "#FFFFFF",
-          "--secondary": "#404040",
+          "--secondary": "#334155",
           "--secondary-foreground": "#FFFFFF",
-          "--muted": "#F6F6F6",
-          "--muted-foreground": "#6D6D6D",
-          "--accent": "#F68518",
+          "--muted": "#F1F3F5",
+          "--muted-foreground": "#64748B",
+          "--accent": "#F97316",
           "--accent-foreground": "#FFFFFF",
-          "--border": "#E8E8E8",
-          "--input": "#E8E8E8",
-          "--ring": "#F68518",
+          "--border": "#E2E8F0",
+          "--input": "#E2E8F0",
+          "--ring": "#F97316",
+
         } as React.CSSProperties
       }
     >
       {/* 0 — CONFIDENTIALITY NOTICE */}
-      <div className="border-b border-border bg-[#EDEDED]">
+      <div className="border-b border-border bg-muted">
         <div className="mx-auto flex max-w-6xl items-start gap-2 px-6 py-2 text-[11px] leading-5 text-muted-foreground">
           <Lock className="mt-0.5 h-3 w-3 shrink-0" />
           <p>
@@ -658,8 +660,11 @@ function AtecOffer() {
                     <th
                       key={tier}
                       className={`border border-border bg-card p-5 text-left align-top ${
-                        ti === 2 ? "border-t-8 border-t-primary" : "border-t-4 border-t-secondary"
+                        ti === 2
+                          ? "border-t-8 border-t-primary shadow-[0_0_28px_rgba(249,115,22,0.22)]"
+                          : "border-t-4 border-t-secondary"
                       }`}
+
                     >
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
