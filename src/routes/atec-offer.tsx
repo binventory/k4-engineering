@@ -137,19 +137,59 @@ const t = {
     ],
     pricingTitle: "Modulare Preisstufen",
     tiers: ["Essential 3D", "Dynamic Rotation", "Ultimate Interactive"],
-    tierPrices: ["4.650 € – 5.160 €", "5.450 € – 5.960 €", "Individuelles Angebot"],
+    tierPrices: ["4.850 €", "5.850 €", "6.500 €"],
+    investLabel: "Investition (zzgl. MwSt.)",
+    recommended: "Empfohlen",
+    included: "Enthalten",
+    inclNoLogo: "Enthalten (ohne Logo)",
+    inclLogo: "Enthalten (+ CNC-Logo)",
     features: [
       "PETG 3D-Druck",
       "Silber-Metallic-Finish",
-      "Aluminium-Basis + CNC-Logo",
-      "Manuelles C-Arm- & Tank-Layout",
-      "Automatische 45°-Tankrotation",
-      "Custom-Getriebe & Mikromotor",
-      "Transparente Fluidleitungen + LED/Optik",
-      "Taster-Steuerung in der Basis",
+      "Aluminium-Verbundplatte",
+      "C-Arm- & Tank-Aufbau",
+      "Automatisierte Tankrotation",
+      "Individuelles Getriebe & Bewegungsmechanik",
+      "Transparente Fluidleitungen + LED/Lichtfasern",
+      "Taster-Steuerung an der Basis",
     ],
-    priceNote:
-      "+800 € Designpauschale nur, wenn keine druckfertigen 3D-CAD-Dateien von ATEC bereitgestellt werden.",
+    scopeDetailTitle: "Detaillierter Leistungsumfang",
+    tierScopes: [
+      {
+        intro:
+          "Hochpräzises statisches Maßstabsmodell mit Fokus auf Oberflächenfinish und strukturelle Genauigkeit.",
+        items: [
+          "PETG 3D-Druck & Montage: Hauptreaktorbehälter, C-Arm-Stütze und rückseitige Verrohrung in Industrie-PETG.",
+          "Silber-Metallic-Finish: Handschleifen, Füllprimer, mehrstufige Silber-Metallic-Lackierung als Nachbildung von gebürstetem Edelstahl.",
+          "Aluminium-Verbundplatte: Basis mit Holzkern, beplankt mit 3 mm ACP (RAL9006 Silber-Metallic). CNC-Logogravur in dieser Stufe nicht enthalten.",
+          "C-Arm- & Tank-Aufbau: vollständige mechanische Montage des auskragenden C-Arms und des konischen Behälters.",
+        ],
+      },
+      {
+        intro: "Ergänzt automatisierte Bewegung und Firmenbranding auf der Basis.",
+        items: [
+          "Alle mechanischen und gestalterischen Merkmale aus Tier 1.",
+          "CNC-graviertes Firmenlogo, gefräst in die silberne ACP-Grundplatte.",
+          "Automatisierte Tankrotation: der vordere konische Tank schwenkt kontinuierlich nach links und rechts, ohne Handbewegung.",
+          "Individuelles Getriebe & Bewegungsmechanik: internes Getriebe, Präzisionszahnräder und verdeckte Antriebsgestänge hinter der zentralen Wandplatte.",
+        ],
+      },
+      {
+        intro:
+          "Das komplette Messe-Highlight: automatisierte Rotation plus dynamische Prozessbeleuchtung.",
+        items: [
+          "Alle Merkmale aus Tier 2.",
+          "Transparente Fluidleitungen + LED/Lichtfasern: transparente Wege mit internen LED-Streifen und Lichtfasern, die aktiven Fluidfluss simulieren.",
+          "Taster-Steuerung an der Basis: professionelle Tastereinheit auf der Displaybasis, damit Präsentierende oder Besucher Licht und Rotation auf Wunsch auslösen können.",
+        ],
+      },
+    ],
+    cadNote: [
+      "Der genannte Basispreis gilt, wenn eine saubere, druckfertige 3D-CAD-Datei ohne notwendige strukturelle Änderungen geliefert wird.",
+      "Ist eine CAD-Bearbeitung zur Optimierung der Dateien für die additive Fertigung erforderlich, fällt eine zusätzliche Bearbeitungsgebühr von maximal 800 € an, abgerechnet je nach Anzahl der zu ändernden Einzeldateien und Bauteile.",
+      "Alle geänderten und optimierten 3D-CAD-Dateien werden an Sie übergeben und bleiben vollständig Ihr Eigentum.",
+    ],
+
     legalTitle: "Zahlung & Rechtliches",
     legal: [
       "40 % Anzahlung bei Projektstart.",
