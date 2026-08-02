@@ -196,13 +196,27 @@ const t = {
       "Alle geänderten und optimierten 3D-CAD-Dateien werden an Sie übergeben und bleiben vollständig Ihr Eigentum.",
     ],
 
-    legalTitle: "Zahlung & Rechtliches",
-    legal: [
-      "40 % Anzahlung bei Projektstart.",
-      "60 % nach Endabnahme, vor Lieferung.",
-      "Freiberufliche Ingenieurdienstleistungen.",
-      "Werkvertrag / Dienstvertrag nach deutschem BGB.",
-    ],
+    legalTitle: "Projektbedingungen, Zahlung & Rechtliche Compliance",
+    legalSub: "Transparente kaufmännische Meilensteine & deutsches BGB-Ingenieurrahmenwerk";
+    legalPayment: {
+      header: "Zahlungsmeilensteine & Konditionen",
+      bullets: [
+        "25% Kick-Off Anzahlung: Fällig unmittelbar nach Vertragsabschluss zur Sicherung der Produktionsplanung, Materialbeschaffung und ersten 3D-CAD-Anpassung.",
+        "75% Schlusszahlung nach Abnahme: Fällig nach erfolgreicher visueller und physischer Inspektionsabnahme (Abnahme) vor endgültigem Versand oder Übergabe.",
+        "Transparente Nettopreise: Alle genannten Projektinvestitionsstufen sind Nettobeträge (zzgl. gesetzlicher USt).",
+        "Keine versteckten Kosten: Materialaufwand und Standard-Produktionskosten sind vollständig im Umfang der gewählten Stufe enthalten.",
+      ],
+    },
+    legalCompliance: {
+      header: "Rechtliche Einordnung (Freiberufliches Ingenieurbüro)",
+      bullets: [
+        "Vertragsart: Werkvertrag gem. § 631 BGB / Werklieferungsvertrag gem. § 650 BGB mit Erfolgsgarantie.",
+        "Freiberuflicher Status: Selbstständige Ingenieurdienstleistung (Ingenieurbüro gem. § 18 EStG).",
+        "Abnahme & Vergütung: 25% Anzahlung bei Start, 75% Schlusszahlung nach Endabnahme (gem. § 640 BGB) vor Übergabe.",
+        "Eigentums- & Nutzungsrechte: Vollständiger Übergang der CAD-Nutzungsrechte und des Modelleigentums nach vollständiger Bezahlung.",
+        "Compliance: Unabhängiger B2B-Dienstleister unter Ausschluss von Scheinselbstständigkeit.",
+      ],
+    },
     preparedFor: "Erstellt für ATEC Pharmatechnik GmbH (atec-pharma.com)",
     firm: "K4-Engineering | Freiberufliches Ingenieurbüro, Augsburg",
     accept: "ANGEBOT ANNEHMEN / RÜCKRUF",
