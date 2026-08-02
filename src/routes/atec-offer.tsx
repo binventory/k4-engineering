@@ -197,7 +197,7 @@ const t = {
     ],
 
     legalTitle: "Projektbedingungen, Zahlung & Rechtliche Compliance",
-    legalSub: "Transparente kaufmännische Meilensteine & deutsches BGB-Ingenieurrahmenwerk";
+    legalSub: "Transparente kaufmännische Meilensteine & deutsches BGB-Ingenieurrahmenwerk",
     legalPayment: {
       header: "Zahlungsmeilensteine & Konditionen",
       bullets: [
