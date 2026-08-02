@@ -22,7 +22,7 @@ import {
   CreditCard,
   ShieldCheck,
 } from "lucide-react";
-import { Lock } from "lucide-react";
+import { Lock, FileDown } from "lucide-react";
 import { getGateStatus } from "@/lib/gate.functions";
 import { ClientAccessGate } from "@/components/ClientAccessGate";
 
