@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createContext, useContext, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import atecLogo from "@/assets/atec-logo.png.asset.json";
 import {
   Boxes,
