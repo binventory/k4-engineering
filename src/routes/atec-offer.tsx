@@ -139,7 +139,7 @@ const t = {
     scope: [
       "Hängender konischer Reaktorbehälter auf auskragender C-Arm-Stütze.",
       "Grundplatte: Holzkern mit 3 mm Aluminium-Verbundplatte (Dibond / RAL9006 Silber-Metallic).",
-      "CNC-graviertes ATEC-Logo in der Grundplatte.",
+      "ATEC-Logo in der Grundplatte.",
     ],
     pricingTitle: "Modulare Preisstufen",
     tiers: ["Essential 3D", "Dynamic Rotation", "Ultimate Interactive"],
@@ -147,8 +147,6 @@ const t = {
     investLabel: "Investition (zzgl. MwSt.)",
     recommended: "Empfohlen",
     included: "Enthalten",
-    inclNoLogo: "Enthalten (ohne Logo)",
-    inclLogo: "Enthalten (+ CNC-Logo)",
     features: [
       "PETG 3D-Druck",
       "Silber-Metallic-Finish",
@@ -167,7 +165,7 @@ const t = {
         items: [
           "PETG 3D-Druck & Montage: Hauptreaktorbehälter, C-Arm-Stütze und rückseitige Verrohrung in Industrie-PETG.",
           "Silber-Metallic-Finish: Handschleifen, Füllprimer, mehrstufige Silber-Metallic-Lackierung als Nachbildung von gebürstetem Edelstahl.",
-          "Aluminium-Verbundplatte: Basis mit Holzkern, beplankt mit 3 mm ACP (RAL9006 Silber-Metallic). CNC-Logogravur in dieser Stufe nicht enthalten.",
+          "Aluminium-Verbundplatte: Basis mit Holzkern, beplankt mit 3 mm ACP (RAL9006 Silber-Metallic). Logogravur in dieser Stufe nicht enthalten.",
           "C-Arm- & Tank-Aufbau: vollständige mechanische Montage des auskragenden C-Arms und des konischen Behälters.",
         ],
       },
@@ -175,7 +173,7 @@ const t = {
         intro: "Ergänzt automatisierte Bewegung und Firmenbranding auf der Basis.",
         items: [
           "Alle mechanischen und gestalterischen Merkmale aus Tier 1.",
-          "CNC-graviertes Firmenlogo, gefräst in die silberne ACP-Grundplatte.",
+          "Firmenlogo, gefräst in die silberne ACP-Grundplatte.",
           "Automatisierte Tankrotation: der vordere konische Tank schwenkt kontinuierlich nach links und rechts, ohne Handbewegung.",
           "Individuelles Getriebe & Bewegungsmechanik: internes Getriebe, Präzisionszahnräder und verdeckte Antriebsgestänge hinter der zentralen Wandplatte.",
         ],
@@ -250,7 +248,7 @@ const t = {
     scope: [
       "Suspended conical reactor tank on a cantilevered C-arm support.",
       "Baseplate: wooden core with 3mm Aluminium Composite Panel (Dibond / RAL9006 silver metallic).",
-      "CNC-engraved ATEC logo in the baseplate.",
+      "ATEC logo in the baseplate.",
     ],
     pricingTitle: "Modular Pricing Tiers",
     tiers: ["Essential 3D", "Dynamic Rotation", "Ultimate Interactive"],
@@ -258,8 +256,6 @@ const t = {
     investLabel: "Investment (excl. VAT)",
     recommended: "Recommended",
     included: "Included",
-    inclNoLogo: "_",
-    inclLogo: "Incl. (+ CNC Logo)",
     features: [
       "PETG 3D Printing",
       "Silver Metallic Finish",
@@ -278,7 +274,7 @@ const t = {
         items: [
           "PETG 3D Printing & Assembly: main reactor tank, C-Arm support, rear piping in industrial PETG.",
           "Silver Metallic Finish: hand-sanding, primer filler, multi-stage silver metallic paint simulating brushed stainless steel.",
-          "Aluminium Composite Base: wood-core base skinned with 3mm ACP (RAL9006 Silver Metallic). CNC logo engraving excluded in this tier.",
+          "Aluminium Composite Base: wood-core base skinned with 3mm ACP (RAL9006 Silver Metallic). Logo engraving excluded in this tier.",
           "C-Arm & Tank Layout: full mechanical mounting of cantilevered C-Arm and conical vessel.",
         ],
       },
@@ -286,7 +282,7 @@ const t = {
         intro: "Adds automated movement and corporate branding on the base.",
         items: [
           "All mechanical and aesthetic features from Tier 1.",
-          "CNC Engraved Company Logo milled into the silver ACP baseplate.",
+          "Company Logo milled into the silver ACP baseplate.",
           "Automated Tank Rotation: front conical tank sweeps left and right in continuous motion, zero hand movement.",
           "Custom Gearbox & Moving Mechanism: internal gearbox, precision gears and concealed drive linkages behind the central wall panel.",
         ],
@@ -326,12 +322,12 @@ const t = {
 const navIds = ["portfolio", "workflow", "capabilities", "pricing", "legal", "contact"];
 const capIcons = [Boxes, Cog, Droplets, Layers, Radio, Languages];
 
-type CellValue = boolean | "noLogo" | "logo";
+type CellValue = boolean;
 
 const matrix: CellValue[][] = [
   [true, true, true],
   [true, true, true],
-  ["noLogo", "logo", "logo"],
+  [false, true, true],
   [true, true, true],
   [false, true, true],
   [false, true, true],
@@ -347,13 +343,7 @@ function Cell({ value, c }: { value: CellValue; c: (typeof t)["de"] | (typeof t)
         <span>{c.included}</span>
       </span>
     );
-  if (value === false)
-    return <Minus className="h-4 w-4 text-muted-foreground" aria-label="not included" />;
-  return (
-    <span className="text-sm font-semibold text-foreground">
-      {value === "noLogo" ? c.inclNoLogo : c.inclLogo}
-    </span>
-  );
+  return <Minus className="h-4 w-4 text-muted-foreground" aria-label="not included" />;
 }
 
 
