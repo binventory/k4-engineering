@@ -248,7 +248,7 @@ const t = {
     scope: [
       "Suspended conical reactor tank on a cantilevered C-arm support.",
       "Baseplate: wooden core with 3mm Aluminium Composite Panel (Dibond / RAL9006 silver metallic).",
-      "CNC-engraved ATEC logo in the baseplate.",
+      "ATEC logo in the baseplate.",
     ],
     pricingTitle: "Modular Pricing Tiers",
     tiers: ["Essential 3D", "Dynamic Rotation", "Ultimate Interactive"],
@@ -256,8 +256,6 @@ const t = {
     investLabel: "Investment (excl. VAT)",
     recommended: "Recommended",
     included: "Included",
-    inclNoLogo: "_",
-    inclLogo: "Incl. (+ CNC Logo)",
     features: [
       "PETG 3D Printing",
       "Silver Metallic Finish",
