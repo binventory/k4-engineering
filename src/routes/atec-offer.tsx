@@ -319,13 +319,27 @@ const t = {
       "All modified and optimized 3D CAD files will be delivered to you and remain your full property.",
     ],
 
-    legalTitle: "Payment & Legal",
-    legal: [
-      "40% down payment at kick-off.",
-      "60% on final inspection before delivery.",
-      "Freiberufliche Ingenieurdienstleistungen.",
-      "Werkvertrag / Dienstvertrag per German BGB.",
-    ],
+    legalTitle: "Project Terms, Payment & Legal Compliance",
+    legalSub: "Transparent Commercial Milestones & German BGB Engineering Framework",
+    legalPayment: {
+      header: "Payment Milestones & Commercials",
+      bullets: [
+        "25% Kick-Off Deposit: Due immediately upon contract signing to secure production scheduling, raw material purchasing, and initial 3D CAD adaptation.",
+        "75% Final Approval Payment: Due upon successful visual and physical inspection approval (Abnahme) prior to final dispatch or handover.",
+        "Transparent Net Pricing: All listed project investment tiers are net amounts (excl. statutory VAT / zzgl. gesetzlicher USt).",
+        "No Hidden Fees: Material expenses and standard production costs are fully included within the selected tier scope.",
+      ],
+    },
+    legalCompliance: {
+      header: "Legal Classification (Freiberufliches Ingenieurbüro)",
+      bullets: [
+        "Contract Classification (Werkvertrag): Executed strictly as a project-based contract for work (Werkvertrag pursuant to § 631 / § 650 BGB), legally guaranteeing the delivery of a fully functional exhibition model to agreed specifications.",
+        "Freelance Engineering Status: All services are provided by an independent engineering office (Ingenieurbüro) in accordance with German tax law for independent professions (§ 18 EStG).",
+        "Formal Acceptance & Warranty: Final payment is linked to formal acceptance (Abnahme pursuant to § 640 BGB). Includes standard BGB statutory warranty (Gewährleistung) for technical prototypes.",
+        "Full IP & CAD Rights Transfer: Upon receipt of full payment, all customized 3D CAD files and physical model ownership rights transfer 100% to ATEC Pharmatechnik GmbH.",
+        "B2B Corporate Compliance: Executed as an autonomous business-to-business service contract using independent operating resources, fully compliant against false self-employment (Scheinselbstständigkeit).",
+      ],
+    },
     preparedFor: "Prepared for ATEC Pharmatechnik GmbH (atec-pharma.com)",
     firm: "K4-Engineering | Freiberufliches Ingenieurbüro, Augsburg",
     accept: "ACCEPT OFFER / REQUEST CALL",
