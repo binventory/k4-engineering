@@ -390,7 +390,17 @@ function AtecOffer() {
           </div>
           <div className="mt-12 grid items-start gap-5 sm:grid-cols-2">
             <figure>
-              <Slot filename="hero-1.png" ratio="aspect-[4/3]" fit="object-contain" className="w-full bg-card" alt={c.heroCap1} />
+              <div className="relative overflow-hidden border border-border bg-card aspect-[4/3]">
+                <video
+                  src="/videos/hero.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
               <figcaption className="mt-3 text-xs leading-6 text-muted-foreground">{c.heroCap1}</figcaption>
             </figure>
             <figure>
