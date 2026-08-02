@@ -761,16 +761,48 @@ function AtecOffer() {
 
 
       {/* 7 — LEGAL */}
-      <section className="py-20 sm:py-24">
+      <section className="border-y border-border py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
           <Heading id="legal">{c.legalTitle}</Heading>
-          <ul className="mt-10 grid gap-4 sm:grid-cols-2">
-            {c.legal.map((l) => (
-              <li key={l} className="border-l-2 border-primary pl-4 text-sm leading-7 text-muted-foreground">
-                {l}
-              </li>
-            ))}
-          </ul>
+          <p className="mt-4 max-w-3xl text-sm text-muted-foreground">{c.legalSub}</p>
+
+          <div className="mt-12 grid gap-6 lg:grid-cols-2">
+            {/* Column 1 — Payment */}
+            <div className="border border-border bg-card p-7">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center bg-secondary text-secondary-foreground">
+                  <CreditCard className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <h3 className="text-lg font-bold text-foreground">{c.legalPayment.header}</h3>
+              </div>
+              <ul className="mt-6 space-y-4">
+                {c.legalPayment.bullets.map((b) => (
+                  <li key={b} className="flex gap-3 text-sm leading-6 text-muted-foreground">
+                    <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 bg-primary" />
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Column 2 — Legal */}
+            <div className="border border-border bg-card p-7">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center bg-secondary text-secondary-foreground">
+                  <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <h3 className="text-lg font-bold text-foreground">{c.legalCompliance.header}</h3>
+              </div>
+              <ul className="mt-6 space-y-4">
+                {c.legalCompliance.bullets.map((b) => (
+                  <li key={b} className="flex gap-3 text-sm leading-6 text-muted-foreground">
+                    <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 bg-primary" />
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
