@@ -240,16 +240,36 @@ const t = {
 const navIds = ["portfolio", "workflow", "capabilities", "pricing", "legal", "contact"];
 const capIcons = [Boxes, Cog, Droplets, Layers, Radio, Languages];
 
-const matrix: boolean[][] = [
+type CellValue = boolean | "noLogo" | "logo";
+
+const matrix: CellValue[][] = [
   [true, true, true],
   [true, true, true],
+  ["noLogo", "logo", "logo"],
   [true, true, true],
-  [true, false, false],
   [false, true, true],
   [false, true, true],
   [false, false, true],
   [false, false, true],
 ];
+
+function Cell({ value, c }: { value: CellValue; c: (typeof t)["de"] | (typeof t)["en"] }) {
+  if (value === true)
+    return (
+      <span className="flex items-center gap-2 text-sm">
+        <Check className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+        <span>{c.included}</span>
+      </span>
+    );
+  if (value === false)
+    return <Minus className="h-4 w-4 text-muted-foreground" aria-label="not included" />;
+  return (
+    <span className="text-sm font-semibold text-foreground">
+      {value === "noLogo" ? c.inclNoLogo : c.inclLogo}
+    </span>
+  );
+}
+
 
 function K4Logo() {
   return (
