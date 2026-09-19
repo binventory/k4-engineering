@@ -41,45 +41,48 @@
 }
 
 :root {
+  color-scheme: light;
   --radius: 0.85rem;
 
-  /* Brand palette — richer, deeper engineering navy + electric cyan */
-  --navy-deep: oklch(0.16 0.045 258);
-  --navy: oklch(0.22 0.065 260);
-  --silver: oklch(0.84 0.012 250);
-  --neon: oklch(0.84 0.16 196);
-  --neon-soft: oklch(0.74 0.13 196 / 0.4);
+  /* The names navy / navy-deep / neon come from the old dark theme.
+     Token names are unchanged, so no component file needs editing.
+     Only the values change: light surfaces + one petrol accent. */
+  --navy-deep: oklch(0.945 0.008 200);
+  --navy: oklch(0.968 0.006 200);
+  --silver: oklch(0.55 0.012 245);
+  --neon: oklch(0.44 0.095 205);
+  --neon-soft: oklch(0.44 0.095 205 / 0.28);
 
-  --background: oklch(0.145 0.04 259);
-  --foreground: oklch(0.97 0.008 240);
+  --background: oklch(0.985 0.004 95);
+  --foreground: oklch(0.22 0.018 250);
 
-  --card: oklch(0.205 0.05 259);
-  --card-foreground: oklch(0.97 0.008 240);
-  --popover: oklch(0.205 0.05 259);
-  --popover-foreground: oklch(0.97 0.008 240);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.018 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.018 250);
 
-  --primary: oklch(0.84 0.16 196);
-  --primary-foreground: oklch(0.16 0.04 260);
-  --secondary: oklch(0.62 0.17 256);
-  --secondary-foreground: oklch(0.97 0.008 240);
-  --muted: oklch(0.235 0.05 259);
-  --muted-foreground: oklch(0.74 0.022 250);
-  --accent: oklch(0.84 0.16 196);
-  --accent-foreground: oklch(0.16 0.04 260);
-  --destructive: oklch(0.62 0.22 25);
-  --destructive-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.44 0.095 205);
+  --primary-foreground: oklch(0.99 0.002 95);
+  --secondary: oklch(0.55 0.085 235);
+  --secondary-foreground: oklch(0.99 0.002 95);
+  --muted: oklch(0.955 0.006 95);
+  --muted-foreground: oklch(0.50 0.015 245);
+  --accent: oklch(0.44 0.095 205);
+  --accent-foreground: oklch(0.99 0.002 95);
+  --destructive: oklch(0.55 0.20 27);
+  --destructive-foreground: oklch(0.99 0 0);
 
-  --border: oklch(0.34 0.05 259 / 0.55);
-  --input: oklch(0.34 0.05 259 / 0.55);
-  --ring: oklch(0.84 0.16 196);
+  --border: oklch(0.87 0.008 200);
+  --input: oklch(0.87 0.008 200);
+  --ring: oklch(0.44 0.095 205);
 
-  --gradient-hero: radial-gradient(ellipse at top, oklch(0.30 0.11 252) 0%, oklch(0.145 0.04 259) 62%);
-  --gradient-neon: linear-gradient(135deg, oklch(0.84 0.16 196), oklch(0.66 0.18 250));
-  --shadow-glow: 0 0 44px oklch(0.84 0.16 196 / 0.35);
-  --shadow-elegant: 0 20px 60px -20px oklch(0.05 0.05 260 / 0.7);
+  --gradient-hero: radial-gradient(ellipse at top, oklch(0.955 0.020 205 / 0.94) 0%, oklch(0.985 0.004 95 / 0.99) 62%);
+  --gradient-neon: linear-gradient(135deg, oklch(0.42 0.095 205), oklch(0.50 0.105 240));
+  --shadow-glow: 0 10px 30px -12px oklch(0.44 0.095 205 / 0.32);
+  --shadow-elegant: 0 22px 55px -28px oklch(0.30 0.03 250 / 0.28);
 }
 
-.dark { color-scheme: dark; }
+.dark { color-scheme: light; }
 
 @layer base {
   * { border-color: var(--color-border); }
@@ -101,13 +104,13 @@
 }
 
 @utility glow-border {
-  box-shadow: 0 0 0 1px oklch(0.84 0.16 196 / 0.3), var(--shadow-glow);
+  box-shadow: 0 0 0 1px oklch(0.44 0.095 205 / 0.22), var(--shadow-elegant);
 }
 
 @utility grid-bg {
   background-image:
-    linear-gradient(oklch(0.84 0.16 196 / 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0.84 0.16 196 / 0.06) 1px, transparent 1px);
+    linear-gradient(oklch(0.42 0.02 250 / 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.42 0.02 250 / 0.055) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
@@ -120,8 +123,8 @@
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px oklch(0.84 0.16 196 / 0.3); }
-  50% { box-shadow: 0 0 40px oklch(0.84 0.16 196 / 0.6); }
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.44 0.095 205 / 0.35); }
+  50% { box-shadow: 0 0 0 6px oklch(0.44 0.095 205 / 0); }
 }
 
 .reveal {
@@ -134,10 +137,11 @@
   transform: translateY(0);
 }
 
-.particle {
-  position: absolute;
-  border-radius: 9999px;
-  background: oklch(0.84 0.16 196);
-  filter: blur(1px);
-  animation: float-particle 8s ease-in-out infinite;
+/* Particles are hidden on purpose in the light theme (calmer look).
+   The <ParticleField /> component in index.tsx can also be deleted if you like. */
+.particle { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
