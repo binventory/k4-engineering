@@ -19,8 +19,8 @@ const treeGallery = [
   { src: treeOff, caption: "Translucent vase-mode trunk â€” sensor electronics housed inside" },
   { src: treeGreenRed, caption: "Live sap-flow visualization glowing through the printed trunk" },
   { src: treePink, caption: "Real-time status lighting â€” the trunk glows with live tree data" },
-  { src: treeBoothIris3, caption: "On show at the IRIS3 Baum Â· MegaCAD stand" },
-  { src: treeBoothHauraton, caption: "Exhibited at the Hauraton stand â€” Baumpflegetage 2026" },
+  { src: treeBoothIris3, caption: "Shown to exhibitors at the Baumpflegetage 2026, Augsburg" },
+  { src: treeBoothHauraton, caption: "Live demo for exhibitors at the Baumpflegetage 2026, Augsburg" },
 ];
 
 export const Route = createFileRoute("/")({
@@ -143,7 +143,7 @@ function Landing() {
             <p className="text-xs uppercase tracking-[0.25em] text-primary">Featured Project</p>
             <h2 className="mt-3 text-3xl sm:text-4xl font-bold">The Smart Tree IoT System</h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Debuted at the <span className="text-foreground">Baumpflegetag Fair in Augsburg, May 2026</span>.
+              Presented at the <span className="text-foreground">Deutsche Baumpflegetage 2026 in Augsburg</span>.
             </p>
             <p className="mt-5 text-muted-foreground">
               We developed an innovative IoT sensor system that measures liquid and sap flow inside a
