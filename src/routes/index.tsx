@@ -97,10 +97,7 @@ function Landing() {
               3D Design, 3D Printing, Hardware, Software, IoT &mdash; and a touch of Art.
             </p>
             <div className="reveal mt-10 flex flex-wrap gap-3">
-              
-                href="#projects"
-                className="group inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110 transition"
-              >
+              <a href="#projects" className="group inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110 transition">
                 Discover Our Innovations
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
               </a>
@@ -232,12 +229,7 @@ function Landing() {
                   allowFullScreen
                   loading="lazy"
                 />
-                
-                  href={LINKEDIN_POST_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 p-4 text-sm text-muted-foreground hover:text-primary transition"
-                >
+                <a href={LINKEDIN_POST_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 p-4 text-sm text-muted-foreground hover:text-primary transition">
                   Watch the video on LinkedIn
                   <ExternalLink className="w-4 h-4" />
                 </a>
