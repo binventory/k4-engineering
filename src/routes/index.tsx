@@ -12,13 +12,20 @@ import treeBoothIris3 from "@/assets/tree/20260505_095335.jpg";
 import treeBoothHauraton from "@/assets/tree/20260505_102836.jpg";
 import {
   Boxes, Printer, Cpu, Radio, Sparkles, ArrowRight, Lightbulb,
-  PenTool, Cog, Wifi, LineChart, ChevronLeft, ChevronRight,
+  PenTool, Cog, Wifi, LineChart, ChevronLeft, ChevronRight, ExternalLink,
 } from "lucide-react";
 
+// LinkedIn video shown beside the Smart Tree photos.
+// To show a different post, change the number in both lines.
+const LINKEDIN_POST_URL =
+  "https://www.linkedin.com/feed/update/urn:li:activity:7460267658433757185";
+const LINKEDIN_EMBED_URL =
+  "https://www.linkedin.com/embed/feed/update/urn:li:activity:7460267658433757185?compact=1";
+
 const treeGallery = [
-  { src: treeOff, caption: "Translucent vase-mode trunk — sensor electronics housed inside" },
+  { src: treeOff, caption: "Translucent vase-mode trunk \u2014 sensor electronics housed inside" },
   { src: treeGreenRed, caption: "Live sap-flow visualization glowing through the printed trunk" },
-  { src: treePink, caption: "Real-time status lighting — the trunk glows with live tree data" },
+  { src: treePink, caption: "Real-time status lighting \u2014 the trunk glows with live tree data" },
   { src: treeBoothIris3, caption: "Shown to exhibitors at the Baumpflegetage 2026, Augsburg" },
   { src: treeBoothHauraton, caption: "Live demo for exhibitors at the Baumpflegetage 2026, Augsburg" },
 ];
@@ -26,9 +33,9 @@ const treeGallery = [
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "K4-Engineering — Making the Invisible Visible" },
+      { title: "K4-Engineering \u2014 Making the Invisible Visible" },
       { name: "description", content: "An engineering & design firm blending 3D design, 3D printing, mechatronics, IoT and art. Founded by a former Airbus Manufacturing & Automation Engineer." },
-      { property: "og:title", content: "K4-Engineering — Making the Invisible Visible" },
+      { property: "og:title", content: "K4-Engineering \u2014 Making the Invisible Visible" },
       { property: "og:description", content: "Hardware. Software. IoT. Art. Engineered in Europe." },
     ],
   }),
@@ -44,11 +51,11 @@ const expertise = [
 ];
 
 const steps = [
-  { icon: Lightbulb, title: "01 — Discover", text: "Workshop the problem, the audience and the invisible signal to surface." },
-  { icon: PenTool, title: "02 — Design", text: "Mechanical CAD, PCB schematics and software architecture in parallel." },
-  { icon: Cog, title: "03 — Fabricate", text: "3D-print enclosures, assemble electronics, flash firmware, iterate fast." },
-  { icon: Wifi, title: "04 — Connect", text: "Wire up IoT telemetry, cloud sync and control logic." },
-  { icon: LineChart, title: "05 — Reveal", text: "Ship a tangible, interactive model with live data — public-ready." },
+  { icon: Lightbulb, title: "01 \u2014 Discover", text: "Workshop the problem, the audience and the invisible signal to surface." },
+  { icon: PenTool, title: "02 \u2014 Design", text: "Mechanical CAD, PCB schematics and software architecture in parallel." },
+  { icon: Cog, title: "03 \u2014 Fabricate", text: "3D-print enclosures, assemble electronics, flash firmware, iterate fast." },
+  { icon: Wifi, title: "04 \u2014 Connect", text: "Wire up IoT telemetry, cloud sync and control logic." },
+  { icon: LineChart, title: "05 \u2014 Reveal", text: "Ship a tangible, interactive model with live data \u2014 public-ready." },
 ];
 
 function Landing() {
@@ -87,10 +94,10 @@ function Landing() {
             </h1>
             <p className="reveal mt-6 text-lg text-muted-foreground max-w-2xl">
               Bridging the gap between physical reality and digital insight through
-              3D Design, 3D Printing, Hardware, Software, IoT — and a touch of Art.
+              3D Design, 3D Printing, Hardware, Software, IoT &mdash; and a touch of Art.
             </p>
             <div className="reveal mt-10 flex flex-wrap gap-3">
-              <a
+              
                 href="#projects"
                 className="group inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110 transition"
               >
@@ -115,7 +122,7 @@ function Landing() {
             <p className="text-xs uppercase tracking-[0.25em] text-primary">Our Expertise</p>
             <h2 className="mt-3 text-3xl sm:text-4xl font-bold">A studio at the intersection of disciplines.</h2>
             <p className="mt-4 text-muted-foreground">
-              Five capabilities, one toolkit — from first sketch to a connected, physical artefact.
+              Five capabilities, one toolkit &mdash; from first sketch to a connected, physical artefact.
             </p>
           </div>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -141,72 +148,102 @@ function Landing() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="reveal max-w-3xl">
             <p className="text-xs uppercase tracking-[0.25em] text-primary">Featured Project</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-bold">The Smart Tree IoT System</h2>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-bold">The Smart Tree &mdash; Interactive 3D Presentation Model</h2>
             <p className="mt-3 text-sm text-muted-foreground">
               Presented at the <span className="text-foreground">Deutsche Baumpflegetage 2026 in Augsburg</span>.
             </p>
             <p className="mt-5 text-muted-foreground">
-              We developed an innovative IoT sensor system that measures liquid and sap flow inside a
-              tree in real-time. The system generates a comprehensive digital health profile for the
-              tree and automatically controls precise watering and supplement values.
+              We designed and 3D-printed an interactive presentation model for an IoT tree-care
+              system that measures sap flow and manages precision watering and supplements. Our
+              model translates that real-time sensor data into a tangible, glowing trunk &mdash; giving
+              visitors at the fair an intuitive, physical way to see the technology in action.
             </p>
           </div>
 
-          {/* Project gallery — carousel */}
-          <div className="reveal mt-10 relative max-w-3xl mx-auto">
-            <div className="relative overflow-hidden rounded-xl border border-border bg-card/60">
-              <div
-                className="flex transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(-${idx * 100}%)` }}
-              >
-                {treeGallery.map((g) => (
-                  <figure key={g.src} className="w-full shrink-0">
-                    <div className="bg-background flex items-center justify-center" style={{ maxHeight: "60vh" }}>
-                      <img
-                        src={g.src}
-                        alt={g.caption}
-                        loading="lazy"
-                        className="w-full h-auto max-h-[60vh] object-contain"
-                      />
-                    </div>
-                    <figcaption className="p-4 text-sm text-muted-foreground text-center">
-                      {g.caption}
-                    </figcaption>
-                  </figure>
-                ))}
+          {/* Photos (left) + LinkedIn video (right); stacked on phones */}
+          <div className="reveal mt-10 grid grid-cols-1 gap-8 lg:grid-cols-5 lg:items-start">
+
+            {/* Photo carousel */}
+            <div className="relative min-w-0 lg:col-span-3">
+              <div className="relative overflow-hidden rounded-xl border border-border bg-card/60">
+                <div
+                  className="flex transition-transform duration-500 ease-out"
+                  style={{ transform: `translateX(-${idx * 100}%)` }}
+                >
+                  {treeGallery.map((g) => (
+                    <figure key={g.src} className="w-full shrink-0">
+                      <div className="bg-background flex items-center justify-center" style={{ maxHeight: "60vh" }}>
+                        <img
+                          src={g.src}
+                          alt={g.caption}
+                          loading="lazy"
+                          className="w-full h-auto max-h-[60vh] object-contain"
+                        />
+                      </div>
+                      <figcaption className="p-4 text-sm text-muted-foreground text-center">
+                        {g.caption}
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={prev}
+                  aria-label="Previous image"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/70 backdrop-blur border border-border hover:border-primary/60 hover:text-primary flex items-center justify-center transition"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={next}
+                  aria-label="Next image"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/70 backdrop-blur border border-border hover:border-primary/60 hover:text-primary flex items-center justify-center transition"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
               </div>
 
-              <button
-                type="button"
-                onClick={prev}
-                aria-label="Previous image"
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/70 backdrop-blur border border-border hover:border-primary/60 hover:text-primary flex items-center justify-center transition"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                type="button"
-                onClick={next}
-                aria-label="Next image"
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/70 backdrop-blur border border-border hover:border-primary/60 hover:text-primary flex items-center justify-center transition"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
+              <div className="mt-4 flex justify-center gap-2">
+                {treeGallery.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setIdx(i)}
+                    aria-label={`Go to image ${i + 1}`}
+                    className={`h-1.5 rounded-full transition-all ${
+                      i === idx ? "w-8 bg-primary" : "w-3 bg-border hover:bg-primary/50"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
 
-            <div className="mt-4 flex justify-center gap-2">
-              {treeGallery.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setIdx(i)}
-                  aria-label={`Go to image ${i + 1}`}
-                  className={`h-1.5 rounded-full transition-all ${
-                    i === idx ? "w-8 bg-primary" : "w-3 bg-border hover:bg-primary/50"
-                  }`}
+            {/* LinkedIn video */}
+            <div className="min-w-0 lg:col-span-2">
+              <div className="overflow-hidden rounded-xl border border-border bg-card/60">
+                <iframe
+                  src={LINKEDIN_EMBED_URL}
+                  title="Smart Tree presentation video on LinkedIn"
+                  className="block w-full h-[70vh] min-h-[420px] lg:h-[60vh] bg-background"
+                  frameBorder="0"
+                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
                 />
-              ))}
+                
+                  href={LINKEDIN_POST_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 p-4 text-sm text-muted-foreground hover:text-primary transition"
+                >
+                  Watch the video on LinkedIn
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
             </div>
+
           </div>
 
         </div>
