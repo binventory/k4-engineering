@@ -104,7 +104,7 @@ function ProposalsPage() {
               <p className="mt-2 text-sm text-muted-foreground">We'll prepare a confidential scope, timeline and price for your brief.</p>
             </div>
             <div className="flex gap-3">
-              <a href="mailto:hello@k4-engineering.eu" className="inline-flex items-center rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:brightness-110 transition">Request Access</a>
+              <a href="mailto:kareem@k4-engineering.eu" className="inline-flex items-center rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:brightness-110 transition">Request Access</a>
               <Link to="/" className="inline-flex items-center rounded-md border border-border px-5 py-3 text-sm font-semibold hover:border-primary/60 hover:text-primary transition">Back Home</Link>
             </div>
           </div>

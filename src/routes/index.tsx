@@ -3,6 +3,7 @@ import { useReveal } from "@/hooks/use-reveal";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ParticleField } from "@/components/ParticleField";
+import { ConsentEmbed } from "@/components/ConsentEmbed";
 import { useState } from "react";
 import heroBg from "@/assets/hero-bg.jpg";
 import treeOff from "@/assets/tree/20260504_112703.jpg";
@@ -34,7 +35,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "K4-Engineering \u2014 Making the Invisible Visible" },
-      { name: "description", content: "An engineering & design firm blending 3D design, 3D printing, mechatronics, IoT and art. Founded by a former Airbus Manufacturing & Automation Engineer." },
+      { name: "description", content: "We design and build interactive 3D prototypes powered by our own hardware and software, for trade fairs and showrooms. Founded by a former Airbus Manufacturing & Automation Engineer." },
       { property: "og:title", content: "K4-Engineering \u2014 Making the Invisible Visible" },
       { property: "og:description", content: "Hardware. Software. IoT. Art. Engineered in Europe." },
     ],
@@ -55,7 +56,7 @@ const steps = [
   { icon: PenTool, title: "02 \u2014 Design", text: "Mechanical CAD, PCB schematics and software architecture in parallel." },
   { icon: Cog, title: "03 \u2014 Fabricate", text: "3D-print enclosures, assemble electronics, flash firmware, iterate fast." },
   { icon: Wifi, title: "04 \u2014 Connect", text: "Wire up IoT telemetry, cloud sync and control logic." },
-  { icon: LineChart, title: "05 \u2014 Reveal", text: "Ship a tangible, interactive model with live data \u2014 public-ready." },
+  { icon: LineChart, title: "05 \u2014 Reveal", text: "Hand over a tangible, interactive prototype with live data \u2014 ready for your stand." },
 ];
 
 function Landing() {
@@ -93,8 +94,8 @@ function Landing() {
               K4 Engineering: <span className="text-gradient-neon">Making the Invisible Visible.</span>
             </h1>
             <p className="reveal mt-6 text-lg text-muted-foreground max-w-2xl">
-              Bridging the gap between physical reality and digital insight through
-              3D Design, 3D Printing, Hardware, Software, IoT &mdash; and a touch of Art.
+              We design and build interactive 3D prototypes for trade fairs and showrooms &mdash;
+              3D-printed, powered by our own hardware and software, with a touch of art.
             </p>
             <div className="reveal mt-10 flex flex-wrap gap-3">
               <a href="#projects" className="group inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] hover:brightness-110 transition">
@@ -145,14 +146,14 @@ function Landing() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="reveal max-w-3xl">
             <p className="text-xs uppercase tracking-[0.25em] text-primary">Featured Project</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-bold">The Smart Tree &mdash; Interactive 3D Presentation Model</h2>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-bold">The Smart Tree &mdash; Interactive 3D Prototype</h2>
             <p className="mt-3 text-sm text-muted-foreground">
               Presented at the <span className="text-foreground">Deutsche Baumpflegetage 2026 in Augsburg</span>.
             </p>
             <p className="mt-5 text-muted-foreground">
-              We designed and 3D-printed an interactive presentation model for an IoT tree-care
-              system that measures sap flow and manages precision watering and supplements. Our
-              model translates that real-time sensor data into a tangible, glowing trunk &mdash; giving
+              We designed and built an interactive 3D prototype for an IoT tree-care
+              system that measures sap flow and manages precision watering and supplements. The
+              prototype translates that real-time sensor data into a tangible, glowing trunk &mdash; giving
               visitors at the fair an intuitive, physical way to see the technology in action.
             </p>
           </div>
@@ -220,14 +221,12 @@ function Landing() {
             {/* LinkedIn video */}
             <div className="min-w-0 lg:col-span-2">
               <div className="overflow-hidden rounded-xl border border-border bg-card/60">
-                <iframe
+                {/* Two-click embed: LinkedIn is only contacted after the visitor clicks (see /datenschutz). */}
+                <ConsentEmbed
                   src={LINKEDIN_EMBED_URL}
                   title="Smart Tree presentation video on LinkedIn"
+                  provider="LinkedIn"
                   className="block w-full h-[70vh] min-h-[420px] lg:h-[60vh] bg-background"
-                  frameBorder="0"
-                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                  allowFullScreen
-                  loading="lazy"
                 />
                 <a href={LINKEDIN_POST_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 p-4 text-sm text-muted-foreground hover:text-primary transition">
                   Watch the video on LinkedIn
@@ -246,7 +245,7 @@ function Landing() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="reveal max-w-2xl">
             <p className="text-xs uppercase tracking-[0.25em] text-primary">Methodology</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-bold">From concept to a physical, interactive IoT model.</h2>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-bold">From concept to a physical, interactive 3D prototype.</h2>
           </div>
 
           <ol className="mt-14 relative grid gap-8 md:grid-cols-5">

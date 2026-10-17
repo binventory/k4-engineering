@@ -25,6 +25,8 @@ import {
 import { Lock, FileDown } from "lucide-react";
 import { getGateStatus } from "@/lib/gate.functions";
 import { ClientAccessGate } from "@/components/ClientAccessGate";
+import { ConsentEmbed } from "@/components/ConsentEmbed";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/atec-offer")({
   loader: () => getGateStatus(),
@@ -567,14 +569,14 @@ function AtecOffer() {
             <p className="mt-1 text-sm text-muted-foreground">{c.videoSub}</p>
             <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="relative w-full overflow-hidden border border-border bg-card" style={{ aspectRatio: "3 / 4" }}>
-                <iframe
+                {/* Two-click embed: Vimeo is only contacted after the visitor clicks (see /datenschutz). */}
+                <ConsentEmbed
                   src="https://player.vimeo.com/video/1202992207?h=b4fa5205d2&title=0&byline=0&portrait=0"
                   className="absolute inset-0 h-full w-full"
                   title="IoT Interactive Presentation — Smart Tree Sensor by K4-Engineering"
-                  frameBorder="0"
+                  provider="Vimeo"
                   allow="autoplay; fullscreen; picture-in-picture"
-                  allowFullScreen
-                  loading="lazy"
+                  lang={lang === "de" ? "de" : "en"}
                 />
               </div>
               <div className="grid grid-rows-2 gap-4" style={{ aspectRatio: "3 / 4" }}>
@@ -861,7 +863,9 @@ function AtecOffer() {
 
           </div>
           <p className="mt-10 text-xs text-muted-foreground">
-            © 2026 K4-Engineering — Freiberufliches Ingenieurbüro
+            © 2026 K4-Engineering — Freiberufliches Ingenieurbüro ·{" "}
+            <Link to="/impressum" className="underline hover:text-primary">Impressum</Link> ·{" "}
+            <Link to="/datenschutz" className="underline hover:text-primary">Datenschutz</Link>
           </p>
         </div>
       </footer>

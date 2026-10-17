@@ -1,4 +1,4 @@
-import { useRouter } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Lock, LoaderCircle } from "lucide-react";
@@ -114,6 +114,10 @@ export function ClientAccessGate() {
           <Lock className="mt-0.5 h-3 w-3 shrink-0" />
           Confidential B2B document. Access is restricted to authorised ATEC Pharmatechnik GmbH
           personnel.
+        </p>
+        <p className="mt-4 flex justify-center gap-4 text-[11px] text-muted-foreground">
+          <Link to="/impressum" className="underline hover:text-primary">Impressum</Link>
+          <Link to="/datenschutz" className="underline hover:text-primary">Datenschutz</Link>
         </p>
       </div>
     </div>

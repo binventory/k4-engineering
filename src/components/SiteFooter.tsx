@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-border/60 bg-navy-deep/40">
@@ -28,8 +30,12 @@ export function SiteFooter() {
           <p className="text-sm text-muted-foreground">Augsburg, Germany · Operating across the EU</p>
         </div>
       </div>
-      <div className="border-t border-border/60 py-5 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} K4-Engineering.eu — All rights reserved.
+      <div className="border-t border-border/60 py-5 px-6 flex flex-col sm:flex-row items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
+        <span>© {new Date().getFullYear()} K4-Engineering.eu — All rights reserved.</span>
+        <nav aria-label="Legal" className="flex gap-4">
+          <Link to="/impressum" className="hover:text-primary">Impressum</Link>
+          <Link to="/datenschutz" className="hover:text-primary">Datenschutz / Privacy</Link>
+        </nav>
       </div>
     </footer>
   );
