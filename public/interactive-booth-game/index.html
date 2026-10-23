@@ -1,0 +1,1419 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="description" content="Interaktives Messespiel als Beispiel: 3D-Modelle, Quiz und Augmented Reality für Ihren Messestand. K4-Engineering.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a2219">
+<title>Arbeitstag – interaktives Messespiel (Beispiel) | K4-Engineering</title>
+<style>
+:root{
+  --bg1:#0a2219; --bg2:#10372a; --bg3:#1b5a42;
+  --cream:#f7f2e6; --paper:#fffaf0; --ink:#12231a; --ink2:#3a4f44; --muted:#9bb3a6;
+  --orange:#ff7a1a; --orange-d:#e86600; --yellow:#ffc83d; --green:#2fbf71; --green-d:#1f9a58; --red:#e5484d;
+  --line:rgba(255,255,255,.16); --glass:rgba(255,255,255,.07);
+  --r:18px;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{
+  color:var(--cream);
+  background:
+    radial-gradient(1100px 620px at 78% -8%,var(--bg3),transparent 62%),
+    linear-gradient(180deg,var(--bg2),var(--bg1));
+  background-attachment:fixed;
+  -webkit-text-size-adjust:100%;
+  overflow-x:hidden;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+a{color:var(--yellow)}
+h1,h2,h3,p{margin:0}
+#app{min-height:100%;display:flex;flex-direction:column}
+.screen{display:none;flex:1;flex-direction:column;width:100%;max-width:1080px;margin:0 auto;
+  padding:max(14px,env(safe-area-inset-top)) 16px max(14px,env(safe-area-inset-bottom))}
+.screen.active{display:flex;animation:fadein .35s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* top bar + legal bar */
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 0 10px}
+.brand{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.brand b{color:var(--orange)}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.85rem;padding:8px 4px}
+.legalbar{margin-top:auto;padding:18px 0 4px;text-align:center;font-size:.74rem;line-height:1.5;color:var(--muted)}
+.legalbar button{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:inherit;padding:2px 4px}
+
+/* start */
+.hero{padding:6px 0 4px;text-align:center}
+.eyebrow{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);font-weight:800}
+h1{font-size:clamp(2.6rem,11vw,4.6rem);line-height:.95;font-weight:900;letter-spacing:-.02em;margin:8px 0 10px;
+  background:linear-gradient(180deg,#fff,#d8efe1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(1rem,3.8vw,1.2rem);color:#d6e6dc;max-width:34ch;margin:0 auto}
+.chips{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:16px 0 4px;padding:0}
+.chips li{font-size:.78rem;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:#cfe3d7}
+.jobs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0 8px}
+@media (min-width:700px){.jobs{grid-template-columns:repeat(3,1fr);gap:16px}}
+.job{position:relative;text-align:left;border:1px solid var(--line);border-radius:22px;padding:14px 14px 16px;min-height:168px;
+  background:linear-gradient(165deg,rgba(255,255,255,.12),rgba(255,255,255,.04));display:flex;flex-direction:column;gap:6px;
+  transition:transform .15s ease,border-color .15s ease,background .15s ease}
+.job:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.34)}
+.job:active{transform:scale(.98)}
+.job .ico{width:58px;height:58px;border-radius:16px;background:rgba(255,255,255,.1);display:grid;place-items:center;margin-bottom:4px}
+.job .ico svg{width:42px;height:42px}
+.job h3{font-size:1.12rem;font-weight:800}
+.job p{font-size:.82rem;color:#c3d9cc;line-height:1.35}
+.pill{position:absolute;top:12px;right:12px;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:999px}
+.pill.play{background:var(--orange);color:#1a1208}
+.pill.prev{border:1px solid var(--line);color:#cfe3d7;background:rgba(0,0,0,.18)}
+.job.playable{border-color:var(--orange);box-shadow:0 0 0 1px var(--orange),0 12px 34px rgba(255,122,26,.22);
+  background:linear-gradient(165deg,rgba(255,122,26,.22),rgba(255,255,255,.05))}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 26px;border-radius:16px;border:0;
+  font-weight:900;font-size:1.05rem;letter-spacing:.01em;background:var(--orange);color:#1a1208;box-shadow:0 8px 0 var(--orange-d),0 14px 26px rgba(0,0,0,.28);
+  transition:transform .12s ease,box-shadow .12s ease}
+.btn:active{transform:translateY(5px);box-shadow:0 3px 0 var(--orange-d),0 6px 14px rgba(0,0,0,.28)}
+.btn.ghost{background:transparent;color:var(--cream);border:2px solid var(--line);box-shadow:none}
+.btn.ghost:active{transform:scale(.98)}
+.btn.block{width:100%}
+.iconbtn{width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--glass);display:grid;place-items:center;font-size:1.3rem}
+
+/* intro */
+.intro{display:grid;gap:18px;align-items:center;margin:auto 0;padding:6px 0}
+@media (min-width:860px){.intro{grid-template-columns:1.1fr 1fr;gap:34px}}
+.intro .art{border-radius:26px;overflow:hidden;border:1px solid var(--line);box-shadow:0 18px 50px rgba(0,0,0,.35);aspect-ratio:4/3;background:#9fd6c0}
+.intro .art svg{display:block;width:100%;height:100%}
+.intro h2{font-size:clamp(1.6rem,6vw,2.3rem);line-height:1.08;font-weight:900;margin:6px 0 10px}
+.intro p{color:#d6e6dc;line-height:1.5;margin-bottom:12px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 18px;padding:0;list-style:none}
+.facts li{font-size:.8rem;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--glass)}
+.warn{font-size:.82rem;color:#ffd9b8;background:rgba(255,122,26,.12);border:1px solid rgba(255,122,26,.4);border-radius:14px;padding:10px 12px}
+
+/* play */
+.hud{display:flex;align-items:center;gap:12px;padding:2px 0 10px}
+.hud-title{flex:1;min-width:0}
+.hud-title b{display:block;font-size:1rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hud-title small{display:block;color:var(--muted);font-size:.78rem}
+.shield{width:36%;max-width:170px}
+.shield span{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:5px;font-weight:700}
+.bar{height:10px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--green),#7be3a6);border-radius:99px;transition:width .5s ease,background .3s ease}
+.playgrid{display:grid;gap:12px;flex:1;align-content:start}
+@media (min-width:860px) and (orientation:landscape){.playgrid{grid-template-columns:1.25fr 1fr;gap:22px;align-items:start}}
+@media (orientation:landscape) and (max-height:560px){
+  .screen{padding-top:8px;padding-bottom:8px}
+  .hud{padding-bottom:6px}
+  .playgrid{grid-template-columns:calc((100vh - 84px) * 1.3333) minmax(0,1fr);gap:14px;align-items:start}
+  .stage{border-radius:18px}
+  .side{gap:8px}
+  .panel{padding:10px 12px}
+  .hz-text{margin:4px 0 6px;min-height:0;font-size:.92rem}
+  .timer{margin-bottom:8px}
+  .choices{gap:7px}
+  .choice{min-height:46px;padding:4px 12px;font-size:.95rem}
+  .choice .ci{width:34px;height:34px}
+  .slot{padding:5px 2px 4px}
+  .intro{grid-template-columns:1fr 1fr;gap:18px}
+  .intro .art{max-height:calc(100vh - 90px)}
+}
+@media (max-width:360px){.screen{padding-left:12px;padding-right:12px}.btn{padding:0 18px}.hud-title b{font-size:.92rem}.slot small{font-size:.54rem}}
+@media (orientation:landscape) and (max-height:560px) and (max-width:760px){.slot small{display:none}.slot{padding:8px 2px}}
+.stage{position:relative;border-radius:24px;overflow:hidden;border:1px solid var(--line);box-shadow:0 18px 50px rgba(0,0,0,.35);aspect-ratio:4/3;background:#9fd6c0}
+.stage svg{display:block;width:100%;height:100%}
+.stage.shake{animation:shake .45s ease}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}
+.flash{position:absolute;inset:0;pointer-events:none;opacity:0}
+.flash.bad{background:radial-gradient(circle at 50% 50%,rgba(229,72,77,0) 30%,rgba(229,72,77,.65));animation:flash .7s ease}
+.flash.good{background:radial-gradient(circle at 50% 50%,rgba(47,191,113,0) 40%,rgba(47,191,113,.5));animation:flash .7s ease}
+@keyframes flash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+.callout{position:absolute;left:50%;top:10px;transform:translate(-50%,-14px) scale(.8);opacity:0;pointer-events:none;
+  background:var(--red);color:#fff;font-weight:900;letter-spacing:.06em;padding:8px 18px;border-radius:12px;font-size:1.05rem;
+  box-shadow:0 8px 20px rgba(0,0,0,.3);transition:transform .22s cubic-bezier(.2,1.4,.4,1),opacity .2s ease;white-space:nowrap}
+.callout.on{opacity:1;transform:translate(-50%,0) scale(1)}
+.callout.ok{background:var(--green-d)}
+.side{display:grid;gap:12px;min-width:0}
+.playgrid>*,.panel,.choices,.choice,.choice .cl,.hz-title span{min-width:0}
+.choice .cl,.hz-title span,.fc-name{overflow-wrap:anywhere;-webkit-hyphens:auto;hyphens:auto}
+.tray{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.slot{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px 6px;border-radius:14px;border:1.5px dashed rgba(255,255,255,.28);color:#7f9a8c;text-align:center;transition:all .3s ease}
+.slot .ico{width:34px;height:34px;display:grid;place-items:center}
+.slot svg{width:26px;height:26px}
+.slot small{font-size:.6rem;line-height:1.1;font-weight:700;letter-spacing:0;max-width:100%}
+.slot.on{border-style:solid;border-color:var(--green);background:rgba(47,191,113,.16);color:#c9f5da;transform:translateY(-3px)}
+.slot.miss{border-color:rgba(229,72,77,.5);color:#e8a3a5}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid var(--line);border-radius:22px;padding:14px}
+.hz-title{font-size:1.25rem;font-weight:900;display:flex;align-items:center;gap:10px}
+.hz-title i{font-style:normal;background:var(--red);color:#fff;border-radius:9px;padding:2px 8px;font-size:.8rem;letter-spacing:.06em}
+.hz-text{color:#d6e6dc;margin:6px 0 10px;line-height:1.45;min-height:2.9em}
+.timer{height:7px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;margin-bottom:12px}
+.timer i{display:block;height:100%;width:100%;background:var(--yellow);transform-origin:left;transform:scaleX(1)}
+.choices{display:grid;gap:10px}
+.choice{display:flex;align-items:center;gap:12px;text-align:left;min-height:62px;padding:8px 14px;border-radius:16px;border:3px solid transparent;
+  background:var(--paper);color:var(--ink);font-weight:800;font-size:1.02rem;box-shadow:0 5px 0 rgba(0,0,0,.28);transition:transform .1s ease,background .2s ease,border-color .2s ease}
+.choice:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.28)}
+.choice .ci{width:40px;height:40px;border-radius:12px;background:#e9f0e4;display:grid;place-items:center;flex:none;color:var(--ink2)}
+.choice svg{width:26px;height:26px}
+.choice.right{background:#e3f8ec;border-color:var(--green)}
+.choice.wrong{background:#fde8e8;border-color:var(--red)}
+.choice[disabled]{cursor:default;opacity:.92}
+.choice[disabled]:not(.right):not(.wrong){opacity:.55}
+
+/* feature pop-up (centre of the screen) */
+.sheet{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom));
+  pointer-events:none;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility 0s linear .22s}
+.sheet.on{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .22s ease}
+.sheet .in{width:100%;max-width:600px;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow:auto;background:var(--paper);color:var(--ink);
+  border-radius:24px;padding:16px 16px 14px;box-shadow:0 30px 80px rgba(0,0,0,.5);border-top:7px solid var(--green);
+  transform:translateY(16px) scale(.94);transition:transform .34s cubic-bezier(.2,1.3,.4,1)}
+.sheet.on .in{transform:none}
+.sheet.bad .in{border-top-color:var(--red)}
+.fc-head{font-size:1.25rem;font-weight:900;display:flex;align-items:center;gap:10px;margin-bottom:10px;line-height:1.2}
+.fc-head .mark{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#fff;background:var(--green-d);font-size:1.05rem}
+.sheet.bad .fc-head .mark{background:var(--red)}
+.fc-body{display:grid;gap:12px}
+@media (min-width:540px){.fc-body{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center}}
+.fc-art{border-radius:16px;overflow:hidden;border:1px solid #dfe8e2;aspect-ratio:5/4;background:#eef4f0}
+.fc-art svg{display:block;width:100%;height:100%}
+.fc-eyebrow{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#c2410c}
+.sheet.bad .fc-eyebrow{color:#b42318}
+.fc-name{font-size:1.22rem;font-weight:900;line-height:1.2;margin:4px 0 6px;color:var(--ink)}
+.fc-text{color:var(--ink2);line-height:1.45;font-size:.95rem}
+.fc-extra{margin-top:8px;font-size:.84rem;font-weight:700;color:#14412c;background:#e3f0e8;border-radius:12px;padding:7px 10px}
+.fc-extra[hidden]{display:none}
+.sheet .btn{margin-top:14px}
+.sheet .note{font-size:.7rem;color:#6a7f73;margin-top:10px;line-height:1.4}
+.fc-art .halo,.fc-art .inset{display:none}
+.fc-art .halo{fill:none;stroke:#ffa600;stroke-width:2.4;stroke-linejoin:round;animation:halo 1.1s ease-in-out infinite}
+.fc-art[data-hot="ear"] [data-k="ear"],.fc-art[data-hot="visor"] [data-k="visor"],.fc-art[data-hot="susp"] [data-k="susp"],
+.fc-art[data-hot="shell"] [data-k="shell"],.fc-art[data-hot="neck"] [data-k="neck"]{display:inline}
+@keyframes halo{50%{stroke-opacity:.45}}
+@media (orientation:landscape) and (max-height:560px){
+  .sheet .in{max-width:760px;padding:12px 14px}
+  .fc-body{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center}
+  .fc-art{aspect-ratio:auto;height:calc(100vh - 176px);max-height:210px;min-height:120px}
+  .fc-head{font-size:1.08rem;margin-bottom:6px}
+  .fc-name{font-size:1.08rem}
+  .fc-text{font-size:.9rem}
+  .sheet .btn{margin-top:10px;min-height:46px}
+  .sheet .note{margin-top:6px}
+}
+.scrim{position:fixed;inset:0;background:rgba(5,16,11,.6);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:15}
+.scrim.on{opacity:1;pointer-events:auto}
+
+/* language switch */
+.tb-right{display:flex;align-items:center;gap:6px}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:rgba(0,0,0,.18);flex:none}
+.lang button{background:none;border:0;color:var(--muted);font-size:.74rem;font-weight:800;letter-spacing:.06em;padding:6px 10px;min-width:40px;min-height:34px}
+.lang button[aria-pressed="true"]{background:var(--orange);color:#1a1208}
+.lang-inline{vertical-align:middle;margin-left:4px}
+.lang-inline button{min-height:28px;padding:4px 9px;font-size:.68rem}
+.legalbar a{color:var(--muted)}
+.legalbar b{color:#cfe3d7}
+
+/* result */
+.result{display:grid;gap:14px;margin:auto 0;padding:6px 0;text-align:center}
+.stars{display:flex;justify-content:center;gap:8px;margin:2px 0}
+.stars svg{width:54px;height:54px}
+.result h2{font-size:clamp(1.7rem,7vw,2.5rem);font-weight:900;line-height:1.05}
+.big{font-size:3.3rem;font-weight:900;color:var(--yellow);line-height:1}
+.big small{font-size:1rem;color:var(--muted);font-weight:700;display:block;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.recap{display:grid;gap:8px;text-align:left}
+.recap .row{display:flex;gap:10px;align-items:center;background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:9px 12px;font-size:.92rem}
+.recap .row b{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.85rem;color:#fff;background:var(--green-d)}
+.recap .row.no b{background:var(--red)}
+.recap .row span{flex:1}
+.recap .row small{color:var(--muted);display:block}
+.full{text-align:left;background:linear-gradient(165deg,rgba(255,122,26,.18),rgba(255,255,255,.04));border:1px solid rgba(255,122,26,.45);border-radius:20px;padding:14px 16px}
+.full h3{font-size:1rem;font-weight:900;margin-bottom:8px;color:#ffd9b8}
+.full ul{margin:0;padding-left:1.1rem;line-height:1.55;font-size:.92rem;color:#e6efe9}
+.qr{display:flex;align-items:center;gap:12px;margin-top:10px;font-size:.84rem;color:#cfe3d7}
+.qr div{flex:none;width:64px;height:64px;border:2px dashed rgba(255,255,255,.4);border-radius:10px;display:grid;place-items:center;font-size:.6rem;text-align:center;line-height:1.1;color:var(--muted)}
+.cta{display:grid;gap:10px;grid-template-columns:1fr;margin-top:4px}
+@media (min-width:560px){.cta{grid-template-columns:1fr 1fr}}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:30;display:none;align-items:flex-end;justify-content:center;padding:12px}
+.modal.on{display:flex}
+@media (min-width:700px){.modal{align-items:center}}
+.modal .box{position:relative;z-index:31;width:100%;max-width:620px;max-height:88vh;overflow:auto;background:var(--paper);color:var(--ink);border-radius:26px;padding:22px 20px 18px;
+  box-shadow:0 30px 80px rgba(0,0,0,.5);animation:fadein .25s ease both}
+.modal .back{position:absolute;inset:0;background:rgba(5,16,11,.65)}
+.modal h2{font-size:1.45rem;font-weight:900;margin-bottom:4px;padding-right:48px}
+.modal h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:#5d7467;margin:14px 0 6px}
+.modal p,.modal li{color:var(--ink2);line-height:1.5;font-size:.95rem}
+.modal ul{margin:0;padding-left:1.1rem}
+.modal .x{position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:12px;border:1px solid #d7e0d9;background:#fff;color:var(--ink);font-size:1.2rem}
+.fchips{display:flex;flex-wrap:wrap;gap:8px}
+.fchips span{background:#e3f0e8;color:#14412c;font-weight:700;font-size:.82rem;padding:6px 11px;border-radius:99px}
+.soon{margin-top:14px;padding:10px 12px;border-radius:14px;background:#fff1e3;color:#7a3d06;font-size:.85rem;font-weight:700}
+.small{font-size:.8rem !important;color:#5d7467 !important}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+.idle{animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-1.6px)}}
+.chain{animation:chain .5s linear infinite}
+@keyframes chain{to{stroke-dashoffset:-6}}
+.shield.hit .bar{animation:hitbar .6s ease}
+@keyframes hitbar{30%{box-shadow:0 0 0 3px rgba(229,72,77,.95)}}
+
+.pitch{max-width:34rem;margin:14px auto 0;font-size:.9rem;line-height:1.5;color:#cfe3d7}
+.pitch a{color:var(--orange);font-weight:800}
+
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- START -->
+  <section class="screen active" id="s-start" aria-labelledby="t-start">
+    <header class="topbar">
+      <span class="brand" data-th="brand"></span>
+      <div class="tb-right">
+        <div class="lang" role="group" data-ta="langGroup"><button type="button" data-setlang="de">DE</button><button type="button" data-setlang="en">EN</button></div>
+        <button class="linkbtn" type="button" data-legal data-t="legalBtn"></button>
+      </div>
+    </header>
+    <div class="hero">
+      <p class="eyebrow" data-t="startEyebrow"></p>
+      <h1 id="t-start" data-t="h1"></h1>
+      <p class="lead" data-t="lead"></p>
+      <ul class="chips"><li data-t="chip1"></li><li data-t="chip2"></li><li data-t="chip3"></li></ul>
+      <p class="pitch" data-th="pitch"></p>
+    </div>
+    <div class="jobs" id="jobs"></div>
+    <footer class="legalbar" data-th="footer"></footer>
+  </section>
+
+  <!-- INTRO -->
+  <section class="screen" id="s-intro" aria-labelledby="t-intro">
+    <header class="topbar">
+      <button class="iconbtn" type="button" id="intro-back" data-ta="backJobs">←</button>
+      <span class="brand" data-th="brand"></span>
+      <div class="lang" role="group" data-ta="langGroup"><button type="button" data-setlang="de">DE</button><button type="button" data-setlang="en">EN</button></div>
+    </header>
+    <div class="intro">
+      <div class="art" id="intro-art"></div>
+      <div>
+        <p class="eyebrow" data-t="introEyebrow"></p>
+        <h2 id="t-intro" data-t="introH"></h2>
+        <p data-t="introP"></p>
+        <ul class="facts"><li data-t="fact1"></li><li data-t="fact2"></li><li data-t="fact3"></li></ul>
+        <button class="btn block" type="button" id="btn-start" data-t="start"></button>
+        <p class="small" style="margin-top:12px;color:#9bb3a6 !important" data-t="introNote"></p>
+      </div>
+    </div>
+    <footer class="legalbar" data-th="footer"></footer>
+  </section>
+
+  <!-- PLAY -->
+  <section class="screen" id="s-play" data-ta="playArea">
+    <header class="hud">
+      <button class="iconbtn" type="button" id="play-exit" data-ta="exitGame">←</button>
+      <div class="hud-title"><b data-t="hudTitle"></b><small id="hud-step"></small></div>
+      <div class="shield" data-ta="shield"><span data-t="shield"></span><div class="bar"><i id="shield-fill"></i></div></div>
+    </header>
+    <div class="playgrid">
+      <div class="stage" id="stage">
+        <div class="callout" id="callout" aria-hidden="true"></div>
+        <div class="flash" id="flash"></div>
+      </div>
+      <div class="side">
+        <div class="tray" id="tray" data-ta="tray"></div>
+        <div class="panel">
+          <div class="hz-title"><i id="hz-tag"></i><span id="hz-title">…</span></div>
+          <p class="hz-text" id="hz-text">&nbsp;</p>
+          <div class="timer" aria-hidden="true"><i id="timer-fill"></i></div>
+          <div class="choices" id="choices"></div>
+        </div>
+      </div>
+    </div>
+    <footer class="legalbar"><span data-th="footerShort"></span> <span class="lang lang-inline" role="group" data-ta="langGroup"><button type="button" data-setlang="de">DE</button><button type="button" data-setlang="en">EN</button></span></footer>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="s-result" aria-labelledby="t-result">
+    <header class="topbar">
+      <span class="brand" data-th="brand"></span>
+      <div class="tb-right">
+        <div class="lang" role="group" data-ta="langGroup"><button type="button" data-setlang="de">DE</button><button type="button" data-setlang="en">EN</button></div>
+        <button class="linkbtn" type="button" data-legal data-t="legalBtn"></button>
+      </div>
+    </header>
+    <div class="result">
+      <div class="stars" id="stars" aria-hidden="true"></div>
+      <h2 id="t-result" data-t="resH"></h2>
+      <div class="big"><span id="res-pct">0 %</span><small data-t="shield"></small></div>
+      <p id="res-text" style="color:#d6e6dc"></p>
+      <div class="recap" id="recap"></div>
+      <div class="full">
+        <h3 data-t="fullH"></h3>
+        <ul><li data-t="full1"></li><li data-t="full2"></li><li data-t="full3"></li><li data-t="full4"></li><li data-t="full5"></li></ul>
+        <div class="qr"><div>K4</div><span data-t="qrText"></span></div>
+        <a class="btn block" data-mail href="#" data-t="mailBtn" style="margin-top:12px;text-align:center;text-decoration:none"></a>
+      </div>
+      <div class="cta">
+        <button class="btn" type="button" id="res-again" data-t="again"></button>
+        <button class="btn ghost" type="button" id="res-jobs" data-t="otherJobs"></button>
+      </div>
+    </div>
+    <footer class="legalbar" data-th="footer"></footer>
+  </section>
+
+</div>
+
+<!-- feature pop-up (after each hazard) -->
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-title" aria-describedby="sh-text">
+  <div class="in">
+    <h3 class="fc-head"><span class="mark" id="sh-mark">✓</span><span id="sh-title"></span></h3>
+    <div class="fc-body">
+      <div class="fc-art" id="sh-art" data-hot="ear" aria-hidden="true">
+        <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="pf-shell" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b7be0"/><stop offset="1" stop-color="#1b3f93"/></linearGradient>
+            <pattern id="pf-mesh" width="1.25" height="1.25" patternUnits="userSpaceOnUse"><rect width="1.25" height="1.25" fill="rgba(30,36,40,.22)"/><path d="M0 0H1.25M0 0V1.25" stroke="rgba(120,132,138,.95)" stroke-width=".26"/></pattern>
+            <radialGradient id="pf-bg" cx=".55" cy=".4" r=".7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3ece6"/></radialGradient>
+          </defs>
+          <rect width="200" height="160" rx="14" fill="url(#pf-bg)"/>
+          <ellipse cx="104" cy="150" rx="56" ry="5" fill="#000" opacity=".08"/>
+          <g transform="translate(105.4 403.6) scale(2.4)">
+            <rect x="-5.5" y="-119" width="11" height="12" rx="3" fill="#e0b08a"/>
+            <circle cx="-10.4" cy="-126.2" r="3.5" fill="#dca983"/>
+            <circle cx="0" cy="-128" r="14.5" fill="#f1c6a2"/>
+            <path d="M13.3 -130.6 C17 -129.2 17.4 -125.8 13.8 -124.8 Z" fill="#e3ad86"/>
+            <path d="M-14.6 -125.4 C-16.4 -142.4 13.2 -147.2 14.7 -131.4 C9.4 -137.6 -4.2 -138.4 -9.4 -129.6 C-11 -127 -12.8 -125.4 -14.6 -125.4Z" fill="#6a452a"/>
+            <circle cx="5.4" cy="-126.4" r="1.9" fill="#2b1d14"/><ellipse cx="11.2" cy="-126.6" rx="1.3" ry="1.8" fill="#2b1d14"/>
+            <path d="M2.4 -131.2 q2.6 -1.9 5.4 -.3 M9.8 -131.4 q1.7 -1.2 3.4 .1" stroke="#7a4a2a" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+            <path d="M3.6 -119.9 Q7.2 -116.9 11 -119.3" stroke="#8a4b2d" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+            <!-- neck protector cradle -->
+            <path d="M-24.6 -122 C-26.6 -114.6 -23.6 -107.6 -16.4 -105.4 C-12.8 -104.4 -9.4 -105 -7.4 -106.8 L-9.6 -110.6 C-13.4 -110.6 -17 -112.6 -18.8 -117 Z" fill="#17327a" fill-opacity=".86" stroke="#112a66" stroke-width=".6"/>
+            <path d="M-23.4 -116.4 C-23.2 -112.2 -20.8 -109 -16.6 -107.6" stroke="#fff" stroke-opacity=".6" stroke-width=".7" fill="none" stroke-linecap="round"/>
+            <!-- shell -->
+            <path d="M22.5 -136.5 C23.4 -151.5 10.5 -163.8 -3 -163.5 C-16.5 -163.2 -25.6 -152.4 -24.9 -139.5 C-24.6 -131.5 -23.6 -125 -20.6 -119.4 C-17.6 -121.6 -12.2 -127.4 -7.8 -130.8 C-3.5 -133.6 2 -134.8 7.5 -135.6 C12 -136.2 16.6 -136.4 19.6 -136.4 Z" fill="url(#pf-shell)" stroke="#112a66" stroke-width=".6"/>
+            <g fill="none" stroke="#f4f7fb" stroke-linecap="round">
+              <path d="M19.8 -141.5 C14.5 -151.6 3.5 -157.6 -10.2 -156.6 C-17 -156 -21.6 -151.6 -23.6 -146" stroke-width="4.4"/>
+              <path d="M15.6 -151.4 C9.4 -158 -1.2 -161 -12.4 -159.8" stroke-width="2"/>
+              <path d="M-20.2 -121.8 C-15.6 -125.6 -10 -130 -4.8 -132.6 C1.6 -134.6 9.8 -135.6 16.6 -135.9" stroke-width="2.4"/>
+            </g>
+            <path d="M12.4 -135.4 C16.8 -136.8 20.8 -137.6 24.4 -136.6 L23.4 -133.9 C20.2 -134.6 16.6 -134.5 12.8 -133.5 Z" fill="#15357f"/>
+            <path d="M-6.4 -162.4 l6.2 .3 M-14.6 -160.6 l5 .8" stroke="#0f2559" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M20.6 -141.4 C18 -154.6 6.6 -162.6 -5.6 -162.2" stroke="#fff" stroke-width="1.2" fill="none" stroke-opacity=".8" stroke-linecap="round"/>
+            <!-- integrated side panel -->
+            <path d="M-24 -122 C-21 -126 -14 -130.6 -6.4 -132.8 C-1.8 -134 2.4 -134.4 4.2 -134.2 C4.8 -129.6 3.4 -125 0 -122 C-1.6 -120.6 -3.4 -119.6 -5 -119 C-8 -113.2 -14.6 -111.6 -19.2 -113 C-22.4 -114 -24.4 -117.6 -24 -122 Z" fill="#f4f7fb" stroke="#17327a" stroke-width="1.1" stroke-linejoin="round"/>
+            <!-- hearing protection -->
+            <ellipse cx="-10.6" cy="-121" rx="7.4" ry="9.6" fill="#232323"/>
+            <ellipse cx="-12" cy="-121" rx="6.6" ry="9" fill="#f4f7fb" stroke="#1f1f1f" stroke-width=".7"/>
+            <path d="M-15.4 -124.6 l2.8 3.6 l-2.8 3.6 M-11.8 -124.6 l2.8 3.6 l-2.8 3.6" stroke="#1b3f93" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- face protection (mesh visor) -->
+            <path d="M3.2 -133.8 C10 -135.4 17 -136 23.4 -135 L25.2 -112.6 C20.8 -109.4 13.8 -108.6 6.6 -109.8 C4.2 -112 2.8 -116.2 2.4 -120.4 Z" fill="url(#pf-mesh)" stroke="#1b1b1b" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M6.4 -131.6 L7 -114" stroke="#fff" stroke-opacity=".4" stroke-width=".7"/>
+            <!-- 3-point suspension -->
+            <path d="M-22.4 -124.6 C-16.6 -128.2 -9.8 -131.4 -3.2 -133 C1.8 -134.4 6.6 -135.6 11.2 -136.8" stroke="#262626" stroke-width=".9" fill="none" stroke-dasharray="1.8 1.1"/>
+            <circle cx="-22.4" cy="-124.6" r="1.9" fill="#ff7a1a" stroke="#fff" stroke-width=".7"/>
+            <circle cx="-3.2" cy="-133" r="1.9" fill="#ff7a1a" stroke="#fff" stroke-width=".7"/>
+            <circle cx="11.2" cy="-136.8" r="1.8" fill="#ff7a1a" stroke="#fff" stroke-width=".65"/>
+            <!-- highlights (drawn on top) -->
+            <path class="halo glow" data-k="neck" d="M-24.6 -122 C-26.6 -114.6 -23.6 -107.6 -16.4 -105.4 C-12.8 -104.4 -9.4 -105 -7.4 -106.8 L-9.6 -110.6 C-13.4 -110.6 -17 -112.6 -18.8 -117 Z"/>
+            <path class="halo glow" data-k="shell" d="M22.5 -136.5 C23.4 -151.5 10.5 -163.8 -3 -163.5 C-16.5 -163.2 -25.6 -152.4 -24.9 -139.5 C-24.6 -131.5 -23.6 -125 -24 -122 C-24.4 -117.6 -22.4 -114 -19.2 -113 C-14.6 -111.6 -8 -113.2 -5 -119 C-3.4 -119.6 -1.6 -120.6 0 -122 C3.4 -125 4.8 -129.6 4.2 -134.2 C9 -135.4 16 -136.4 22.5 -136.5 Z"/>
+            <ellipse class="halo glow" data-k="ear" cx="-11.6" cy="-121" rx="9.6" ry="12"/>
+            <path class="halo glow" data-k="visor" d="M3.2 -133.8 C10 -135.4 17 -136 23.4 -135 L25.2 -112.6 C20.8 -109.4 13.8 -108.6 6.6 -109.8 C4.2 -112 2.8 -116.2 2.4 -120.4 Z"/>
+            <g class="halo glow" data-k="susp"><circle cx="-22.4" cy="-124.6" r="4"/><circle cx="-3.2" cy="-133" r="4"/><circle cx="11.2" cy="-136.8" r="3.8"/></g>
+          </g>
+          <!-- small top view for the 3-point suspension -->
+          <g class="inset" data-k="susp" transform="translate(32 32)">
+            <circle r="22" fill="#fff" stroke="#c9d6cf" stroke-width="1.4"/>
+            <ellipse rx="15" ry="12.5" fill="#cfe0fa" stroke="#1b3f93" stroke-width="1.6"/>
+            <path d="M12.5 -7.5 Q18 0 12.5 7.5" stroke="#1b1b1b" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <circle cx="-13" cy="0" r="3" fill="#ff7a1a" stroke="#fff" stroke-width="1"/>
+            <circle cx="1" cy="-11.6" r="3" fill="#ff7a1a" stroke="#fff" stroke-width="1"/>
+            <circle cx="1" cy="11.6" r="3" fill="#ff7a1a" stroke="#fff" stroke-width="1"/>
+          </g>
+        </svg>
+      </div>
+      <div class="fc-info">
+        <p class="fc-eyebrow" id="sh-eyebrow"></p>
+        <p class="fc-name" id="sh-feat"></p>
+        <p class="fc-text" id="sh-text"></p>
+        <p class="fc-extra" id="sh-extra" hidden></p>
+      </div>
+    </div>
+    <button class="btn block" type="button" id="sh-next"></button>
+    <p class="note" id="sh-note"></p>
+  </div>
+</div>
+
+<!-- modal -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="back" data-close></div>
+  <div class="box" id="m-box"><button class="x" type="button" data-close data-ta="close">✕</button><div id="m-body"></div></div>
+</div>
+
+<template id="tpl-scene">
+<svg id="scene" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zeichnung: Forstarbeiter mit Helm und Kettensäge im Wald">
+<defs>
+  <linearGradient id="g-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6bbde0"/><stop offset=".62" stop-color="#c8e9dd"/><stop offset="1" stop-color="#f7efcb"/></linearGradient>
+  <radialGradient id="g-sun"><stop offset="0" stop-color="#fffbd8" stop-opacity=".95"/><stop offset="1" stop-color="#fffbd8" stop-opacity="0"/></radialGradient>
+  <linearGradient id="g-h1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aedbbb"/><stop offset="1" stop-color="#93cba6"/></linearGradient>
+  <linearGradient id="g-h2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cbe8f"/><stop offset="1" stop-color="#5da476"/></linearGradient>
+  <linearGradient id="g-gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#78b25c"/><stop offset="1" stop-color="#3e7c40"/></linearGradient>
+  <linearGradient id="g-can" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4aa762"/><stop offset="1" stop-color="#276f42"/></linearGradient>
+  <linearGradient id="g-can2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#62bf74"/><stop offset="1" stop-color="#318652"/></linearGradient>
+  <linearGradient id="g-tr" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a5c3b"/><stop offset=".55" stop-color="#704b2f"/><stop offset="1" stop-color="#533820"/></linearGradient>
+  <linearGradient id="g-shell" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b7be0"/><stop offset="1" stop-color="#1b3f93"/></linearGradient>
+  <pattern id="mesh" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="rgba(30,36,40,.24)"/><path d="M0 0H2M0 0V2" stroke="rgba(214,222,226,.85)" stroke-width=".42"/></pattern>
+  <linearGradient id="g-jac" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8c2e"/><stop offset="1" stop-color="#ee690a"/></linearGradient>
+  <linearGradient id="g-log" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98550"/><stop offset="1" stop-color="#8a5c30"/></linearGradient>
+  <g id="pine"><path d="M0 -28 L-9 -10 H-5 L-12 5 H-6 L-15 21 H15 L6 5 H12 L5 -10 H9 Z"/><rect x="-2.5" y="21" width="5" height="9"/></g>
+</defs>
+
+<!-- sky and sun -->
+<rect width="400" height="300" fill="url(#g-sky)"/>
+<circle cx="322" cy="54" r="62" fill="url(#g-sun)"/>
+<circle cx="322" cy="54" r="16" fill="#fff6c4"/>
+<g fill="#fff" opacity=".82"><ellipse cx="78" cy="46" rx="30" ry="8"/><ellipse cx="100" cy="40" rx="19" ry="8"/><ellipse cx="236" cy="30" rx="26" ry="7"/><ellipse cx="253" cy="25" rx="15" ry="6"/></g>
+
+<!-- far hills and pines -->
+<path d="M0 168 C50 138 105 142 160 158 C220 176 280 140 340 150 C370 156 390 162 400 166 V300 H0Z" fill="url(#g-h1)"/>
+<g fill="#58a67f" opacity=".9">
+  <use href="#pine" transform="translate(18 160) scale(.55)"/><use href="#pine" transform="translate(46 152) scale(.7)"/>
+  <use href="#pine" transform="translate(84 150) scale(.5)"/><use href="#pine" transform="translate(212 163) scale(.55)"/>
+  <use href="#pine" transform="translate(246 156) scale(.72)"/><use href="#pine" transform="translate(284 152) scale(.5)"/>
+  <use href="#pine" transform="translate(378 160) scale(.6)"/>
+</g>
+<path d="M0 192 C60 170 120 178 190 190 C250 200 320 174 400 190 V300 H0Z" fill="url(#g-h2)"/>
+<g fill="#3f8f64">
+  <use href="#pine" transform="translate(30 184) scale(.9)"/><use href="#pine" transform="translate(66 190) scale(.7)"/>
+  <use href="#pine" transform="translate(112 192) scale(.62)"/><use href="#pine" transform="translate(262 196) scale(.8)"/>
+  <use href="#pine" transform="translate(300 196) scale(.66)"/>
+</g>
+
+<!-- ground -->
+<path d="M0 226 C70 218 150 232 230 226 C300 221 360 230 400 224 V300 H0Z" fill="url(#g-gr)"/>
+<path d="M0 272 C100 262 300 262 400 272 V300 H0Z" fill="#2d6634" opacity=".55"/>
+<ellipse cx="170" cy="262" rx="92" ry="13" fill="#b78f5d" opacity=".55"/>
+<g stroke="#2d6634" stroke-width="2" stroke-linecap="round" opacity=".7">
+  <path d="M20 250 l-3 -9 M24 250 l1 -10 M28 250 l4 -8"/><path d="M92 276 l-3 -9 M96 276 l1 -10 M100 276 l4 -8"/>
+  <path d="M310 262 l-3 -9 M314 262 l1 -10 M318 262 l4 -8"/><path d="M360 282 l-3 -9 M364 282 l1 -10 M368 282 l4 -8"/>
+</g>
+
+<!-- left tree -->
+<path d="M30 264 C36 196 38 130 44 66 L64 66 C66 130 68 196 76 264Z" fill="url(#g-tr)"/>
+<g>
+  <circle cx="38" cy="64" r="46" fill="url(#g-can)"/><circle cx="84" cy="44" r="38" fill="url(#g-can2)"/>
+  <circle cx="4" cy="84" r="38" fill="url(#g-can)"/><circle cx="62" cy="14" r="34" fill="url(#g-can2)"/><circle cx="92" cy="80" r="26" fill="url(#g-can)"/>
+</g>
+
+<!-- right tree -->
+<path d="M318 266 C322 204 326 126 331 70 L352 70 C354 130 358 204 366 266Z" fill="url(#g-tr)"/>
+<path d="M331 96 C316 90 300 84 278 80" stroke="#704b2f" stroke-width="9" stroke-linecap="round" fill="none"/>
+<g>
+  <circle cx="306" cy="66" r="42" fill="url(#g-can)"/><circle cx="352" cy="44" r="46" fill="url(#g-can2)"/>
+  <circle cx="394" cy="78" r="38" fill="url(#g-can)"/><circle cx="334" cy="14" r="36" fill="url(#g-can2)"/><circle cx="276" cy="90" r="24" fill="url(#g-can)"/>
+</g>
+
+<!-- log with sawing spot -->
+<g id="log">
+  <rect x="205" y="224" width="98" height="26" rx="13" fill="url(#g-log)"/>
+  <ellipse cx="303" cy="237" rx="9" ry="13" fill="#e2b87c"/><ellipse cx="303" cy="237" rx="5" ry="8" fill="none" stroke="#b98550" stroke-width="1.5"/>
+  <path d="M214 232 h60 M222 242 h50" stroke="#7a4f27" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>
+  <path d="M226 224 l7 -3 l7 3" fill="#e9c58f"/>
+</g>
+<g id="stump"><ellipse cx="368" cy="262" rx="20" ry="9" fill="#6e4a2e"/><rect x="348" y="244" width="40" height="18" fill="url(#g-tr)"/><ellipse cx="368" cy="244" rx="20" ry="8" fill="#d9a96c"/><ellipse cx="368" cy="244" rx="12" ry="4.5" fill="none" stroke="#b98550" stroke-width="1.4"/></g>
+
+<!-- snag hazard: thorny branch from the left tree -->
+<g id="hz-snag" opacity="0">
+  <g id="sn-branch">
+    <path d="M62 140 C84 132 108 138 132 128" stroke="#6b4a2d" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <g fill="#4a3320"><path d="M78 134 l-4 -9 l8 6z"/><path d="M94 138 l-2 -10 l8 7z"/><path d="M110 137 l1 -10 l7 8z"/><path d="M122 132 l3 -9 l5 9z"/>
+      <path d="M86 140 l-5 8 l9 -3z"/><path d="M102 142 l-3 9 l9 -4z"/><path d="M116 138 l-1 9 l8 -5z"/></g>
+    <g fill="#3f9a56"><ellipse cx="96" cy="126" rx="9" ry="5" transform="rotate(-25 96 126)"/><ellipse cx="118" cy="146" rx="9" ry="5" transform="rotate(35 118 146)"/><ellipse cx="132" cy="122" rx="8" ry="4.5" transform="rotate(-40 132 122)"/></g>
+  </g>
+</g>
+
+<!-- slip hazard: wet round branch on the ground -->
+<g id="hz-slip" opacity="0">
+  <g fill="#8fd0ee" opacity=".85"><ellipse cx="190" cy="263.6" rx="13" ry="2.4"/><ellipse cx="216" cy="264.4" rx="6" ry="1.6"/></g>
+  <g id="slip-log">
+    <rect x="180" y="252.5" width="28" height="9.5" rx="4.75" fill="#7a5233"/>
+    <ellipse cx="207.5" cy="257.25" rx="3.4" ry="4.75" fill="#d9a96c"/><ellipse cx="207.5" cy="257.25" rx="1.6" ry="2.4" fill="none" stroke="#b98550" stroke-width=".9"/>
+    <path d="M184 255 h15" stroke="#c99a68" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M186 259.4 h11" stroke="#5c3b22" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>
+    <g fill="#6fae4f"><ellipse cx="190" cy="252.8" rx="4" ry="1.5"/><ellipse cx="200" cy="253.2" rx="2.6" ry="1.2"/></g>
+  </g>
+</g>
+
+<!-- WORKER -->
+<g id="worker" transform="translate(165 262)">
+ <g id="worker-in">
+  <g class="idle">
+  <ellipse cx="0" cy="1" rx="38" ry="7" fill="#1d3b22" opacity=".38"/>
+  <rect x="-17" y="-62" width="14" height="54" rx="5" fill="#2f5a3d"/><rect x="3" y="-62" width="14" height="54" rx="5" fill="#2f5a3d"/>
+  <rect x="-17" y="-36" width="14" height="5" fill="#ffd23f"/><rect x="3" y="-36" width="14" height="5" fill="#ffd23f"/>
+  <path d="M-21 -13 h20 v11 a3 3 0 0 1 -3 3 h-14 a3 3 0 0 1 -3 -3z" fill="#2c2825"/><path d="M1 -13 h20 v11 a3 3 0 0 1 -3 3 h-14 a3 3 0 0 1 -3 -3z" fill="#2c2825"/>
+  <path d="M-25 -104 a12 12 0 0 1 12 -12 h26 a12 12 0 0 1 12 12 v44 a6 6 0 0 1 -6 6 h-38 a6 6 0 0 1 -6 -6z" fill="url(#g-jac)"/>
+  <rect x="-25" y="-86" width="50" height="6" fill="#f4efe0"/><rect x="-25" y="-75" width="50" height="2.5" fill="#f4efe0" opacity=".75"/>
+  <path d="M0 -116 v56" stroke="#d65c00" stroke-width="1.6"/>
+  <path d="M-22 -102 C-32 -88 -24 -74 -10 -68" stroke="#f2740f" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <g id="saw">
+    <path d="M24 -64 L74 -40" stroke="#c9d3d8" stroke-width="8" stroke-linecap="round"/>
+    <path class="chain" d="M24 -64 L74 -40" stroke="#37474f" stroke-width="2.4" stroke-dasharray="3 3" stroke-linecap="butt"/>
+    <rect x="-8" y="-80" width="38" height="24" rx="8" fill="#f0a020" transform="rotate(14 11 -68)"/>
+    <rect x="-3" y="-76" width="14" height="9" rx="4" fill="#2b2b2b" transform="rotate(14 11 -68)"/>
+    <path d="M-8 -70 C-18 -68 -20 -56 -12 -52" stroke="#2b2b2b" stroke-width="5" fill="none" stroke-linecap="round"/>
+  </g>
+  <path d="M22 -102 C36 -92 36 -76 22 -66" stroke="#ff8c2e" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <circle cx="-9" cy="-66" r="7" fill="#f7c948"/><circle cx="21" cy="-65" r="7" fill="#f7c948"/>
+  <rect x="-5.5" y="-119" width="11" height="9" rx="3" fill="#e0b08a"/>
+  <!-- head: 3/4 view, facing right towards the log -->
+  <circle cx="-10.4" cy="-126.2" r="3.5" fill="#dca983"/>
+  <circle cx="0" cy="-128" r="14.5" fill="#f1c6a2"/>
+  <path d="M13.3 -130.6 C17 -129.2 17.4 -125.8 13.8 -124.8 Z" fill="#e3ad86"/>
+  <path d="M-14.6 -125.4 C-16.4 -142.4 13.2 -147.2 14.7 -131.4 C9.4 -137.6 -4.2 -138.4 -9.4 -129.6 C-11 -127 -12.8 -125.4 -14.6 -125.4Z" fill="#6a452a"/>
+  <g id="face">
+    <circle cx="5.4" cy="-126.4" r="1.9" fill="#2b1d14"/>
+    <ellipse cx="11.2" cy="-126.6" rx="1.3" ry="1.8" fill="#2b1d14"/>
+    <path d="M2.4 -131.2 q2.6 -1.9 5.4 -.3 M9.8 -131.4 q1.7 -1.2 3.4 .1" stroke="#7a4a2a" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+    <path id="mouth-ok" d="M3.6 -119.9 Q7.2 -116.9 11 -119.3" stroke="#8a4b2d" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+    <g id="mouth-no" display="none"><ellipse cx="7.4" cy="-118.4" rx="2.4" ry="2.9" fill="#8a3b2a"/><path d="M2.8 -132.8 l4 2.6 M13.6 -133 l-3 2.4" stroke="#7a4a2a" stroke-width="1.4" stroke-linecap="round"/></g>
+  </g>
+  <!-- helmet: own simplified drawing (generic example helmet, no logo) -->
+  <g id="helmet">
+    <g id="m-neck" opacity="0">
+      <path d="M-24.6 -122 C-26.6 -114.6 -23.6 -107.6 -16.4 -105.4 C-12.8 -104.4 -9.4 -105 -7.4 -106.8 L-9.6 -110.6 C-13.4 -110.6 -17 -112.6 -18.8 -117 Z" fill="#17327a" fill-opacity=".86" stroke="#112a66" stroke-width="1"/>
+      <path d="M-23.4 -116.4 C-23.2 -112.2 -20.8 -109 -16.6 -107.6" stroke="#fff" stroke-opacity=".6" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    </g>
+    <path d="M22.5 -136.5 C23.4 -151.5 10.5 -163.8 -3 -163.5 C-16.5 -163.2 -25.6 -152.4 -24.9 -139.5 C-24.6 -131.5 -23.6 -125 -20.6 -119.4 C-17.6 -121.6 -12.2 -127.4 -7.8 -130.8 C-3.5 -133.6 2 -134.8 7.5 -135.6 C12 -136.2 16.6 -136.4 19.6 -136.4 Z" fill="url(#g-shell)" stroke="#112a66" stroke-width="1"/>
+    <g fill="none" stroke="#f4f7fb" stroke-linecap="round">
+      <path d="M19.8 -141.5 C14.5 -151.6 3.5 -157.6 -10.2 -156.6 C-17 -156 -21.6 -151.6 -23.6 -146" stroke-width="4.4"/>
+      <path d="M15.6 -151.4 C9.4 -158 -1.2 -161 -12.4 -159.8" stroke-width="2"/>
+      <path d="M-20.2 -121.8 C-15.6 -125.6 -10 -130 -4.8 -132.6 C1.6 -134.6 9.8 -135.6 16.6 -135.9" stroke-width="2.4"/>
+    </g>
+    <path d="M12.4 -135.4 C16.8 -136.8 20.8 -137.6 24.4 -136.6 L23.4 -133.9 C20.2 -134.6 16.6 -134.5 12.8 -133.5 Z" fill="#15357f"/>
+    <path d="M-6.4 -162.4 l6.2 .3 M-14.6 -160.6 l5 .8" stroke="#0f2559" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M19.4 -146.6 C18.4 -150.4 16.2 -153.6 13.2 -156" stroke="#fff" stroke-opacity=".55" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <g id="m-ear-arm" opacity="0"><path d="M-4.6 -133.4 C-8 -131.6 -10.6 -129 -11.4 -126" stroke="#1e1e1e" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
+    <g id="m-visor-arm" opacity="0"><path d="M2.8 -125.8 L-3.8 -126.8" stroke="#1b1b1b" stroke-width="2.6" stroke-linecap="round"/><circle cx="-4.2" cy="-126.8" r="2.2" fill="#2e2e2e"/></g>
+    <g id="m-shell" opacity="0">
+      <path d="M-24 -122 C-21 -126 -14 -130.6 -6.4 -132.8 C-1.8 -134 2.4 -134.4 4.2 -134.2 C4.8 -129.6 3.4 -125 0 -122 C-1.6 -120.6 -3.4 -119.6 -5 -119 C-8 -113.2 -14.6 -111.6 -19.2 -113 C-22.4 -114 -24.4 -117.6 -24 -122 Z" fill="#f4f7fb" stroke="#17327a" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M20.6 -141.4 C18 -154.6 6.6 -162.6 -5.6 -162.2" stroke="#fff" stroke-width="1.5" fill="none" stroke-opacity=".8" stroke-linecap="round"/>
+    </g>
+    <g id="m-ear" opacity="0">
+      <ellipse cx="-10.6" cy="-121" rx="7.4" ry="9.6" fill="#232323"/>
+      <ellipse cx="-12" cy="-121" rx="6.6" ry="9" fill="#f4f7fb" stroke="#1f1f1f" stroke-width=".9"/>
+      <path d="M-15.4 -124.6 l2.8 3.6 l-2.8 3.6 M-11.8 -124.6 l2.8 3.6 l-2.8 3.6" stroke="#1b3f93" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g id="m-visor" opacity="0">
+      <path d="M3.2 -133.8 C10 -135.4 17 -136 23.4 -135 L25.2 -112.6 C20.8 -109.4 13.8 -108.6 6.6 -109.8 C4.2 -112 2.8 -116.2 2.4 -120.4 Z" fill="url(#mesh)" stroke="#1b1b1b" stroke-width="1.9" stroke-linejoin="round"/>
+      <path d="M6.4 -131.6 L7 -114" stroke="#fff" stroke-opacity=".35" stroke-width="1"/>
+    </g>
+    <g id="m-susp" opacity="0">
+      <path d="M-22.4 -124.6 C-16.6 -128.2 -9.8 -131.4 -3.2 -133 C1.8 -134.4 6.6 -135.6 11.2 -136.8" stroke="#262626" stroke-width="1.2" fill="none" stroke-dasharray="2.2 1.4"/>
+      <circle cx="-22.4" cy="-124.6" r="2.2" fill="#ff7a1a" stroke="#fff" stroke-width=".9"/>
+      <circle cx="-3.2" cy="-133" r="2.2" fill="#ff7a1a" stroke="#fff" stroke-width=".9"/>
+      <circle cx="11.2" cy="-136.8" r="2" fill="#ff7a1a" stroke="#fff" stroke-width=".85"/>
+    </g>
+  </g>
+  </g>
+  <!-- effects tied to worker -->
+  <circle id="fx-bubble" cx="0" cy="-132" r="38" fill="rgba(47,191,113,.16)" stroke="#2fbf71" stroke-width="3" opacity="0"/>
+  <g id="fx-stars" opacity="0" fill="#ffd23f" stroke="#e09500" stroke-width="1">
+    <path transform="translate(-26 -162)" d="M0 -6 L1.8 -1.8 L6.4 -1.6 L2.8 1.2 L4 5.6 L0 3 L-4 5.6 L-2.8 1.2 L-6.4 -1.6 L-1.8 -1.8Z"/>
+    <path transform="translate(2 -176)" d="M0 -6 L1.8 -1.8 L6.4 -1.6 L2.8 1.2 L4 5.6 L0 3 L-4 5.6 L-2.8 1.2 L-6.4 -1.6 L-1.8 -1.8Z"/>
+    <path transform="translate(28 -160)" d="M0 -6 L1.8 -1.8 L6.4 -1.6 L2.8 1.2 L4 5.6 L0 3 L-4 5.6 L-2.8 1.2 L-6.4 -1.6 L-1.8 -1.8Z"/>
+  </g>
+ </g>
+</g>
+
+<!-- noise hazard -->
+<g id="hz-noise" opacity="0">
+  <g fill="none" stroke="#ff4d4d" stroke-width="3.2" stroke-linecap="round">
+    <circle class="nr" cx="178" cy="192" r="12"/><circle class="nr" cx="178" cy="192" r="12"/><circle class="nr" cx="178" cy="192" r="12"/>
+  </g>
+  <g id="n-ear" fill="none" stroke="#ff4d4d" stroke-width="3.2" stroke-linecap="round">
+    <path d="M199 120 q7 6 0 14"/><path d="M206 115 q12 11 0 24"/><path d="M213 110 q17 16 0 34"/>
+  </g>
+</g>
+
+<!-- chips hazard (filled by script) -->
+<g id="hz-chips"></g>
+
+<!-- falling branch -->
+<g id="hz-branch" opacity="0" transform="translate(300 40)">
+  <g id="br-body">
+    <path d="M-46 8 C-22 -1 10 -4 48 -9" stroke="#6b4829" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <path d="M-14 1 L-24 -14 M12 -4 L22 -20 M30 -7 L44 -16" stroke="#6b4829" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    <g fill="#3f9a56"><ellipse cx="-27" cy="-17" rx="9" ry="5" transform="rotate(-35 -27 -17)"/><ellipse cx="24" cy="-24" rx="9" ry="5" transform="rotate(-50 24 -24)"/>
+      <ellipse cx="46" cy="-19" rx="9" ry="5" transform="rotate(-20 46 -19)"/><ellipse cx="-46" cy="4" rx="8" ry="4.5" transform="rotate(-10 -46 4)"/></g>
+  </g>
+</g>
+
+<!-- effects in world space -->
+<g id="hz-fx"></g>
+</svg>
+</template>
+
+<script>
+(() => {
+'use strict';
+
+/* ============ helpers ============ */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const SVGNS = 'http://www.w3.org/2000/svg';
+const RM = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+let epoch = 0;                                   // bumps to cancel running animations
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const rand = (a, b) => a + Math.random() * (b - a);
+// A stale wait (the player left or restarted) never resolves, so the code waiting on it simply stops.
+const sleep = ms => { const my = epoch; return new Promise(r => setTimeout(() => { if (my === epoch) r(); }, RM ? Math.min(ms, 30) : ms)); };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const E = {
+  lin: t => t,
+  out: t => 1 - Math.pow(1 - t, 3),
+  inn: t => t * t * t,
+  io: t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+  back: t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); }
+};
+function tween(ms, fn, ease = E.io) {
+  const my = epoch;
+  return new Promise(res => {
+    if (RM) { fn(1, 1); res(); return; }
+    const t0 = performance.now();
+    const step = now => {
+      if (my !== epoch) return;                  // stale: never resolve
+      const p = clamp((now - t0) / ms, 0, 1);
+      fn(ease(p), p);
+      if (p < 1) requestAnimationFrame(step); else res();
+    };
+    requestAnimationFrame(step);
+  });
+}
+function xf(el, o) {
+  const x = o.x || 0, y = o.y || 0, r = o.r || 0, px = o.px || 0, py = o.py || 0;
+  const sx = o.sx != null ? o.sx : (o.s != null ? o.s : 1), sy = o.sy != null ? o.sy : (o.s != null ? o.s : 1);
+  el.setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) translate(${px} ${py}) rotate(${r.toFixed(2)}) scale(${sx.toFixed(3)} ${sy.toFixed(3)}) translate(${-px} ${-py})`);
+}
+const setOp = (el, v) => el.setAttribute('opacity', String(v));
+
+/* ============ language ============ */
+let LANG = ((navigator.language || 'de') + '').slice(0, 2).toLowerCase() === 'en' ? 'en' : 'de';
+const L = o => (o && typeof o === 'object') ? (o[LANG] != null ? o[LANG] : o.de) : o;
+const MAIL = 'Kareem@k4-engineering.eu';
+const mailHref = () => 'mailto:' + MAIL + '?subject=' + encodeURIComponent(LANG === 'en' ? 'Enquiry: interactive booth experience' : 'Anfrage: interaktives Messeerlebnis');
+const LINK = '<a href="https://k4-engineering.eu" target="_blank" rel="noopener noreferrer">k4-engineering.eu</a>';
+const STR = {
+  de: {
+    docTitle: 'Arbeitstag – interaktives Messespiel (Beispiel) | K4-Engineering',
+    brand: '<b>K4</b>-Engineering · Interaktives Beispiel',
+    langGroup: 'Sprache wählen',
+    legalBtn: 'Rechtliches',
+    startEyebrow: 'Interaktives Messespiel · Beispiel',
+    h1: 'Arbeitstag',
+    lead: 'Wähle deinen Job. Erkenne die Gefahren. Finde den passenden Schutz.',
+    chip1: 'Beispiel: 1 von 6 Jobs spielbar', chip2: 'ca. 2 Minuten', chip3: 'Deutsch & English',
+    pitch: 'Dieses Spiel zeigt, was auf <b>Ihrem Messestand</b> möglich ist: <b>interaktive 3D-Modelle zum Anfassen</b>, <b>Quiz, Fragebögen und Spiele</b> oder <b>Augmented Reality</b> für Ihr Produkt – auf Tablet oder großem Bildschirm. <a data-mail href="#">Jetzt anfragen</a>',
+    play: 'Spielen', preview: 'Vorschau',
+    backJobs: 'Zurück zur Jobauswahl',
+    introEyebrow: 'Job: Forst',
+    introH: 'Sturmholz aufarbeiten',
+    introP: 'Heute geht es im Wald zur Sache. Du startest nur mit der Helmschale. Bei jeder Gefahr wählst du das Helm-Merkmal, das dich schützt.',
+    fact1: '5 Gefahren', fact2: '3 Antworten pro Gefahr', fact3: 'ca. 2 Minuten',
+    start: 'Schicht starten',
+    introNote: 'Spielerische Darstellung mit Beispielinhalten. Keine Sicherheitsberatung.',
+    playArea: 'Spiel',
+    exitGame: 'Spiel beenden und zurück zur Auswahl',
+    hudTitle: 'Forst · Sturmholz',
+    step: 'Gefahr {i} von {n}',
+    shield: 'Schutzgrad',
+    tray: 'Dein Helm',
+    close: 'Schließen',
+    sceneLabel: 'Zeichnung: Forstarbeiter mit Helm und Kettensäge im Wald',
+    footer: `Idee &amp; Konzept: <b>K4-Engineering</b> · Alle Inhalte urheberrechtlich geschützt · © 2026 · ${LINK}<br>Beispielinhalte, kein reales Produkt · <button type="button" data-legal>Rechtliches &amp; Datenschutz</button>`,
+    footerShort: `Idee &amp; Konzept: <b>K4-Engineering</b> · © 2026 · ${LINK} · <button type="button" data-legal>Rechtliches</button>`,
+    cProtected: 'GESCHÜTZT!', cOuch: 'AUA!',
+    slowT: 'Zu langsam!', slowX: 'Die Gefahr war schneller. ',
+    eyeOk: 'Dein Helm-Merkmal', eyeNo: 'Das hätte dich geschützt',
+    next: 'Weiter', toResult: 'Ergebnis ansehen',
+    shNote: 'Beispielinhalt. Zeichnung: eigene Illustration von K4-Engineering. In Ihrer Version: Ihre Produktfotos und Merkmale.',
+    resH: 'Schicht beendet!',
+    res3: 'Profi! Dein Helm ist komplett ausgestattet.', res2: 'Gut gemacht! Fast alles war geschützt.',
+    res1: 'Da geht noch mehr. Probiere es gleich nochmal.', res0: 'Autsch! Nochmal versuchen – du schaffst das.',
+    correctWas: 'Richtig wäre: ',
+    fullH: 'Das können wir für Ihren Messestand bauen',
+    full1: '3D-gedruckte, interaktive Modelle zum Anfassen (Licht, Motor, Sensoren)',
+    full2: 'Interaktive Quiz, Fragebögen und Spiele rund um Ihr Produkt',
+    full3: 'Augmented Reality: Ihr Produkt in 3D auf Handy oder Tablet',
+    full4: 'Läuft auf Tablet oder großem Bildschirm an Ihrem Stand, auch offline',
+    full5: 'Mit Ihren Produktfotos, Texten und Ihrem Design, mehrsprachig',
+    qrText: 'Sie haben ein Produkt oder eine Idee? Schreiben Sie uns kurz. Wir melden uns mit einem Vorschlag.',
+    mailBtn: 'Anfrage per E-Mail',
+    again: 'Nochmal spielen', otherJobs: 'Anderen Job ansehen',
+    pvHaz: 'Typische Gefahren (Beispiele)', pvFeat: 'Passende Helm-Merkmale (Beispiele)',
+    pvSoon: 'In Ihrer Version spielbar – mit Gefahren-Szenen und Produktkarten.',
+    pvNote: 'Beispielinhalt.', pvBack: 'Zurück zur Auswahl',
+    legal: `
+<h2 id="m-title">Rechtliches &amp; Datenschutz</h2>
+<h3>Urheberrecht</h3>
+<p>Idee, Konzept, Texte, Grafiken und Programmcode dieses Spiels stammen von K4-Engineering (k4-engineering.eu). © 2026 K4-Engineering. Alle Rechte vorbehalten. Bitte nicht kopieren oder nachbauen – auch nicht in Teilen und nicht als Konzept – ohne schriftliche Zustimmung von K4-Engineering.</p>
+<h3>Beispielinhalte</h3>
+<p>Dies ist ein Beispiel für ein interaktives Messespiel, keine Werbung und keine Sicherheitsberatung. Der gezeigte Helm, seine Merkmale und alle Texte sind frei gewählte Beispiele und stehen für kein reales Produkt und keinen Hersteller. Alle Zeichnungen sind eigene Illustrationen von K4-Engineering.</p>
+<h3>Datenschutz</h3>
+<p>Dieses Spiel speichert keine Daten im Browser, setzt keine Cookies, lädt keine externen Inhalte (keine Schriften, keine Tracker) und sendet keine Eingaben an einen Server. Beim Aufruf der Seite verarbeitet der Hosting-Anbieter technisch notwendige Verbindungsdaten, zum Beispiel die IP-Adresse. Mehr dazu in der Datenschutzerklärung.</p>
+<p style="margin-top:12px"><a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">Impressum</a> · <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a></p>
+<button class="btn block" type="button" data-close style="margin-top:16px">Schließen</button>`
+  },
+  en: {
+    docTitle: 'On the Job – interactive booth game (example) | K4-Engineering',
+    brand: '<b>K4</b>-Engineering · Interactive example',
+    langGroup: 'Choose language',
+    legalBtn: 'Legal',
+    startEyebrow: 'Interactive booth game · Example',
+    h1: 'On the Job',
+    lead: 'Pick your job. Spot the hazards. Find the right protection.',
+    chip1: 'Example: 1 of 6 jobs playable', chip2: 'approx. 2 minutes', chip3: 'Deutsch & English',
+    pitch: 'This game shows what is possible on <b>your booth</b>: <b>interactive 3D-printed models</b>, <b>quizzes, questionnaires and games</b> or <b>augmented reality</b> for your product – on a tablet or a big screen. <a data-mail href="#">Get in touch</a>',
+    play: 'Play', preview: 'Preview',
+    backJobs: 'Back to job selection',
+    introEyebrow: 'Job: Forestry',
+    introH: 'Clearing storm timber',
+    introP: 'Today it gets serious in the forest. You start with just the helmet shell. For each hazard, pick the helmet feature that protects you.',
+    fact1: '5 hazards', fact2: '3 answers per hazard', fact3: 'approx. 2 minutes',
+    start: 'Start shift',
+    introNote: 'Playful illustration with example content. Not safety advice.',
+    playArea: 'Game',
+    exitGame: 'Quit the game and go back',
+    hudTitle: 'Forest · Windthrow',
+    step: 'Hazard {i} of {n}',
+    shield: 'Protection',
+    tray: 'Your helmet',
+    close: 'Close',
+    sceneLabel: 'Drawing: forestry worker with helmet and chainsaw in the forest',
+    footer: `Idea &amp; concept: <b>K4-Engineering</b> · All content protected by copyright · © 2026 · ${LINK}<br>Example content, not a real product · <button type="button" data-legal>Legal &amp; privacy</button>`,
+    footerShort: `Idea &amp; concept: <b>K4-Engineering</b> · © 2026 · ${LINK} · <button type="button" data-legal>Legal</button>`,
+    cProtected: 'PROTECTED!', cOuch: 'OUCH!',
+    slowT: 'Too slow!', slowX: 'The hazard was faster. ',
+    eyeOk: 'Your helmet feature', eyeNo: 'This would have protected you',
+    next: 'Next', toResult: 'See result',
+    shNote: 'Example content. Drawing: our own illustration by K4-Engineering. In your version: your product photos and features.',
+    resH: 'Shift complete!',
+    res3: 'Pro! Your helmet is fully equipped.', res2: 'Well done! Almost everything was protected.',
+    res1: 'There is more to get. Try again right away.', res0: 'Ouch! Try again – you can do it.',
+    correctWas: 'Correct: ',
+    fullH: 'What we can build for your booth',
+    full1: '3D-printed interactive models you can touch (light, motors, sensors)',
+    full2: 'Interactive quizzes, questionnaires and games about your product',
+    full3: 'Augmented reality: your product in 3D on a phone or tablet',
+    full4: 'Runs on a tablet or big screen at your booth, also offline',
+    full5: 'With your product photos, texts and design, multilingual',
+    qrText: 'Do you have a product or an idea? Send us a short message. We will come back with a proposal.',
+    mailBtn: 'Send an enquiry by email',
+    again: 'Play again', otherJobs: 'See other jobs',
+    pvHaz: 'Typical hazards (examples)', pvFeat: 'Matching helmet features (examples)',
+    pvSoon: 'Playable in your version – with hazard scenes and product cards.',
+    pvNote: 'Example content.', pvBack: 'Back to jobs',
+    legal: `
+<h2 id="m-title">Legal &amp; privacy</h2>
+<h3>Copyright</h3>
+<p>The idea, concept, texts, graphics and program code of this game are by K4-Engineering (k4-engineering.eu). © 2026 K4-Engineering. All rights reserved. Please do not copy or rebuild it – not in parts and not as a concept – without written consent from K4-Engineering.</p>
+<h3>Example content</h3>
+<p>This is an example of an interactive booth game, not advertising and not safety advice. The helmet shown, its features and all texts are freely chosen examples and do not stand for any real product or manufacturer. All drawings are our own illustrations by K4-Engineering.</p>
+<h3>Privacy</h3>
+<p>This game stores no data in the browser, sets no cookies, loads no external content (no fonts, no trackers) and sends no input to a server. When the page is opened, the hosting provider processes technically necessary connection data such as the IP address. See the privacy policy for details.</p>
+<p style="margin-top:12px"><a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">Legal notice (Impressum)</a> · <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">Privacy policy</a></p>
+<button class="btn block" type="button" data-close style="margin-top:16px">Close</button>`
+  }
+};
+const T = k => { const v = STR[LANG][k]; return v != null ? v : STR.de[k]; };
+
+/* ============ icons ============ */
+const SV = (inner, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ${extra} aria-hidden="true">${inner}</svg>`;
+const IC = {
+  ear: SV('<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="7" rx="2"/><rect x="16.5" y="14" width="4.5" height="7" rx="2"/>'),
+  visor: SV('<path d="M4 8.5C4 5.5 7.5 4 12 4s8 1.5 8 4.5V13c0 3-3.5 5-8 5s-8-2-8-5z"/><path d="M7 9h10M7 12.5h10M10 6v10M14 6v10"/>'),
+  susp: SV('<circle cx="12" cy="12" r="8.5"/><circle cx="4.6" cy="12" r="2" fill="currentColor"/><circle cx="15.7" cy="4.4" r="2" fill="currentColor"/><circle cx="15.7" cy="19.6" r="2" fill="currentColor"/>'),
+  shell: SV('<path d="M4 16a8 8 0 0 1 16 0z"/><path d="M2.5 16h19"/><path d="M12 8.2V12"/>'),
+  neck: SV('<path d="M5 13a7 7 0 0 1 14 0"/><path d="M4 13h16"/><path d="M6.2 13.6c-.5 3 1.2 5.6 4.2 6.4" stroke-width="3.2"/>'),
+  vent: SV('<path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/>'),
+  size: SV('<path d="M3.5 12h17M7 8l-4 4 4 4M17 8l4 4-4 4"/>'),
+  comm: SV('<path d="M5 14v-2a7 7 0 0 1 14 0v2"/><rect x="4" y="13" width="3.5" height="6" rx="1.5"/><rect x="16.5" y="13" width="3.5" height="6" rx="1.5"/><path d="M18 19c0 2-2 3-5 3"/>'),
+  pad: SV('<path d="M12 3v18M4.6 7.5l14.8 9M19.4 7.5l-14.8 9"/>')
+};
+const JI = {
+  forest: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 5 L19 27 H26 L13 46 H51 L38 27 H45 Z" fill="#2fbf71"/><path d="M32 5 L19 27 H26 L13 46 H32Z" fill="#27a862"/><rect x="29" y="46" width="6" height="11" rx="1.5" fill="#9a6a38"/></svg>',
+  arborist: '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="30" cy="24" r="16" fill="#2fbf71"/><circle cx="20" cy="31" r="10" fill="#27a862"/><circle cx="40" cy="31" r="10" fill="#27a862"/><rect x="27" y="38" width="6" height="18" rx="1.5" fill="#9a6a38"/><path d="M46 8c10 10 8 24-2 30" stroke="#ff7a1a" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="43" cy="39" r="3.2" fill="none" stroke="#ffc83d" stroke-width="2.5"/></svg>',
+  climber: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M26 10h14a10 10 0 0 1 10 10v22a10 10 0 0 1-10 10H26a10 10 0 0 1-10-10V20a10 10 0 0 1 10-10z" fill="none" stroke="#ffc83d" stroke-width="5"/><path d="M16 29h12" stroke="#ffc83d" stroke-width="5" stroke-linecap="round"/><path d="M40 6v52" stroke="#ff7a1a" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 7"/></svg>',
+  rescue: '<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="8" width="48" height="48" rx="14" fill="#e5484d"/><path d="M26 15h12v11h11v12H38v11H26V38H15V26h11z" fill="#fff"/></svg>',
+  road: '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 7 L46 52 H18 Z" fill="#ff7a1a"/><path d="M27.4 22h9.2l2 7H25.4z" fill="#fff"/><path d="M23.4 36h17.2l2.2 7H21.2z" fill="#fff"/><rect x="11" y="50" width="42" height="7" rx="3.5" fill="#4a5e53"/></svg>',
+  industry: '<svg viewBox="0 0 64 64" aria-hidden="true"><polygon points="32,6 54,19 54,45 32,58 10,45 10,19" fill="#79aacd"/><polygon points="32,6 54,19 32,32 10,19" fill="#a5cbe3"/><circle cx="32" cy="34" r="9" fill="#0f2a1f"/></svg>'
+};
+
+/* ============ content ============ */
+/* Generic example features (no manufacturer, no brand names). */
+const FEAT = {
+  ear:   { icon: 'ear', mod: '#m-ear', extra: '#m-ear-arm', c: [-12, -121],
+           btn: { de: 'Integrierter Gehörschutz', en: 'Integrated hearing protection' }, short: { de: 'Gehör', en: 'Hearing' },
+           name: { de: 'Integrierter Gehörschutz', en: 'Integrated hearing protection' },
+           info: { de: 'Er sitzt direkt in der Helmschale und dämpft lauten Lärm, zum Beispiel von der Kettensäge.',
+                   en: 'It sits right in the helmet shell and dampens loud noise, for example from a chainsaw.' } },
+  visor: { icon: 'visor', mod: '#m-visor', extra: '#m-visor-arm', c: [14, -122],
+           btn: { de: 'Integrierter Gesichtsschutz', en: 'Integrated face protection' }, short: { de: 'Visier', en: 'Visor' },
+           name: { de: 'Integrierter Gesichtsschutz', en: 'Integrated face protection' },
+           info: { de: 'Das Gitter-Visier hält Späne und Splitter vom Gesicht fern.',
+                   en: 'The mesh visor keeps chips and splinters away from your face.' } },
+  susp:  { icon: 'susp', mod: '#m-susp', c: [-4, -131],
+           btn: { de: 'Stoßdämpfende Aufhängung', en: 'Shock-absorbing suspension' }, short: { de: 'Dämpfung', en: 'Damping' },
+           name: { de: 'Stoßdämpfende 3-Punkt-Aufhängung', en: 'Shock-absorbing 3-point suspension' },
+           info: { de: 'Die Aufhängung im Helm fängt die Energie eines Aufpralls ab.',
+                   en: 'The suspension inside the helmet absorbs the energy of an impact.' } },
+  shell: { icon: 'shell', mod: '#m-shell', c: [-10, -124],
+           btn: { de: 'Hängerfreie Bauweise', en: 'Snag-free design' }, short: { de: 'Schale', en: 'Shell' },
+           name: { de: 'Hängerfreie, geschlossene Bauweise', en: 'Snag-free, closed design' },
+           info: { de: 'Alle Teile sitzen eng an der Schale. So bleibt nichts an Ästen, Dornen oder Sträuchern hängen.',
+                   en: 'All parts sit close to the shell. Nothing snags on branches, thorns or bushes.' } },
+  neck:  { icon: 'neck', mod: '#m-neck', c: [-16, -112],
+           btn: { de: 'Nackenschutz', en: 'Neck protector' }, short: { de: 'Nacken', en: 'Neck' },
+           name: { de: 'Nackenschutz', en: 'Neck protector' },
+           info: { de: 'Er schützt den Hinterkopf bei Stürzen.',
+                   en: 'It protects the back of the head in a fall.' } },
+  vent:  { icon: 'vent', btn: { de: 'Lüftungsschieber', en: 'Ventilation slider' } },
+  size:  { icon: 'size', btn: { de: 'Größenverstellung', en: 'Size adjustment' } },
+  comm:  { icon: 'comm', btn: { de: 'Funk-Headset (Bluetooth)', en: 'Radio headset (Bluetooth)' } },
+  pad:   { icon: 'pad', btn: { de: 'Kühlendes Polster', en: 'Cooling padding' } }
+};
+const SLOT_ORDER = ['ear', 'visor', 'susp', 'shell', 'neck'];
+
+/* Preview content: generic example features. */
+const JOBS = [
+  { id: 'forest', playable: true, name: { de: 'Forst', en: 'Forestry' }, desc: { de: 'Forstarbeit', en: 'Forestry work' } },
+  { id: 'arborist', name: { de: 'Baumpflege', en: 'Arboriculture' }, desc: { de: 'Baumklettern & Baumpflege', en: 'Tree climbing & tree care' },
+    hazards: { de: ['Lärm der Säge', 'Späne und Schnittholz', 'Hängenbleiben im Geäst'], en: ['Chainsaw noise', 'Chips and cut wood', 'Snagging in branches'] },
+    feats: { de: ['Integrierter Gehörschutz', 'Integrierter Gesichtsschutz', 'Kinnriemen mit Schnellverschluss', 'Hängerfreie Bauweise'],
+             en: ['Integrated hearing protection', 'Integrated face protection', 'Quick-release chin strap', 'Snag-free design'] } },
+  { id: 'climber', name: { de: 'Höhe & Seil', en: 'Height & rope' }, desc: { de: 'Arbeiten in der Höhe, technische Rettung', en: 'Work at height, technical rescue' },
+    hazards: { de: ['Anprall und Pendeln am Seil', 'Hitze unter dem Helm', 'Sturz und Helmverlust'], en: ['Impact and swinging on the rope', 'Heat under the helmet', 'Fall and losing the helmet'] },
+    feats: { de: ['Stoßdämpfende Aufhängung', 'Verbesserte Dämpfung bei Pendelstößen', 'Lüftungsschieber', 'Kinnriemen mit Schnellverschluss'],
+             en: ['Shock-absorbing suspension', 'Better damping for swing impacts', 'Ventilation slider', 'Quick-release chin strap'] } },
+  { id: 'rescue', name: { de: 'Rettung', en: 'Rescue' }, desc: { de: 'Rettungseinsatz & technische Hilfe', en: 'Rescue missions & technical assistance' },
+    hazards: { de: ['Herabfallende Teile', 'Anprall im Einsatz', 'Helm verrutscht bei Bewegung'], en: ['Falling objects', 'Impacts on duty', 'Helmet slips when moving'] },
+    feats: { de: ['Stoßdämpfende Aufhängung', 'Erhöhte Dämpfung', 'Kinnriemen mit Schnellverschluss', 'Sicherer Sitz'],
+             en: ['Shock-absorbing suspension', 'Increased damping', 'Quick-release chin strap', 'Secure fit'] } },
+  { id: 'road', name: { de: 'Straße', en: 'Road' }, desc: { de: 'Straßenbau, Straßenunterhalt & Verkehr', en: 'Road works, maintenance & traffic' },
+    hazards: { de: ['Anprall im Baustellenbereich', 'Helm verrutscht bei Bewegung', 'Herabfallende Teile'], en: ['Impacts on the work site', 'Helmet slips when moving', 'Falling objects'] },
+    feats: { de: ['Stoßdämpfende Aufhängung', 'Verbesserte Dämpfung', 'Kinnriemen mit Schnellverschluss', 'Sicherer Sitz'],
+             en: ['Shock-absorbing suspension', 'Improved damping', 'Quick-release chin strap', 'Secure fit'] } },
+  { id: 'industry', name: { de: 'Industrie', en: 'Industry' }, desc: { de: 'Industrie, Bau, Montage & Wartung', en: 'Industry, construction, assembly & maintenance' },
+    hazards: { de: ['Anstoßen und Anprall', 'Hitze und Schweiß', 'Helm sitzt nicht richtig'], en: ['Bumps and impacts', 'Heat and sweat', 'Helmet does not fit right'] },
+    feats: { de: ['Dämpfung bei Anprall von oben und von der Seite', 'Lüftungsschieber', 'Kühlendes Polster', 'Stufenlose Größenverstellung', 'Freies Sichtfeld'],
+             en: ['Damping for impacts from above and the side', 'Ventilation slider', 'Cooling padding', 'Stepless size adjustment', 'Unrestricted field of vision'] } }
+];
+
+/* Forest mission: 5 hazards. Decoys never include a feature that could also be a valid answer. */
+const EVENTS = [
+  { key: 'noise', answer: 'ear', decoys: ['vent', 'pad', 'size', 'visor'],
+    tag: { de: 'LÄRM', en: 'NOISE' }, title: { de: 'Kettensäge: Lärm!', en: 'Chainsaw: noise!' }, callout: { de: 'LÄRM!', en: 'NOISE!' },
+    text: { de: 'Die Säge dröhnt direkt neben deinem Ohr. Was schützt dein Gehör?', en: 'The saw roars right next to your ear. What protects your hearing?' },
+    okT: { de: 'Richtig! Gehör geschützt.', en: 'Correct! Hearing protected.' }, noT: { de: 'Aua! Zu laut.', en: 'Ouch! Too loud.' } },
+  { key: 'chips', answer: 'visor', decoys: ['vent', 'pad', 'size', 'ear'],
+    tag: { de: 'SPÄNE', en: 'CHIPS' }, title: { de: 'Späne fliegen!', en: 'Flying chips!' }, callout: { de: 'SPÄNE!', en: 'CHIPS!' },
+    text: { de: 'Beim Sägen spritzen Späne und Splitter ins Gesicht. Was schützt Augen und Gesicht?', en: 'Sawing throws chips and splinters at your face. What protects your eyes and face?' },
+    okT: { de: 'Richtig! Gesicht geschützt.', en: 'Correct! Face protected.' }, noT: { de: 'Aua! Späne im Gesicht.', en: 'Ouch! Chips in the face.' } },
+  { key: 'branch', answer: 'susp', decoys: ['vent', 'size', 'comm'],
+    tag: { de: 'ASTBRUCH', en: 'BRANCH' }, title: { de: 'Ast bricht ab!', en: 'Branch breaks off!' }, callout: { de: 'KNACK!', en: 'CRACK!' },
+    text: { de: 'Im Sturmholz hängen lose Äste. Einer fällt genau auf deinen Helm. Was fängt den Stoß ab?', en: 'Loose branches hang in the storm timber. One drops right onto your helmet. What absorbs the impact?' },
+    okT: { de: 'Richtig! Stoß abgefangen.', en: 'Correct! Impact absorbed.' }, noT: { de: 'Aua! Voll getroffen.', en: 'Ouch! Direct hit.' } },
+  { key: 'snag', answer: 'shell', decoys: ['vent', 'pad', 'size', 'comm'],
+    tag: { de: 'HÄNGER', en: 'SNAG' }, title: { de: 'Dickicht!', en: 'Thicket!' }, callout: { de: 'DORNEN!', en: 'THORNS!' },
+    text: { de: 'Du kämpfst dich durchs Gestrüpp. Dornen und Äste greifen nach deinem Helm. Was verhindert das Hängenbleiben?', en: 'You push through the undergrowth. Thorns and branches grab at your helmet. What stops you from getting caught?' },
+    okT: { de: 'Richtig! Nichts bleibt hängen.', en: 'Correct! Nothing gets caught.' }, noT: { de: 'Aua! Hängen geblieben.', en: 'Ouch! Caught up.' } },
+  { key: 'slip', answer: 'neck', decoys: ['vent', 'comm', 'visor'],
+    tag: { de: 'STURZ', en: 'FALL' }, title: { de: 'Ausgerutscht!', en: 'Slipped!' }, callout: { de: 'RUTSCHIG!', en: 'SLIPPERY!' },
+    text: { de: 'Ein nasser Ast rollt unter deinem Fuß weg. Du fällst nach hinten. Was schützt deinen Hinterkopf?', en: 'A wet branch rolls away under your foot. You fall backwards. What protects the back of your head?' },
+    okT: { de: 'Richtig! Hinterkopf geschützt.', en: 'Correct! Back of the head protected.' }, noT: { de: 'Aua! Hart aufgeschlagen.', en: 'Ouch! Hard landing.' } }
+];
+
+/* ============ state ============ */
+const W = { x: 165, y: 262 };
+const LIMIT = 15000;
+let S = null;                                   // game state
+let busy = false;
+let sceneEl = null;
+let warnStop = null;
+let timer = null;
+let lastFocus = null;
+let modalKind = null;
+
+/* ============ screens ============ */
+function go(id) {
+  $$('.screen').forEach(s => s.classList.toggle('active', s.id === 's-' + id));
+  window.scrollTo(0, 0);
+}
+function mountScene(host) {
+  if (host === sceneEl.parentNode) return;
+  host.insertBefore(sceneEl, host.firstChild);
+}
+
+/* ============ language switch ============ */
+function applyLang() {
+  document.documentElement.lang = LANG;
+  document.title = T('docTitle');
+  $$('[data-t]').forEach(el => { el.textContent = T(el.dataset.t); });
+  $$('[data-th]').forEach(el => { el.innerHTML = T(el.dataset.th); });
+  $$('[data-ta]').forEach(el => { el.setAttribute('aria-label', T(el.dataset.ta)); });
+  $$('[data-setlang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setlang === LANG)));
+  if (sceneEl) sceneEl.setAttribute('aria-label', T('sceneLabel'));
+  $$('[data-mail]').forEach(a => { a.href = mailHref(); });
+  renderJobs();
+  renderTray(); paintTray();
+  if (S && $('#s-play').classList.contains('active')) renderEventTexts();
+  if (S && S.last && $('#sheet').classList.contains('on')) fillSheet(S.last);
+  if (S && $('#s-result').classList.contains('active')) renderResult();
+  if ($('#modal').classList.contains('on')) renderModal();
+}
+function setLang(l) {
+  if ((l !== 'de' && l !== 'en') || l === LANG) return;
+  LANG = l; applyLang();
+}
+
+/* ============ start screen ============ */
+function renderJobs() {
+  const box = $('#jobs');
+  box.innerHTML = '';
+  JOBS.forEach(j => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'job' + (j.playable ? ' playable' : '');
+    b.innerHTML = `<span class="pill ${j.playable ? 'play' : 'prev'}">${esc(j.playable ? T('play') : T('preview'))}</span>
+      <span class="ico">${JI[j.id]}</span><h3>${esc(L(j.name))}</h3><p>${esc(L(j.desc))}</p>`;
+    b.addEventListener('click', () => (j.playable ? openIntro() : openModal(j.id)));
+    box.appendChild(b);
+  });
+}
+function previewHTML(j) {
+  return `<h2 id="m-title">${esc(L(j.name))}</h2>
+    <p class="small">${esc(L(j.desc))}</p>
+    <h3>${esc(T('pvHaz'))}</h3>
+    <ul>${L(j.hazards).map(h => `<li>${esc(h)}</li>`).join('')}</ul>
+    <h3>${esc(T('pvFeat'))}</h3>
+    <div class="fchips">${L(j.feats).map(f => `<span>${esc(f)}</span>`).join('')}</div>
+    <div class="soon">${esc(T('pvSoon'))}</div>
+    <p class="small" style="margin-top:10px">${esc(T('pvNote'))}</p>
+    <button class="btn block" type="button" data-close style="margin-top:14px">${esc(T('pvBack'))}</button>`;
+}
+
+/* ============ modal ============ */
+function renderModal() {
+  if (modalKind === 'legal') { $('#m-body').innerHTML = T('legal'); return; }
+  const j = JOBS.find(x => x.id === modalKind);
+  if (j) $('#m-body').innerHTML = previewHTML(j);
+}
+function openModal(kind) {
+  lastFocus = document.activeElement;
+  modalKind = kind; renderModal();
+  $('#modal').classList.add('on');
+  $('#m-box').scrollTop = 0;
+  const x = $('#modal .x'); if (x) x.focus();
+}
+function closeModal() {
+  $('#modal').classList.remove('on'); modalKind = null;
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+document.addEventListener('keydown', e => {
+  const open = $('#modal').classList.contains('on');
+  if (open && e.key === 'Escape') { closeModal(); return; }
+  if (open && e.key === 'Tab') {
+    const f = $$('#modal button, #modal a[href]').filter(n => !n.disabled);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    return;
+  }
+  if ($('#sheet').classList.contains('on') && e.key === 'Tab') { e.preventDefault(); $('#sh-next').focus(); return; }
+  if (!open && $('#s-play').classList.contains('active') && S && S.asking && /^[1-3]$/.test(e.key)) {
+    const b = $$('#choices .choice')[Number(e.key) - 1]; if (b) b.click();
+  }
+});
+document.addEventListener('click', e => {
+  const sl = e.target.closest('[data-setlang]');
+  if (sl) { setLang(sl.dataset.setlang); return; }
+  if (e.target.closest('[data-legal]')) { openModal('legal'); return; }
+  if (e.target.closest('[data-close]')) closeModal();
+});
+
+/* ============ scene control ============ */
+const g = id => $(id, sceneEl);
+function face(ouch) {
+  g('#mouth-ok').setAttribute('display', ouch ? 'none' : 'inline');
+  g('#mouth-no').setAttribute('display', ouch ? 'inline' : 'none');
+}
+function resetScene(full) {
+  stopWarn();
+  ['#hz-noise', '#hz-snag', '#hz-slip', '#hz-branch'].forEach(id => setOp(g(id), 0));
+  g('#hz-chips').innerHTML = '';
+  g('#hz-fx').innerHTML = '';
+  xf(g('#worker'), { x: W.x, y: W.y });
+  xf(g('#helmet'), {});
+  xf(g('#sn-branch'), {});
+  xf(g('#slip-log'), {});
+  g('#n-ear').setAttribute('opacity', 1);
+  setOp(g('#fx-bubble'), 0); setOp(g('#fx-stars'), 0);
+  face(false);
+  if (full) SLOT_ORDER.forEach(k => { const f = FEAT[k], m = g(f.mod); setOp(m, 0); xf(m, {}); if (f.extra) setOp(g(f.extra), 0); });
+}
+function startWarn(fn) {
+  stopWarn();
+  if (RM) { fn(0.4); return; }
+  let on = true; const my = epoch; const t0 = performance.now();
+  const loop = now => { if (!on || my !== epoch) return; fn((now - t0) / 1000); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+  warnStop = () => { on = false; };
+}
+function stopWarn() { if (warnStop) { warnStop(); warnStop = null; } }
+
+async function equip(k) {
+  const f = FEAT[k], m = g(f.mod), ex = f.extra ? g(f.extra) : null;
+  const slot = $(`.slot[data-f="${k}"]`); if (slot) slot.classList.add('on');
+  await tween(520, e => { const o = clamp(e * 1.4, 0, 1); setOp(m, o); if (ex) setOp(ex, o); xf(m, { s: .55 + .45 * e, px: f.c[0], py: f.c[1] }); }, E.back);
+  setOp(m, 1); if (ex) setOp(ex, 1); xf(m, {});
+}
+function flashFx(kind) {
+  const fl = $('#flash'); fl.className = 'flash'; void fl.offsetWidth; fl.className = 'flash ' + kind;
+}
+function calloutFx(text, ok) {
+  const c = $('#callout'); c.textContent = text; c.className = 'callout' + (ok ? ' ok' : '');
+  void c.offsetWidth; c.classList.add('on');
+}
+function calloutOff() { $('#callout').classList.remove('on'); }
+function shake() {
+  const st = $('#stage'); st.classList.remove('shake'); void st.offsetWidth; st.classList.add('shake');
+}
+async function outcomeFx(safe) {
+  if (safe) {
+    flashFx('good'); calloutFx(T('cProtected'), true);
+    const b = g('#fx-bubble');
+    await tween(520, e => { setOp(b, .95 * (1 - Math.abs(2 * e - 1) * .35)); xf(b, { s: .85 + .3 * e, px: 0, py: -132 }); }, E.out);
+    await sleep(320);
+    await tween(260, e => setOp(b, .8 * (1 - e)), E.lin);
+    setOp(b, 0); xf(b, {});
+  } else {
+    flashFx('bad'); shake(); calloutFx(T('cOuch'), false); face(true);
+    const st = g('#fx-stars');
+    await tween(400, e => { setOp(st, e); xf(st, { r: 30 * e, px: 0, py: -160 }); }, E.out);
+    await sleep(700);
+    await tween(240, e => setOp(st, 1 - e), E.lin);
+    setOp(st, 0); xf(st, {}); face(false);
+  }
+  calloutOff();
+}
+
+/* ---- hazards: warn (loops while player thinks) + resolve (plays after answer) ---- */
+const HZ = {
+  noise: {
+    warn(ev) {
+      const hz = g('#hz-noise'); setOp(hz, 1);
+      const rings = $$('.nr', hz), ear = g('#n-ear');
+      startWarn(t => {
+        rings.forEach((r, i) => { const q = (((t * .85 - i * .33) % 1) + 1) % 1; r.setAttribute('r', (12 + q * 66).toFixed(1)); r.setAttribute('opacity', ((1 - q) * .9).toFixed(2)); });
+        ear.setAttribute('opacity', (.45 + .55 * Math.abs(Math.sin(t * 6))).toFixed(2));
+      });
+      calloutFx(L(ev.callout), false);
+    },
+    async resolve(safe) {
+      stopWarn(); calloutOff();
+      const hz = g('#hz-noise'), rings = $$('.nr', hz), ear = g('#n-ear');
+      await tween(900, (e, p) => {
+        rings.forEach((r, i) => { const q = (((p * 2.6 - i * .3) % 1) + 1) % 1; r.setAttribute('r', (12 + q * 72).toFixed(1)); r.setAttribute('opacity', ((1 - q) * .95).toFixed(2)); });
+        ear.setAttribute('opacity', safe ? (1 - p * .9).toFixed(2) : '1');
+      }, E.lin);
+      await outcomeFx(safe);
+      setOp(hz, 0);
+    }
+  },
+  chips: {
+    warn(ev) {
+      const grp = g('#hz-chips'); grp.innerHTML = '';
+      const sparks = [];
+      for (let i = 0; i < 6; i++) { const p = document.createElementNS(SVGNS, 'path'); p.setAttribute('d', 'M0 -4.6 L4.6 0 L0 4.6 L-4.2 1.6Z'); p.setAttribute('fill', i % 2 ? '#e0a45a' : '#f6d28b'); p.setAttribute('stroke', '#8a5a2b'); p.setAttribute('stroke-width', '.9'); grp.appendChild(p); sparks.push(p); }
+      startWarn(t => {
+        sparks.forEach((p, i) => { const q = (((t * .9 + i / 6) % 1) + 1) % 1; const x = 242 + 26 * q + Math.sin(i * 7) * 6, y = 220 - 54 * q * (1 - .45 * q) + Math.cos(i * 5) * 3;
+          p.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(t * 300 + i * 60) % 360})`); p.setAttribute('opacity', (1 - q * .8).toFixed(2)); });
+      });
+      calloutFx(L(ev.callout), false);
+    },
+    async resolve(safe) {
+      stopWarn(); calloutOff();
+      const grp = g('#hz-chips'); grp.innerHTML = '';
+      const chips = [];
+      for (let i = 0; i < 14; i++) {
+        const p = document.createElementNS(SVGNS, 'path'); p.setAttribute('d', 'M0 -5.2 L5.2 0 L0 5.2 L-4.8 1.8Z'); p.setAttribute('fill', i % 3 ? '#e0a45a' : '#f6d28b'); p.setAttribute('stroke', '#8a5a2b'); p.setAttribute('stroke-width', '.9'); grp.appendChild(p);
+        const tx = 172 + rand(-3, 15), ty = 138 + rand(-6, 8);
+        chips.push({ p, d: i * .035, p0: [238, 221], p1: [(238 + tx) / 2 + rand(-6, 14), Math.min(221, ty) - rand(24, 54)], p2: [tx, ty],
+          rb: [tx + rand(26, 74), ty - rand(10, 46)], rot: rand(-720, 720) });
+      }
+      await tween(1150, (e, p) => {
+        chips.forEach(c => {
+          const q = clamp((p - c.d) / .62, 0, 1);
+          if (q <= 0) { c.p.setAttribute('opacity', 0); return; }
+          if (q < 1) { const a = E.out(q), x = (1 - a) * (1 - a) * c.p0[0] + 2 * (1 - a) * a * c.p1[0] + a * a * c.p2[0], y = (1 - a) * (1 - a) * c.p0[1] + 2 * (1 - a) * a * c.p1[1] + a * a * c.p2[1];
+            c.p.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(c.rot * q).toFixed(0)})`); c.p.setAttribute('opacity', 1); }
+          else { const r = clamp((p - c.d - .62) / .38, 0, 1);
+            if (safe) { const x = c.p2[0] + (c.rb[0] - c.p2[0]) * E.out(r), y = c.p2[1] + (c.rb[1] - c.p2[1]) * E.out(r) + 40 * r * r;
+              c.p.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(c.rot + 360 * r).toFixed(0)})`); c.p.setAttribute('opacity', (1 - r).toFixed(2)); }
+            else { c.p.setAttribute('transform', `translate(${c.p2[0].toFixed(1)} ${c.p2[1].toFixed(1)}) scale(${(1 + r * 1.4).toFixed(2)})`); c.p.setAttribute('opacity', (1 - r).toFixed(2)); } }
+        });
+      }, E.lin);
+      grp.innerHTML = '';
+      await outcomeFx(safe);
+    }
+  },
+  branch: {
+    warn(ev) {
+      const hz = g('#hz-branch'); setOp(hz, 1);
+      startWarn(t => { const w = Math.sin(t * 5); xf(hz, { x: 288, y: 72 + w * .8, r: -12 + w * 2.6, px: 48, py: -9 }); });
+      calloutFx(L(ev.callout), false);
+    },
+    async resolve(safe) {
+      stopWarn(); calloutOff();
+      const hz = g('#hz-branch'), helmet = g('#helmet'), worker = g('#worker');
+      await tween(640, e => xf(hz, { x: 288 - 123 * e, y: 72 + 22 * e, r: -12 + 20 * e }), E.inn);
+      if (safe) {
+        flashFx('good');
+        const rb = tween(1000, (e, p) => { const x = 165 - 78 * e; const y = 94 - 46 * Math.sin(Math.min(p / .45, 1) * Math.PI / 2) * (p < .45 ? 1 : 1 - (p - .45) / .55) + 150 * Math.max(0, p - .35) * Math.max(0, p - .35) * 3.2; xf(hz, { x, y: Math.min(y, 246), r: 8 + 130 * e }); }, E.lin);
+        await tween(130, e => xf(helmet, { sy: 1 - .09 * e, sx: 1 + .03 * e, py: -131 }), E.out);
+        await tween(260, e => xf(helmet, { sy: .91 + .09 * e, sx: 1.03 - .03 * e, py: -131 }), E.back);
+        xf(helmet, {}); await rb;
+      } else {
+        const sq = tween(170, e => xf(worker, { x: W.x, y: W.y, sy: 1 - .13 * e }), E.out);
+        await sq;
+        const back = tween(380, e => xf(worker, { x: W.x, y: W.y, sy: .87 + .13 * e }), E.back);
+        const slide = tween(520, e => xf(hz, { x: 165 + 52 * e, y: 94 + 150 * e * e, r: 8 + 6 * e }), E.inn);
+        await Promise.all([back, slide]);
+        xf(worker, { x: W.x, y: W.y });
+      }
+      await outcomeFx(safe);
+      setOp(hz, 0);
+    }
+  },
+  snag: {
+    warn(ev) {
+      const hz = g('#hz-snag'), br = g('#sn-branch'); setOp(hz, 1);
+      startWarn(t => xf(br, { r: Math.sin(t * 2.6) * 1.8, px: 62, py: 140 }));
+      calloutFx(L(ev.callout), false);
+    },
+    async resolve(safe) {
+      stopWarn(); calloutOff();
+      const hz = g('#hz-snag'), br = g('#sn-branch'), helmet = g('#helmet'), worker = g('#worker');
+      await tween(720, (e, p) => { xf(worker, { x: W.x - 36 * e, y: W.y - Math.abs(Math.sin(p * 9)) * 2.4, r: -2 * e }); }, E.io);
+      if (safe) {
+        flashFx('good');
+        const lf = [];
+        for (let i = 0; i < 7; i++) { const l = document.createElementNS(SVGNS, 'ellipse'); l.setAttribute('rx', 5); l.setAttribute('ry', 2.8); l.setAttribute('fill', i % 2 ? '#3f9a56' : '#62bf74'); g('#hz-fx').appendChild(l); lf.push({ l, a: rand(-160, -20), v: rand(24, 60) }); }
+        await tween(620, (e, p) => {
+          xf(br, { r: -9 * Math.sin(p * Math.PI), px: 62, py: 140 });
+          xf(worker, { x: W.x - 36 + 36 * e, y: W.y, r: -2 + 2 * e });
+          lf.forEach(o => { const a = o.a * Math.PI / 180; o.l.setAttribute('transform', `translate(${(128 + Math.cos(a) * o.v * e).toFixed(1)} ${(134 + Math.sin(a) * o.v * e + 30 * e * e).toFixed(1)}) rotate(${(e * 300).toFixed(0)})`); o.l.setAttribute('opacity', (1 - e).toFixed(2)); });
+        }, E.out);
+        g('#hz-fx').innerHTML = '';
+      } else {
+        const a = tween(180, e => { xf(helmet, { x: 12 * e, y: -4 * e, r: -26 * e, px: 0, py: -140 }); xf(worker, { x: W.x - 36 + 14 * e, y: W.y, r: -8 * e }); }, E.out);
+        await a;
+        const b = tween(640, e => { xf(helmet, { x: 12 * (1 - e), y: -4 * (1 - e), r: -26 * (1 - e), px: 0, py: -140 }); xf(worker, { x: W.x - 22 + 22 * e, y: W.y, r: -8 * (1 - e) }); }, E.back);
+        await b;
+      }
+      xf(worker, { x: W.x, y: W.y }); xf(helmet, {});
+      await outcomeFx(safe);
+      setOp(hz, 0); xf(br, {});
+    }
+  },
+  slip: {
+    warn(ev) {
+      const hz = g('#hz-slip'), lg = g('#slip-log'); setOp(hz, 1);
+      startWarn(t => { setOp(hz, .7 + .3 * Math.abs(Math.sin(t * 4))); xf(lg, { x: Math.sin(t * 3.2) * 1.4 }); });
+      calloutFx(L(ev.callout), false);
+    },
+    async resolve(safe) {
+      stopWarn(); calloutOff();
+      const hz = g('#hz-slip'), lg = g('#slip-log'), worker = g('#worker');
+      setOp(hz, 1); xf(lg, {});
+      // step onto the wet branch
+      await tween(480, (e, p) => xf(worker, { x: W.x + 16 * e, y: W.y - Math.abs(Math.sin(p * 6.5)) * 2.2 }), E.io);
+      // the branch rolls away and the worker falls backwards (the back of the head hits first)
+      const roll = tween(760, e => xf(lg, { x: 30 * e }), E.out);
+      await tween(460, e => xf(worker, { x: W.x + 16 + 12 * e, y: W.y, r: -64 * e }), E.inn);
+      await outcomeFx(safe);
+      await roll;
+      await tween(620, e => xf(worker, { x: W.x + 28 - 28 * e, y: W.y, r: -64 * (1 - e) }), E.out);
+      xf(worker, { x: W.x, y: W.y });
+      setOp(hz, 0); xf(lg, {});
+    }
+  }
+};
+
+/* ============ tray ============ */
+function renderTray() {
+  $('#tray').innerHTML = SLOT_ORDER.map(k => `<div class="slot" data-f="${k}"><span class="ico">${IC[FEAT[k].icon]}</span><small>${esc(L(FEAT[k].short))}</small></div>`).join('');
+}
+function paintTray() {
+  if (!S) return;
+  S.results.forEach(r => { const el = $(`.slot[data-f="${r.ev.answer}"]`); if (el) el.classList.add(r.ok ? 'on' : 'miss'); });
+}
+
+/* ============ timer ============ */
+function stopTimer() { if (timer) { timer.cancel = true; cancelAnimationFrame(timer.raf); clearTimeout(timer.id); timer = null; } }
+function startTimer(ms, onEnd) {
+  stopTimer();
+  const el = $('#timer-fill'); el.style.transform = 'scaleX(1)'; el.style.background = 'var(--yellow)';
+  const my = epoch; const t0 = performance.now(); const t = { cancel: false };
+  timer = t;
+  if (RM) { t.id = setTimeout(() => { if (!t.cancel && my === epoch) onEnd(); }, ms); return; }
+  const tick = now => {
+    if (t.cancel || my !== epoch) return;
+    const p = clamp((now - t0) / ms, 0, 1);
+    el.style.transform = `scaleX(${(1 - p).toFixed(3)})`;
+    el.style.background = p > .75 ? '#ff6b6b' : (p > .5 ? '#ffb23d' : 'var(--yellow)');
+    if (p >= 1) { timer = null; onEnd(); return; }
+    t.raf = requestAnimationFrame(tick);
+  };
+  t.raf = requestAnimationFrame(tick);
+}
+
+/* ============ game flow ============ */
+function openIntro() {
+  epoch++; S = null; stopTimer();
+  mountScene($('#intro-art')); resetScene(true);
+  go('intro');
+}
+function startGame() {
+  epoch++; stopTimer(); hideSheet();
+  S = { i: 0, results: [], wrong: 0, asking: false, last: null };
+  renderTray();
+  mountScene($('#stage')); resetScene(true);
+  $('#shield-fill').style.width = '0%';
+  go('play');
+  nextEvent();
+}
+function renderEventTexts() {
+  const ev = EVENTS[S.i];
+  $('#hud-step').textContent = T('step').replace('{i}', S.i + 1).replace('{n}', EVENTS.length);
+  $('#hz-tag').textContent = L(ev.tag);
+  $('#hz-title').textContent = L(ev.title);
+  $('#hz-text').textContent = L(ev.text);
+  $$('#choices .choice').forEach(b => { const s = $('.cl', b); if (s) s.textContent = L(FEAT[b.dataset.f].btn); });
+}
+function nextEvent() {
+  const my = epoch; busy = false;
+  const ev = EVENTS[S.i];
+  const equipped = new Set(S.results.filter(r => r.ok).map(r => r.ev.answer));
+  const decoys = shuffle(ev.decoys.filter(d => !equipped.has(d))).slice(0, 2);
+  const opts = shuffle([ev.answer, ...decoys]);
+  const box = $('#choices'); box.innerHTML = '';
+  opts.forEach(k => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'choice'; b.dataset.f = k;
+    b.innerHTML = `<span class="ci">${IC[FEAT[k].icon]}</span><span class="cl"></span>`;
+    b.addEventListener('click', () => choose(k));
+    box.appendChild(b);
+  });
+  renderEventTexts();
+  resetScene(false);
+  HZ[ev.key].warn(ev);
+  S.asking = true; S.t0 = performance.now();
+  startTimer(LIMIT, () => { if (my === epoch) choose(null); });
+}
+async function choose(k) {
+  if (!S || !S.asking || busy) return;
+  busy = true; S.asking = false; stopTimer();
+  const my = epoch;
+  const ev = EVENTS[S.i];
+  const ok = k === ev.answer;
+  $$('#choices .choice').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.f === ev.answer) b.classList.add('right');
+    else if (b.dataset.f === k) b.classList.add('wrong');
+  });
+  S.results.push({ ev, ok, picked: k, slow: k === null });
+  if (ok) {
+    await Promise.all([HZ[ev.key].resolve(true), (async () => { await sleep(380); await equip(ev.answer); setShield(); })()]);
+  } else {
+    S.wrong++;
+    const sh = $('.shield'); sh.classList.remove('hit'); void sh.offsetWidth; sh.classList.add('hit');
+    await HZ[ev.key].resolve(false);
+    const sl = $(`.slot[data-f="${ev.answer}"]`); if (sl) sl.classList.add('miss');
+  }
+  if (my !== epoch) return;
+  showSheet(ev, ok, k === null);
+}
+function setShield() { if (!S) return; $('#shield-fill').style.width = (S.results.filter(r => r.ok).length * 20) + '%'; }
+
+/* ---- feature pop-up: shows the helmet feature that protects against this hazard ---- */
+function fillSheet(r) {
+  const ev = r.ev, f = FEAT[ev.answer];
+  $('#sheet').classList.toggle('bad', !r.ok);
+  $('#sh-mark').textContent = r.ok ? '✓' : '✕';
+  $('#sh-title').textContent = r.ok ? L(ev.okT) : (r.slow ? T('slowT') : L(ev.noT));
+  $('#sh-eyebrow').textContent = r.ok ? T('eyeOk') : T('eyeNo');
+  $('#sh-feat').textContent = L(f.name);
+  $('#sh-text').textContent = (!r.ok && r.slow ? T('slowX') : '') + L(f.info);
+  const more = $('#sh-extra');
+  if (f.more) { more.textContent = L(f.more); more.hidden = false; } else { more.textContent = ''; more.hidden = true; }
+  $('#sh-art').setAttribute('data-hot', ev.answer);
+  $('#sh-next').textContent = S && S.i === EVENTS.length - 1 ? T('toResult') : T('next');
+  $('#sh-note').textContent = T('shNote');
+}
+function showSheet(ev, ok, slow) {
+  S.last = { ev, ok, slow };
+  fillSheet(S.last);
+  const inner = $('#sheet .in'); if (inner) inner.scrollTop = 0;
+  $('#sheet').classList.add('on'); $('#scrim').classList.add('on');
+  setTimeout(() => { try { $('#sh-next').focus({ preventScroll: true }); } catch (e) { /* ignore */ } }, 380);
+}
+function hideSheet() { $('#sheet').classList.remove('on'); $('#scrim').classList.remove('on'); }
+function afterSheet() {
+  hideSheet();
+  if (!S) return;
+  if (S.i < EVENTS.length - 1) { S.i++; nextEvent(); } else finish();
+}
+
+/* ============ result ============ */
+const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z" fill="FILL" stroke="STROKE" stroke-width="1.2" stroke-linejoin="round"/></svg>';
+function renderResult() {
+  const c = S.results.filter(r => r.ok).length;
+  const stars = c === 5 ? 3 : c >= 3 ? 2 : c >= 1 ? 1 : 0;
+  $('#stars').innerHTML = [0, 1, 2].map(i => STAR.replace('FILL', i < stars ? '#ffc83d' : 'rgba(255,255,255,.08)').replace('STROKE', i < stars ? '#e09500' : 'rgba(255,255,255,.3)')).join('');
+  $('#res-pct').textContent = (c * 20) + ' %';
+  $('#res-text').textContent = T(c === 5 ? 'res3' : c >= 3 ? 'res2' : c >= 1 ? 'res1' : 'res0');
+  $('#recap').innerHTML = S.results.map(r => {
+    const name = L(FEAT[r.ev.answer].name);
+    return `<div class="row ${r.ok ? '' : 'no'}"><b>${r.ok ? '✓' : '✕'}</b><span>${esc(L(r.ev.title).replace(/[!:]/g, ''))}<small>${esc(r.ok ? name : T('correctWas') + name)}</small></span></div>`;
+  }).join('');
+}
+function finish() {
+  epoch++; stopTimer(); stopWarn();
+  renderResult();
+  go('result');
+}
+
+/* ============ boot ============ */
+function init() {
+  sceneEl = $('#tpl-scene').content.querySelector('svg').cloneNode(true);
+  mountScene($('#intro-art'));
+  applyLang();
+  resetScene(true);
+  $('#intro-back').addEventListener('click', () => { epoch++; go('start'); });
+  $('#btn-start').addEventListener('click', startGame);
+  $('#play-exit').addEventListener('click', () => { epoch++; stopTimer(); stopWarn(); hideSheet(); S = null; go('start'); });
+  $('#sh-next').addEventListener('click', afterSheet);
+  $('#res-again').addEventListener('click', startGame);
+  $('#res-jobs').addEventListener('click', () => { epoch++; go('start'); });
+}
+init();
+})();
+
+</script>
+</body>
+</html>
