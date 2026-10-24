@@ -41,6 +41,7 @@ figcaption{font-size:.8rem;padding:.7rem 1rem;background:var(--white);color:var(
 .card .ico{font-size:1.6rem}
 .card ul{list-style:none;margin-top:.8rem;display:grid;gap:.45rem;font-size:.92rem}
 .card li::before{content:"✓ ";color:var(--accent);font-weight:700}
+.card p{font-size:.92rem}
 .num{display:inline-flex;width:34px;height:34px;border-radius:50%;background:var(--primary);color:var(--white);align-items:center;justify-content:center;font-weight:800;margin-bottom:.7rem}
 .price{font-size:1.9rem;font-weight:800;color:var(--primary);margin-top:1rem}
 .price small{font-size:.85rem;color:var(--muted);font-weight:600}
@@ -57,6 +58,7 @@ figcaption{font-size:.8rem;padding:.7rem 1rem;background:var(--white);color:var(
 .tag{display:inline-block;background:rgba(45,80,22,.1);color:var(--primary);border-radius:99px;padding:.35rem .9rem;font-size:.8rem;font-weight:700;margin:.2rem .2rem}
 .btn{display:inline-block;background:var(--primary);color:var(--white);text-decoration:none;border-radius:99px;padding:.7rem 1.4rem;font-weight:700;font-size:.9rem;margin-top:1rem}
 .btn:hover{background:var(--accent)}
+.btn.small{padding:.5rem 1rem;font-size:.8rem}
 .lang{position:fixed;top:18px;right:26px;z-index:70;display:flex;background:var(--white);border-radius:99px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.25)}
 .langbtn{border:none;background:transparent;padding:.5rem .95rem;font-weight:800;cursor:pointer;color:var(--muted)}
 .langbtn.on{background:var(--primary);color:var(--white)}
@@ -68,6 +70,7 @@ footer{font-size:.85rem;color:var(--muted);line-height:1.6;text-align:center;pad
 footer a{color:inherit;text-decoration:underline}
 footer a:hover{color:var(--accent)}
 .play-hint{position:absolute;bottom:1rem;right:1rem;background:rgba(0,0,0,.6);color:var(--white);padding:.4rem .8rem;border-radius:99px;font-size:.75rem;pointer-events:none;z-index:2}
+.highlight{border-left:4px solid var(--accent)}
 @media print{.nav,.bar,.count,.lang{display:none}.slide{display:flex!important;min-height:98vh;page-break-after:always}}
 </style>
 </head>
@@ -83,8 +86,8 @@ footer a:hover{color:var(--accent)}
   <span class="kicker">K4 Engineering × Baum & Bonheur</span>
   <h1 data-de="Ihre stärkste Qualität ist unsichtbar.<br>Wir machen sie zum Hingucker."
       data-en="Your strongest quality is invisible.<br>We turn it into the eye-catcher.">Ihre stärkste Qualität ist unsichtbar.<br>Wir machen sie zum Hingucker.</h1>
-  <p class="lead" data-de="Ein interaktives 3D-Exponat für Ihren Messeauftritt – erweiterbar um Spiele, WebAR und eine sprechende KI-Baum-Assistenz. Vorbereitet für unser Teams-Gespräch ab dem 28. Oktober."
-     data-en="An interactive 3D exhibit for your trade fair presence – extendable with games, WebAR and a talking AI tree assistant. Prepared for our Teams meeting from 28 October.">Ein interaktives 3D-Exponat für Ihren Messeauftritt – erweiterbar um Spiele, WebAR und eine sprechende KI-Baum-Assistenz. Vorbereitet für unser Teams-Gespräch ab dem 28. Oktober.</p>
+  <p class="lead" data-de="Ein interaktives 3D-Exponat für Ihren Messeauftritt – erweiterbar um Selector-Game, WebAR und einen mehrsprachigen KI-Baum-Chatbot. Vorbereitet für unser Teams-Gespräch ab dem 28. Oktober."
+     data-en="An interactive 3D exhibit for your trade fair presence – extendable with a selector game, WebAR and a multilingual AI tree chatbot. Prepared for our Teams meeting from 28 October.">Ein interaktives 3D-Exponat für Ihren Messeauftritt – erweiterbar um Selector-Game, WebAR und einen mehrsprachigen KI-Baum-Chatbot. Vorbereitet für unser Teams-Gespräch ab dem 28. Oktober.</p>
   <div><span class="tag" style="background:rgba(201,169,97,.2);color:var(--accent)">IPM Essen 2027</span><span class="tag" style="background:rgba(201,169,97,.2);color:var(--accent)">GaLaBau</span>
     <span class="tag" style="background:rgba(201,169,97,.2);color:var(--accent)">RegioAgrar</span><span class="tag" style="background:rgba(201,169,97,.2);color:var(--accent)">Deutsche Baumpflegetage</span></div>
 </section>
@@ -111,6 +114,11 @@ footer a:hover{color:var(--accent)}
       <li data-de="Trockenresistente Sorten" data-en="Drought-resistant varieties">Trockenresistente Sorten</li>
       <li data-de="Solitäre in Bestqualität" data-en="Solitaires in top quality">Solitäre in Bestqualität</li></ul></div>
   </div>
+  <div class="card highlight">
+    <h3 data-de="Ihre Vielfalt = Ihr Vorteil: der Selector" data-en="Your variety = your advantage: the selector">Ihre Vielfalt = Ihr Vorteil: der Selector</h3>
+    <p data-de="Über 280.000 Pflanzen und hunderte Sorten: Bei dieser Vielfalt verliert man leicht den Überblick. Ein interaktiver Selector-Guide führt Ihre Kunden und Messebesucher in 60 Sekunden zur richtigen Sorte – und bringt Ihrem Team qualifizierte Anfragen statt langer Suchgespräche. Ein Vorteil für Ihre Kunden <b>und</b> Ihre Besucher."
+       data-en="Over 280,000 plants and hundreds of varieties: with such variety it is easy to lose overview. An interactive selector guide leads your clients and fair visitors to the right variety in 60 seconds – and brings your team qualified enquiries instead of long search conversations. An advantage for your clients <b>and</b> your visitors.">Über 280.000 Pflanzen und hunderte Sorten: Bei dieser Vielfalt verliert man leicht den Überblick. Ein interaktiver Selector-Guide führt Ihre Kunden und Messebesucher in 60 Sekunden zur richtigen Sorte – und bringt Ihrem Team qualifizierte Anfragen statt langer Suchgespräche. Ein Vorteil für Ihre Kunden <b>und</b> Ihre Besucher.</p>
+  </div>
   <p class="lead" data-de="Ihr Produkt verkauft Vertrauen in das, was <b>unter der Erde</b> passiert. Genau dort setzen wir an."
      data-en="Your product sells trust in what happens <b>below ground</b>. That is exactly where we start.">Ihr Produkt verkauft Vertrauen in das, was <b>unter der Erde</b> passiert. Genau dort setzen wir an.</p>
 </section>
@@ -133,19 +141,15 @@ footer a:hover{color:var(--accent)}
      data-en="<b>Buyers decide by what they see.</b> We give your invisible edge a stage."><b>Käufer entscheiden nach dem, was sie sehen.</b> Wir geben Ihrem unsichtbaren Vorsprung eine Bühne.</p>
 </section>
 
-<!-- 4 KERNPAKET + VIDEO -->
+<!-- 4 KERNPAKET + FOTO -->
 <section class="slide">
-  <span class="kicker" data-de="Das Kernpaket · Sehen Sie es in Aktion" data-en="The core package · See it in action">Das Kernpaket · Sehen Sie es in Aktion</span>
+  <span class="kicker" data-de="Das Kernpaket · Genau wie auf diesem Foto" data-en="The core package · Exactly as in this photo">Das Kernpaket · Genau wie auf diesem Foto</span>
   <h2 data-de="Ein Exponat, drei Erlebnis-Ebenen" data-en="One exhibit, three experience layers">Ein Exponat, drei Erlebnis-Ebenen</h2>
   <div class="grid g2">
     <figure>
-      <video poster="01-modell-tablet.jpg" id="heroVideo" autoplay muted loop playsinline preload="auto">
-        <source src="02_Baum-Bonheur.mp4" type="video/mp4">
-        <img src="01-modell-tablet.jpg" alt="3D-Exponat: Querschnitt-Modell, Stadt-Modell, Tablet-Station">
-      </video>
-      <span class="play-hint" id="playHint" style="display:none" data-de="▶ Klicken zum Abspielen" data-en="▶ Click to play">▶ Klicken zum Abspielen</span>
-      <figcaption data-de="Ihr Kernpaket in 10 Sekunden: Querschnitt-Modell, Stadt-Modell und digitale Ebene – aus einer Hand."
-        data-en="Your core package in 10 seconds: cutaway model, city model and digital layer – from a single source.">Ihr Kernpaket in 10 Sekunden: Querschnitt-Modell, Stadt-Modell und digitale Ebene – aus einer Hand.</figcaption></figure>
+      <img src="01-modell-tablet.jpg" alt="3D-Exponat: Querschnitt-Modell mit leuchtendem Wurzelsystem, Stadt-Modell und Tablet-Station">
+      <figcaption data-de="Ihr Kernpaket: Querschnitt-Modell, Stadt-Modell und digitale Ebene – aus einer Hand."
+        data-en="Your core package: cutaway model, city model and digital layer – from a single source.">Ihr Kernpaket: Querschnitt-Modell, Stadt-Modell und digitale Ebene – aus einer Hand.</figcaption></figure>
     <div class="grid" style="gap:1rem">
       <div class="card"><span class="num">1</span><h3 data-de="Das Querschnitt-Modell" data-en="The cutaway model">Das Querschnitt-Modell</h3>
         <p data-de="3D-gedruckter Baum mit Transparent-Querschnitt: Faseroptik lässt den Saftstrom warm aufleuchten. Darunter ein klarer Epoxidblock mit dem 3D-gedruckten Feinwurzel-Netz – Ihre „4× verpflanzt"-Qualität, endlich sichtbar. Echter Moosrand für Authentizität."
@@ -162,43 +166,42 @@ footer a:hover{color:var(--accent)}
      data-en="This exhibit is your <b>core package</b>. All further modules are optional extensions – you decide how much experience your stand gets.">Dieses Exponat ist Ihr <b>Kernpaket</b>. Alle weiteren Module sind optionale Erweiterungen – Sie entscheiden, wie viel Erlebnis Ihr Stand bekommt.</p>
 </section>
 
-<!-- 5 ADD-ONS -->
+<!-- 5 ADD-ONS: VIDEO LINKS + KOMPAKTE KARTEN RECHTS -->
 <section class="slide">
-  <span class="kicker" data-de="Optionale Erweiterungsmodule" data-en="Optional extension modules">Optionale Erweiterungsmodule</span>
+  <span class="kicker" data-de="Optionale Erweiterungsmodule · Sehen Sie es in Aktion" data-en="Optional modules · See it in action">Optionale Erweiterungsmodule · Sehen Sie es in Aktion</span>
   <h2 data-de="Drei Add-ons, die Ihren Stand zum Publikumsmagneten machen" data-en="Three add-ons that turn your stand into a crowd puller">Drei Add-ons, die Ihren Stand zum Publikumsmagneten machen</h2>
-  <div class="grid g3">
-    <div class="card"><div class="ico">🎮</div><h3>Modul A · Interactive Booth Game</h3>
-      <p data-de="Ein Auswahl-Spiel im Stil unseres Live-Demos: Besucher beantworten wenige Fragen und erhalten ihren perfekten Baum – mit Bestenliste, Badges und Ergebnis-Download."
-         data-en="A selector game in the style of our live demo: visitors answer a few questions and get their perfect tree – with leaderboard, badges and result download.">Ein Auswahl-Spiel im Stil unseres Live-Demos: Besucher beantworten wenige Fragen und erhalten ihren perfekten Baum – mit Bestenliste, Badges und Ergebnis-Download.</p>
-      <ul><li data-de="5–10 Min. Verweilzeit pro Besucher" data-en="5–10 min dwell time per visitor">5–10 Min. Verweilzeit pro Besucher</li>
-      <li data-de="Ihr Stand ist dauerhaft belagert" data-en="Your stand is permanently crowded">Ihr Stand ist dauerhaft belagert</li>
-      <li data-de="Jeder Spielabschluss = qualifizierter Lead" data-en="Every finished game = qualified lead">Jeder Spielabschluss = qualifizierter Lead</li>
-      <li data-de="Content für Social Media inklusive" data-en="Social media content included">Content für Social Media inklusive</li></ul>
-      <span class="pricetag" data-de="+ €1.900 einmalig" data-en="+ €1,900 one-time">+ €1.900 einmalig</span><br>
-      <a class="btn" href="https://k4-engineering.eu/interactive-booth-game/" target="_blank"
-         data-de="Live-Demo ansehen →" data-en="View live demo →">Live-Demo ansehen →</a></div>
-    <div class="card"><div class="ico">📱</div><h3 data-de="Modul B · WebAR – Der Baum, der sich bewegt" data-en="Module B · WebAR – the tree that moves">Modul B · WebAR – Der Baum, der sich bewegt</h3>
-      <p data-de="Ein animiertes 3D-Modell auf Handy oder Tablet: Der Baum wächst vor den Augen des Besuchers, wechselt Jahreszeiten, zeigt Wurzel-Ausbreitung und Schattenwurf – in 1:1 über dem Stadt-Modell oder der echten Baustelle."
-         data-en="An animated 3D model on phone or tablet: the tree grows before the visitor's eyes, changes seasons, shows root spread and shade – 1:1 above the city model or the real site.">Ein animiertes 3D-Modell auf Handy oder Tablet: Der Baum wächst vor den Augen des Besuchers, wechselt Jahreszeiten, zeigt Wurzel-Ausbreitung und Schattenwurf – in 1:1 über dem Stadt-Modell oder der echten Baustelle.</p>
-      <ul><li data-de="Kein App-Download (WebAR im Browser)" data-en="No app download (WebAR in browser)">Kein App-Download (WebAR im Browser)</li>
-      <li data-de="Bewegte Animationen statt Standbild" data-en="Moving animations instead of stills">Bewegte Animationen statt Standbild</li>
-      <li data-de="Daten-Hotspots: CO₂, Schatten, Wurzelteller" data-en="Data hotspots: CO2, shade, root plate">Daten-Hotspots: CO₂, Schatten, Wurzelteller</li>
-      <li data-de="Export als PDF-Datenblatt ins Projekt" data-en="Export as PDF datasheet into the project">Export als PDF-Datenblatt ins Projekt</li></ul>
-      <span class="pricetag" data-de="+ €1.600 einmalig" data-en="+ €1,600 one-time">+ €1.600 einmalig</span></div>
-    <div class="card"><div class="ico">🗣️</div><h3>Modul C · AI Smart Talking Tree</h3>
-      <p data-de="Ihr Baum spricht: Eine KI-Stimmassistenz im Exponat beantwortet Besucherfragen zu Sorten, Pflege, Verfügbarkeit und Klimaeignung – freundlich, geduldig, <b>in mehreren Sprachen</b> (DE, EN, FR, NL …)."
-         data-en="Your tree talks: an AI voice assistant in the exhibit answers visitor questions on varieties, care, availability and climate suitability – friendly, patient, <b>in multiple languages</b> (DE, EN, FR, NL …).">Ihr Baum spricht: Eine KI-Stimmassistenz im Exponat beantwortet Besucherfragen zu Sorten, Pflege, Verfügbarkeit und Klimaeignung – freundlich, geduldig, <b>in mehreren Sprachen</b> (DE, EN, FR, NL …).</p>
-      <ul><li data-de="Sprachdialog direkt am Exponat" data-en="Voice dialogue right at the exhibit">Sprachdialog direkt am Exponat</li>
-      <li data-de="Trainiert auf Ihrem Sortiment & Ihren Daten" data-en="Trained on your assortment & data">Trainiert auf Ihrem Sortiment & Ihren Daten</li>
-      <li data-de="Internationale Messebesucher ohne Dolmetscher" data-en="International visitors without interpreters">Internationale Messebesucher ohne Dolmetscher</li>
-      <li data-de="Übergibt Kontakte ans Messeteam" data-en="Hands contacts to your fair team">Übergibt Kontakte ans Messeteam</li></ul>
-      <span class="pricetag" data-de="+ €2.400 einmalig" data-en="+ €2,400 one-time">+ €2.400 einmalig</span></div>
+  <div class="grid g2">
+    <figure>
+      <video poster="01-modell-tablet.jpg" id="heroVideo" autoplay muted loop playsinline preload="auto">
+        <source src="02_Baum-Bonheur.mp4" type="video/mp4">
+        <img src="01-modell-tablet.jpg" alt="Video: 3D-Exponat mit leuchtendem Wurzelsystem und Tablet-Station">
+      </video>
+      <span class="play-hint" id="playHint" style="display:none" data-de="▶ Klicken zum Abspielen" data-en="▶ Click to play">▶ Klicken zum Abspielen</span>
+      <figcaption data-de="Ihr Kernpaket in 10 Sekunden – und die Basis für alle Add-ons."
+        data-en="Your core package in 10 seconds – and the base for all add-ons.">Ihr Kernpaket in 10 Sekunden – und die Basis für alle Add-ons.</figcaption></figure>
+    <div class="grid" style="gap:1rem">
+      <div class="card"><div class="ico">🎮</div><h3>Modul A · Interactive Booth Game</h3>
+        <p data-de="Selector-Spiel: In 5 Fragen zum perfekten Baum – mit Bestenliste und Ergebnis-Download."
+           data-en="Selector game: five questions to the perfect tree – with leaderboard and result download.">Selector-Spiel: In 5 Fragen zum perfekten Baum – mit Bestenliste und Ergebnis-Download.</p>
+        <span class="pricetag" data-de="+ €800 einmalig" data-en="+ €800 one-time">+ €800 einmalig</span><br>
+        <a class="btn small" href="https://k4-engineering.eu/interactive-booth-game/" target="_blank"
+           data-de="Live-Demo →" data-en="Live demo →">Live-Demo →</a></div>
+      <div class="card"><div class="ico">📱</div><h3>Modul B · WebAR</h3>
+        <p data-de="Animierter 3D-Baum mit Vorteils-Notizen – im Browser, ohne App-Download."
+           data-en="Animated 3D tree with advantage notes – in the browser, no app download.">Animierter 3D-Baum mit Vorteils-Notizen – im Browser, ohne App-Download.</p>
+        <span class="pricetag" data-de="+ €1.000 einmalig" data-en="+ €1,000 one-time">+ €1.000 einmalig</span></div>
+      <div class="card"><div class="ico">💬</div><h3>Modul C · AI Tree Chatbot</h3>
+        <p data-de="Mehrsprachiger Text-Chatbot (ohne Stimme): beantwortet Besucherfragen zu Sorten, Pflege & Verfügbarkeit – und bleibt auf Wunsch auch nach der Messe online."
+           data-en="Multilingual text chatbot (no voice): answers visitor questions on varieties, care & availability – and stays online after the fair if you wish.">Mehrsprachiger Text-Chatbot (ohne Stimme): beantwortet Besucherfragen zu Sorten, Pflege & Verfügbarkeit – und bleibt auf Wunsch auch nach der Messe online.</p>
+        <ul><li data-de="KI-Server in der EU → Datenschutz & DSGVO" data-en="AI servers in the EU → data protection & GDPR">KI-Server in der EU → Datenschutz & DSGVO</li></ul>
+        <span class="pricetag" data-de="+ €1.200 einmalig" data-en="+ €1,200 one-time">+ €1.200 einmalig</span></div>
+    </div>
   </div>
   <p class="lead" data-de="Warum Add-ons? Spiele und sprechende Exponate erzeugen <b>Verweilzeit, Menschenmengen und Gesprächsstoff</b> – ein voller Stand zieht noch mehr Besucher an. Der Effekt verstärkt sich selbst."
      data-en="Why add-ons? Games and talking exhibits create <b>dwell time, crowds and conversation</b> – a full stand attracts even more visitors. The effect reinforces itself.">Warum Add-ons? Spiele und sprechende Exponate erzeugen <b>Verweilzeit, Menschenmengen und Gesprächsstoff</b> – ein voller Stand zieht noch mehr Besucher an. Der Effekt verstärkt sich selbst.</p>
 </section>
 
-<!-- 6 REFERENZ -->
+<!-- 6 REFERENZ + LINK -->
 <section class="slide dark">
   <span class="kicker" data-de="Bewiesen, nicht behauptet" data-en="Proven, not claimed">Bewiesen, nicht behauptet</span>
   <h2>Smart Tree · Deutsche Baumpflegetage 2026, Augsburg</h2>
@@ -209,6 +212,11 @@ footer a:hover{color:var(--accent)}
     <span class="tag" style="background:rgba(201,169,97,.2);color:var(--accent)" data-de="3D-Druck + Elektronik + Epoxid" data-en="3D print + electronics + epoxy">3D-Druck + Elektronik + Epoxid</span>
     <span class="tag" style="background:rgba(201,169,97,.2);color:var(--accent)" data-de="Digitale Zwillinge & Spiele" data-en="Digital twins & games">Digitale Zwillinge & Spiele</span>
     <span class="tag" style="background:rgba(201,169,97,.2);color:var(--accent)" data-de="Mehrsprachige KI-Assistenz" data-en="Multilingual AI assistance">Mehrsprachige KI-Assistenz</span>
+  </div>
+  <div>
+    <a class="btn" href="https://k4-engineering.eu/" target="_blank"
+       data-de="Referenzprojekt Smart Tree auf k4-engineering.eu ansehen →"
+       data-en="View the Smart Tree reference project on k4-engineering.eu →">Referenzprojekt Smart Tree auf k4-engineering.eu ansehen →</a>
   </div>
 </section>
 
@@ -224,22 +232,23 @@ footer a:hover{color:var(--accent)}
       <li data-de="Tablet-Station mit 3D-Zwilling & Hotspots" data-en="Tablet station with 3D twin & hotspots">Tablet-Station mit 3D-Zwilling & Hotspots</li>
       <li data-de="QR-Platte → Handy-Erlebnis" data-en="QR plate → phone experience">QR-Platte → Handy-Erlebnis</li>
       <li data-de="Transportcase + Aufbauanleitung" data-en="Transport case + setup guide">Transportcase + Aufbauanleitung</li></ul>
-      <div class="price">€4.900 <small data-de="einmalig" data-en="one-time">einmalig</small></div></div>
+      <div class="price">€3.900 <small data-de="einmalig" data-en="one-time">einmalig</small></div></div>
     <div class="card"><h3 data-de="Erweiterungsmodule" data-en="Extension modules">Erweiterungsmodule</h3>
-      <ul><li data-de="Modul A · Interactive Booth Game: + €1.900" data-en="Module A · Interactive Booth Game: + €1,900">Modul A · Interactive Booth Game: + €1.900</li>
-      <li data-de="Modul B · WebAR, bewegtes 3D-Modell: + €1.600" data-en="Module B · WebAR, animated 3D model: + €1,600">Modul B · WebAR, bewegtes 3D-Modell: + €1.600</li>
-      <li data-de="Modul C · AI Smart Talking Tree: + €2.400" data-en="Module C · AI Smart Talking Tree: + €2,400">Modul C · AI Smart Talking Tree: + €2.400</li>
-      <li data-de="Jederzeit später nachrüstbar" data-en="Retrofittable at any later time">Jederzeit später nachrüstbar</li></ul>
-      <div class="price" data-de="ab €1.600 <small>pro Modul</small>" data-en="from €1,600 <small>per module</small>">ab €1.600 <small>pro Modul</small></div></div>
-    <div class="card"><h3 data-de="Komplett-Paket · Alles inklusive" data-en="Complete package · everything included">Komplett-Paket · Alles inklusive</h3>
-      <ul><li data-de="Kernpaket + alle drei Module" data-en="Core package + all three modules">Kernpaket + alle drei Module</li>
-      <li data-de="Statt €10.800 einzeln" data-en="Instead of €10,800 separately">Statt €10.800 einzeln</li>
+      <ul><li data-de="Modul A · Interactive Booth Game: + €800" data-en="Module A · Interactive Booth Game: + €800">Modul A · Interactive Booth Game: + €800</li>
+      <li data-de="Modul B · WebAR, animiertes 3D-Modell: + €1.000" data-en="Module B · WebAR, animated 3D model: + €1,000">Modul B · WebAR, animiertes 3D-Modell: + €1.000</li>
+      <li data-de="Modul C · AI Tree Chatbot (EU-KI): + €1.200" data-en="Module C · AI Tree Chatbot (EU AI): + €1,200">Modul C · AI Tree Chatbot (EU-KI): + €1.200</li>
+      <li data-de="2 Module kombiniert: − €500 Rabatt" data-en="2 modules combined: − €500 discount">2 Module kombiniert: − €500 Rabatt</li>
+      <li data-de="Alle 3 Module: − €1.000 Rabatt" data-en="All 3 modules: − €1,000 discount">Alle 3 Module: − €1.000 Rabatt</li></ul>
+      <div class="price" data-de="ab €800 <small>pro Modul</small>" data-en="from €800 <small>per module</small>">ab €800 <small>pro Modul</small></div></div>
+    <div class="card"><h3 data-de="Komplett-Beispiel" data-en="Complete example">Komplett-Beispiel</h3>
+      <ul><li data-de="Kernpaket + alle 3 Module" data-en="Core package + all 3 modules">Kernpaket + alle 3 Module</li>
+      <li data-de="Einzelpreis €6.900 – mit Modul-Rabatt €1.000" data-en="Separate price €6,900 – with module discount €1,000">Einzelpreis €6.900 – mit Modul-Rabatt €1.000</li>
       <li data-de="Priorisierte Produktion & Testlauf" data-en="Prioritised production & test run">Priorisierte Produktion & Testlauf</li>
       <li data-de="Schulung Ihres Messeteams inklusive" data-en="Training of your fair team included">Schulung Ihres Messeteams inklusive</li></ul>
-      <div class="price">€9.800 <small data-de="einmalig · Sie sparen €1.000" data-en="one-time · you save €1,000">einmalig · Sie sparen €1.000</small></div></div>
+      <div class="price">€5.900 <small data-de="einmalig · Sie sparen €1.000" data-en="one-time · you save €1,000">einmalig · Sie sparen €1.000</small></div></div>
   </div>
-  <p class="lead" data-de="Optional: Service-Flat <b>€149/Monat</b> (Hosting, Updates, Messe-Fit pro Saison) · Alternativ Mietmodell <b>€1.900 pro Messe</b> inkl. Aufbau-Support."
-     data-en="Optional: service flat <b>€149/month</b> (hosting, updates, fair-fit per season) · Alternative rental model <b>€1,900 per fair</b> incl. setup support.">Optional: Service-Flat <b>€149/Monat</b> (Hosting, Updates, Messe-Fit pro Saison) · Alternativ Mietmodell <b>€1.900 pro Messe</b> inkl. Aufbau-Support.</p>
+  <p class="lead" data-de="Optional für Folgemessen: <b>Digital-Service-Flat</b> – Hosting, Updates & Support für jede weitere Messe: ab €290 pro Messe. Ihre digitalen Module bleiben damit dauerhaft einsatzbereit."
+     data-en="Optional for future fairs: <b>Digital Service Flat</b> – hosting, updates & support for every further fair: from €290 per fair. Your digital modules stay permanently ready to use.">Optional für Folgemessen: <b>Digital-Service-Flat</b> – Hosting, Updates & Support für jede weitere Messe: ab €290 pro Messe. Ihre digitalen Module bleiben damit dauerhaft einsatzbereit.</p>
 </section>
 
 <!-- 8 ABLAUF -->
@@ -252,24 +261,35 @@ footer a:hover{color:var(--accent)}
     <div class="card"><b data-de="Anfang Jan 2027" data-en="Early Jan 2027">Anfang Jan 2027</b><p data-de="Digitale Ebene: 3D-Zwilling, gewählte Module, Testlauf" data-en="Digital layer: 3D twin, chosen modules, test run">Digitale Ebene: 3D-Zwilling, gewählte Module, Testlauf</p></div>
     <div class="card"><b data-de="Mitte Jan 2027" data-en="Mid Jan 2027">Mitte Jan 2027</b><p data-de="Lieferung, Stand-Integration, Messe-Briefing – bereit für Essen" data-en="Delivery, stand integration, fair briefing – ready for Essen">Lieferung, Stand-Integration, Messe-Briefing – bereit für Essen</p></div>
   </div>
-  <p class="lead" data-de="Module wie Spiel, WebAR oder KI-Assistenz lassen sich auch <b>nach</b> der ersten Messe nachrüsten – Ihr Exponat wächst mit Ihren Erfolgen."
-     data-en="Modules like the game, WebAR or AI assistant can be retrofitted <b>after</b> the first fair – your exhibit grows with your success.">Module wie Spiel, WebAR oder KI-Assistenz lassen sich auch <b>nach</b> der ersten Messe nachrüsten – Ihr Exponat wächst mit Ihren Erfolgen.</p>
+  <p class="lead" data-de="Module wie Spiel, WebAR oder KI-Chatbot lassen sich auch <b>nach</b> der ersten Messe nachrüsten – Ihr Exponat wächst mit Ihren Erfolgen."
+     data-en="Modules like the game, WebAR or AI chatbot can be retrofitted <b>after</b> the first fair – your exhibit grows with your success.">Module wie Spiel, WebAR oder KI-Chatbot lassen sich auch <b>nach</b> der ersten Messe nachrüsten – Ihr Exponat wächst mit Ihren Erfolgen.</p>
 </section>
 
-<!-- 9 NAECHSTE SCHRITTE -->
+<!-- 9 NAECHSTE SCHRITTE & ARBEITSWEISE -->
 <section class="slide">
-  <span class="kicker" data-de="Nächste Schritte" data-en="Next steps">Nächste Schritte</span>
-  <h2 data-de="Wir freuen uns auf den Teams-Termin ab dem 28. Oktober" data-en="We look forward to the Teams meeting from 28 October">Wir freuen uns auf den Teams-Termin ab dem 28. Oktober</h2>
-  <div class="grid g3">
-    <div class="card"><div class="ico">📅</div><h3 data-de="1 · Termin" data-en="1 · Appointment">1 · Termin</h3>
-      <p data-de="Sie erhalten von uns einen Einladungsvorschlag (30 Min.) – ganz wie von Ihnen angeregt." data-en="You will receive a meeting proposal from us (30 min) – exactly as you suggested.">Sie erhalten von uns einen Einladungsvorschlag (30 Min.) – ganz wie von Ihnen angeregt.</p></div>
-    <div class="card"><div class="ico">🎯</div><h3 data-de="2 · Fokus klären" data-en="2 · Clarify focus">2 · Fokus klären</h3>
-      <p data-de="Leit-Sorten, Prioritäts-Messen 2027 und gewünschte Module – daraus entsteht Ihre Konzeptskizze." data-en="Lead varieties, priority fairs 2027 and desired modules – from this we create your concept sketch.">Leit-Sorten, Prioritäts-Messen 2027 und gewünschte Module – daraus entsteht Ihre Konzeptskizze.</p></div>
-    <div class="card"><div class="ico">✏️</div><h3 data-de="3 · Skizze in 5 Tagen" data-en="3 · Sketch in 5 days">3 · Skizze in 5 Tagen</h3>
-      <p data-de="Nach dem Call: erste Designskizze Ihres Exponats inkl. Preisbestätigung – unverbindlich." data-en="After the call: first design sketch of your exhibit incl. price confirmation – non-binding.">Nach dem Call: erste Designskizze Ihres Exponats inkl. Preisbestätigung – unverbindlich.</p></div>
+  <span class="kicker" data-de="Nächste Schritte · So arbeiten wir zusammen" data-en="Next steps · How we work together">Nächste Schritte · So arbeiten wir zusammen</span>
+  <h2 data-de="Vom 3D-Design bis zur Lieferung – transparent planbar" data-en="From 3D design to delivery – transparently plannable">Vom 3D-Design bis zur Lieferung – transparent planbar</h2>
+  <div class="grid g4">
+    <div class="card"><span class="num">1</span><h3 data-de="3D-Design & Abstimmung" data-en="3D design & alignment">3D-Design & Abstimmung</h3>
+      <p data-de="Wir modellieren Ihren Baum als 3D-Entwurf. Sie besprechen ihn mit uns und ändern ihn – <b>bis zu 3 Änderungsrunden inklusive</b>, bis er perfekt zu Ihrer Marke passt."
+         data-en="We model your tree as a 3D draft. You discuss it with us and modify it – <b>up to 3 revision rounds included</b> – until it perfectly fits your brand.">Wir modellieren Ihren Baum als 3D-Entwurf. Sie besprechen ihn mit uns und ändern ihn – <b>bis zu 3 Änderungsrunden inklusive</b>, bis er perfekt zu Ihrer Marke passt.</p></div>
+    <div class="card"><span class="num">2</span><h3 data-de="Produktion & Licht" data-en="Production & lighting">Produktion & Licht</h3>
+      <p data-de="3D-Druck, Elektronik, Faseroptik und Epoxid-Guss: Wir fertigen, verkabeln, versiegeln und testen jedes Lichtszenario vor Auslieferung."
+         data-en="3D printing, electronics, fibre optics and epoxy casting: we manufacture, wire, seal and test every light scenario before delivery.">3D-Druck, Elektronik, Faseroptik und Epoxid-Guss: Wir fertigen, verkabeln, versiegeln und testen jedes Lichtszenario vor Auslieferung.</p></div>
+    <div class="card"><span class="num">3</span><h3 data-de="Lieferung – zwei Wege" data-en="Delivery – two options">Lieferung – zwei Wege</h3>
+      <p data-de="Per Post direkt an Ihr Unternehmen – oder <b>Direktlieferung an die Messe Augsburg</b> vor Messebeginn, sofern verfügbar. Sie entscheiden, was einfacher ist."
+         data-en="By post directly to your company – or <b>direct delivery to the Augsburg fairground</b> before the fair starts, if available. You decide what is easier.">Per Post direkt an Ihr Unternehmen – oder <b>Direktlieferung an die Messe Augsburg</b> vor Messebeginn, sofern verfügbar. Sie entscheiden, was einfacher ist.</p></div>
+    <div class="card"><span class="num">4</span><h3 data-de="Einweisung & Support" data-en="Onboarding & support">Einweisung & Support</h3>
+      <p data-de="Ein detailliertes Erklär-Video zeigt Schritt für Schritt, wie alles funktioniert. Auf Wunsch ist zusätzlich <b>eine Person vor Ort</b>, die Ihrem Team alles zeigt."
+         data-en="A detailed explainer video shows step by step how everything works. On request, <b>a person on site</b> additionally demonstrates everything to your team.">Ein detailliertes Erklär-Video zeigt Schritt für Schritt, wie alles funktioniert. Auf Wunsch ist zusätzlich <b>eine Person vor Ort</b>, die Ihrem Team alles zeigt.</p></div>
   </div>
-  <p class="lead" data-de="Herzlich willkommen zurück, Frau Theobald – und danke für das freundliche Vorgespräch."
-     data-en="Welcome back, Ms Theobald – and thank you for the friendly preliminary talk.">Herzlich willkommen zurück, Frau Theobald – und danke für das freundliche Vorgespräch.</p>
+  <div class="card highlight">
+    <h3 data-de="🛡️ Testphase & Liefer-Garantie" data-en="🛡️ Test phase & delivery guarantee">🛡️ Testphase & Liefer-Garantie</h3>
+    <p data-de="Alle digitalen Add-ons testen Sie <b>vor der Messe</b> in Ruhe; Fehler unserer Seite korrigieren wir kostenfrei. Sollten wir ein beauftragtes Modul dennoch nicht rechtzeitig liefern, <b>erstatten wir dessen volles Service-Entgelt</b>."
+       data-en="You test all digital add-ons <b>before the fair</b> at ease; errors on our side are corrected free of charge. Should we still fail to deliver a commissioned module in time, <b>we refund its full service fee</b>.">Alle digitalen Add-ons testen Sie <b>vor der Messe</b> in Ruhe; Fehler unserer Seite korrigieren wir kostenfrei. Sollten wir ein beauftragtes Modul dennoch nicht rechtzeitig liefern, <b>erstatten wir dessen volles Service-Entgelt</b>.</p>
+  </div>
+  <p class="lead" data-de="Herzlich willkommen zurück, Frau Theobald – wir freuen uns auf den Teams-Termin ab dem 28. Oktober."
+     data-en="Welcome back, Ms Theobald – we look forward to the Teams meeting from 28 October.">Herzlich willkommen zurück, Frau Theobald – wir freuen uns auf den Teams-Termin ab dem 28. Oktober.</p>
 </section>
 
 <!-- 10 KONTAKT + LEGAL FOOTER -->
