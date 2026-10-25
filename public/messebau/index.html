@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K4 Engineering – Digitale Erlebnisse für Ihre Messe</title>
+<style>
+:root{
+  --primary:#1e3a5f;
+  --primary-dark:#0f1f38;
+  --accent:#c9a961;
+  --cream:#f8f5f0;
+  --text:#2d3748;
+  --muted:#6b7280;
+  --white:#ffffff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--primary-dark);color:var(--text)}
+.slide{display:none;min-height:100vh;background:var(--cream);padding:6vh 8vw;position:relative;flex-direction:column;justify-content:center;gap:2rem}
+.slide.active{display:flex}
+.slide.dark{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:var(--cream)}
+.kicker{letter-spacing:.22em;text-transform:uppercase;font-size:.78rem;font-weight:700;color:var(--primary)}
+.dark .kicker{color:var(--accent)}
+h1{font-size:clamp(2rem,4.6vw,3.6rem);line-height:1.12;font-weight:800;color:var(--primary-dark)}
+.dark h1{color:var(--cream)}
+h2{font-size:clamp(1.5rem,3vw,2.4rem);font-weight:800;line-height:1.2;color:var(--primary-dark)}
+.dark h2{color:var(--cream)}
+h3{font-size:1.15rem;color:var(--primary);margin-bottom:.6rem}
+p.lead{font-size:clamp(1rem,1.4vw,1.15rem);color:var(--muted);max-width:62ch;line-height:1.6}
+.dark p.lead{color:#d4d0c8}
+.grid{display:grid;gap:1.4rem}
+.g2{grid-template-columns:1.05fr .95fr;align-items:center}
+.g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+@media(max-width:860px){.g2{grid-template-columns:1fr}}
+figure{border-radius:18px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.28);background:#ddd}
+figure img{width:100%;height:100%;object-fit:cover;display:block;min-height:320px;aspect-ratio:1/1}
+figcaption{font-size:.8rem;padding:.7rem 1rem;background:var(--white);color:var(--muted)}
+.card{background:var(--white);border:1px solid #e8e4dd;border-radius:16px;padding:1.4rem;box-shadow:0 6px 22px rgba(0,0,0,.06)}
+.card .ico{font-size:1.6rem;margin-bottom:.5rem}
+.card p{font-size:.92rem;line-height:1.5}
+.num{display:inline-flex;width:34px;height:34px;border-radius:50%;background:var(--primary);color:var(--white);align-items:center;justify-content:center;font-weight:800;margin-bottom:.7rem}
+.nav{position:fixed;bottom:22px;right:26px;display:flex;gap:.6rem;z-index:50}
+.nav button{width:46px;height:46px;border-radius:50%;border:none;background:var(--primary);color:var(--white);font-size:1.1rem;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.nav button:hover{background:var(--accent)}
+.bar{position:fixed;top:0;left:0;height:4px;background:var(--accent);z-index:60;transition:width .3s}
+.count{position:fixed;bottom:34px;left:30px;font-size:.8rem;color:#9aa396;z-index:50}
+.tag{display:inline-block;background:rgba(30,58,95,.1);color:var(--primary);border-radius:99px;padding:.35rem .9rem;font-size:.8rem;font-weight:700;margin:.2rem .2rem}
+.btn{display:inline-block;background:var(--primary);color:var(--white);text-decoration:none;border-radius:99px;padding:.7rem 1.4rem;font-weight:700;font-size:.9rem;margin-top:1rem}
+.btn:hover{background:var(--accent)}
+.lang{position:fixed;top:18px;right:26px;z-index:70;display:flex;background:var(--white);border-radius:99px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.langbtn{border:none;background:transparent;padding:.5rem .95rem;font-weight:800;cursor:pointer;color:var(--muted)}
+.langbtn.on{background:var(--primary);color:var(--white)}
+footer{font-size:.85rem;color:var(--muted);line-height:1.6;text-align:center;padding:2rem 1rem}
+.dark footer{color:#d4d0c8}
+footer a{color:inherit;text-decoration:underline}
+.solution-tag{display:inline-block;background:var(--accent);color:var(--primary-dark);padding:.3rem .8rem;border-radius:99px;font-size:.75rem;font-weight:800;letter-spacing:.05em;margin-bottom:.6rem}
+@media print{.nav,.bar,.count,.lang{display:none}.slide{display:flex!important;min-height:98vh;page-break-after:always}}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<div class="lang">
+  <button class="langbtn on" data-lang="de" onclick="setLang('de')">DE</button>
+  <button class="langbtn" data-lang="en" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- 1 COVER -->
+<section class="slide dark active">
+  <span class="kicker">K4 Engineering × Messebau</span>
+  <h1 data-de="Digitale Erlebnisse,<br>die Besucher an Ihren Stand ziehen."
+      data-en="Digital experiences<br>that draw visitors to your stand.">Digitale Erlebnisse,<br>die Besucher an Ihren Stand ziehen.</h1>
+  <p class="lead" data-de="Vier modulare Lösungen für Messebauer und Aussteller: KI-Messeführer, 3D-Modelle, interaktive Spiele und Augmented Reality – entwickelt und produziert in Deutschland."
+     data-en="Four modular solutions for stand builders and exhibitors: AI fair guide, 3D models, interactive games and augmented reality – developed and produced in Germany.">Vier modulare Lösungen für Messebauer und Aussteller: KI-Messeführer, 3D-Modelle, interaktive Spiele und Augmented Reality – entwickelt und produziert in Deutschland.</p>
+  <div><span class="tag">KI-Chatbot</span><span class="tag">3D-Druck + LED</span><span class="tag">WebAR</span><span class="tag">Quiz & Spiele</span></div>
+</section>
+
+<!-- 2 PROBLEM -->
+<section class="slide">
+  <span class="kicker" data-de="Die Herausforderung" data-en="The challenge">Die Herausforderung</span>
+  <h2 data-de="Besucher haben weniger Zeit – und mehr Auswahl." data-en="Visitors have less time – and more choice.">Besucher haben weniger Zeit – und mehr Auswahl.</h2>
+  <div class="grid g4">
+    <div class="card"><div class="ico">⏱️</div><h3 data-de="Durchschnittlich 47 Sekunden" data-en="Average 47 seconds">Durchschnittlich 47 Sekunden</h3>
+      <p data-de="So lange bleibt ein Besucher an einem durchschnittlichen Messestand stehen." data-en="That's how long a visitor stays at an average booth.">So lange bleibt ein Besucher an einem durchschnittlichen Messestand stehen.</p></div>
+    <div class="card"><div class="ico">📱</div><h3 data-de="Smartphone in der Hand" data-en="Smartphone in hand">Smartphone in der Hand</h3>
+      <p data-de="83 % der Fachbesucher nutzen ihr Handy während der Messe – wir machen es zum Werkzeug." data-en="83% of professional visitors use their phone during the fair – we turn it into a tool.">83 % der Fachbesucher nutzen ihr Handy während der Messe – wir machen es zum Werkzeug.</p></div>
+    <div class="card"><div class="ico">🎯</div><h3 data-de="Leads statt Flyer" data-en="Leads instead of flyers">Leads statt Flyer</h3>
+      <p data-de="Flyer landen im Müll. Digitale Interaktion mit DSGVO-konformer Einwilligung bringt qualifizierte Kontakte." data-en="Flyers end up in trash. Digital interaction with GDPR consent brings qualified contacts.">Flyer landen im Müll. Digitale Interaktion mit DSGVO-konformer Einwilligung bringt qualifizierte Kontakte.</p></div>
+    <div class="card"><div class="ico">🔄</div><h3 data-de="Mehrfach nutzbar" data-en="Reusable across fairs">Mehrfach nutzbar</h3>
+      <p data-de="Unsere Module funktionieren auf jeder Messe – mit neuem Content, nicht neuem Hardware-Budget." data-en="Our modules work at every fair – with new content, not a new hardware budget.">Unsere Module funktionieren auf jeder Messe – mit neuem Content, nicht neuem Hardware-Budget.</p></div>
+  </div>
+</section>
+
+<!-- 3 OVERVIEW -->
+<section class="slide">
+  <span class="kicker" data-de="Unsere 4 Lösungen" data-en="Our 4 solutions">Unsere 4 Lösungen</span>
+  <h2 data-de="Modular kombinierbar. Technisch ausgereift." data-en="Modular and combinable. Technically mature.">Modular kombinierbar. Technisch ausgereift.</h2>
+  <div class="grid g4">
+    <div class="card"><span class="num">1</span><h3>KI-Messeführer</h3>
+      <p data-de="Chatbot für die ganze Messe. Besucher fragen, was sie suchen – die Antwort kommt sofort mit Standnummer." data-en="Chatbot for the whole fair. Visitors ask what they need – instant answer with booth number.">Chatbot für die ganze Messe. Besucher fragen, was sie suchen – die Antwort kommt sofort mit Standnummer.</p></div>
+    <div class="card"><span class="num">2</span><h3>3D-Modelle mit Licht</h3>
+      <p data-de="Beleuchtete Exponate und Schnittmodelle mit eigener Elektronik. Anfassen erlaubt." data-en="Illuminated exhibits and cutaway models with own electronics. Touching welcome.">Beleuchtete Exponate und Schnittmodelle mit eigener Elektronik. Anfassen erlaubt.</p></div>
+    <div class="card"><span class="num">3</span><h3>Quiz & Spiele</h3>
+      <p data-de="Für Tablet oder Großbildschirm. Gewinnaktion mit Lead-Erfassung – nur mit Einwilligung." data-en="For tablet or large screen. Prize game with lead capture – consent only.">Für Tablet oder Großbildschirm. Gewinnaktion mit Lead-Erfassung – nur mit Einwilligung.</p></div>
+    <div class="card"><span class="num">4</span><h3>Augmented Reality</h3>
+      <p data-de="Produkt per Smartphone in Originalgröße im Raum – ohne App-Download." data-en="Product life-size in the room via smartphone – no app download.">Produkt per Smartphone in Originalgröße im Raum – ohne App-Download.</p></div>
+  </div>
+  <p class="lead" data-de="Alle vier Module funktionieren einzeln oder im Verbund – Sie wählen, was zu Ihrem Kunden passt."
+     data-en="All four modules work alone or together – you choose what fits your customer.">Alle vier Module funktionieren einzeln oder im Verbund – Sie wählen, was zu Ihrem Kunden passt.</p>
+</section>
+
+<!-- 4 KI-MESSEFÜHRER -->
+<section class="slide">
+  <span class="kicker">Modul 1</span>
+  <h2>KI-Messeführer · Chatbot für die ganze Messe</h2>
+  <div class="grid g2">
+    <figure>
+      <img src="01-ki-fuehrer.jpg" alt="KI-Messeführer Chatbot auf Smartphone">
+      <figcaption data-de="QR-Code scannen – Frage tippen – Stand finden. Keine App, keine Anmeldung."
+        data-en="Scan QR – type question – find booth. No app, no registration.">QR-Code scannen – Frage tippen – Stand finden. Keine App, keine Anmeldung.</figcaption></figure>
+    <div class="grid" style="gap:1rem">
+      <div class="card"><span class="solution-tag" data-de="FÜR MESSE-ORGANISATOREN" data-en="FOR FAIR ORGANIZERS">FÜR MESSE-ORGANISATOREN</span>
+        <p data-de="Besucher tippen: „Wer macht 3D-Druck?" – der Bot nennt passende Aussteller mit Halle und Stand. Mehrsprachig (DE, EN, FR, NL, …). Funktioniert auf jedem Smartphone per QR-Code."
+           data-en="Visitors type: „Who does 3D printing?" – the bot lists matching exhibitors with hall and booth. Multilingual. Works on any phone via QR code.">Besucher tippen: „Wer macht 3D-Druck?" – der Bot nennt passende Aussteller mit Halle und Stand. Mehrsprachig (DE, EN, FR, NL, …). Funktioniert auf jedem Smartphone per QR-Code.</p></div>
+      <div class="card"><span class="solution-tag" data-de="WAS SIE BEKOMMEN" data-en="WHAT YOU GET">WAS SIE BEKOMMEN</span>
+        <ul style="list-style:none;display:grid;gap:.4rem;font-size:.9rem">
+          <li>✓ <span data-de="Web-App, keine Installation" data-en="Web app, no install">Web-App, keine Installation</span></li>
+          <li>✓ <span data-de="KI-Server in der EU (DSGVO)" data-en="AI server in EU (GDPR)">KI-Server in der EU (DSGVO)</span></li>
+          <li>✓ <span data-de="Admin-Panel für Aussteller-Daten" data-en="Admin panel for exhibitor data">Admin-Panel für Aussteller-Daten</span></li>
+          <li>✓ <span data-de="Analytics: was Besucher wirklich suchen" data-en="Analytics: what visitors really search">Analytics: was Besucher wirklich suchen</span></li>
+        </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 3D-MODELLE -->
+<section class="slide">
+  <span class="kicker">Modul 2</span>
+  <h2 data-de="3D-Modelle mit Licht · Begreifbar statt abstrakt" data-en="3D models with light · Tangible instead of abstract">3D-Modelle mit Licht · Begreifbar statt abstrakt</h2>
+  <div class="grid g2">
+    <figure>
+      <img src="02-3d-modell.jpg" alt="Beleuchtetes 3D-Schnittmodell">
+      <figcaption data-de="Querschnitt, Elektronik, Faseroptik – in einem Exponat."
+        data-en="Cutaway, electronics, fibre optics – in one exhibit.">Querschnitt, Elektronik, Faseroptik – in einem Exponat.</figcaption></figure>
+    <div class="grid" style="gap:1rem">
+      <div class="card"><span class="solution-tag" data-de="TECHNIK" data-en="TECHNOLOGY">TECHNIK</span>
+        <ul style="list-style:none;display:grid;gap:.4rem;font-size:.9rem">
+          <li>✓ <span data-de="FDM / SLA / SLS-Druck je nach Detail" data-en="FDM / SLA / SLS printing per detail">FDM / SLA / SLS-Druck je nach Detail</span></li>
+          <li>✓ <span data-de="Eigene PCBs & Mikrocontroller" data-en="Custom PCBs & microcontrollers">Eigene PCBs & Mikrocontroller</span></li>
+          <li>✓ <span data-de="Faseroptik für fließendes Licht" data-en="Fibre optics for flowing light">Faseroptik für fließendes Licht</span></li>
+          <li>✓ <span data-de="Epoxid-Guss für transparente Bauteile" data-en="Epoxy casting for transparent parts">Epoxid-Guss für transparente Bauteile</span></li>
+          <li>✓ <span data-de="Button & Touch-Interaktion" data-en="Button & touch interaction">Button & Touch-Interaktion</span></li>
+        </ul></div>
+      <div class="card"><span class="solution-tag" data-de="EINSATZ" data-en="USE CASES">EINSATZ</span>
+        <p data-de="Ideal, wenn das Produkt zu groß, zu teuer oder zu komplex für den Stand ist: Maschinen, Motoren, Infrastruktur, medizinische Geräte, Prozesse unter der Erde."
+           data-en="Ideal when the product is too large, expensive or complex for the booth: machines, engines, infrastructure, medical devices, underground processes.">Ideal, wenn das Produkt zu groß, zu teuer oder zu komplex für den Stand ist: Maschinen, Motoren, Infrastruktur, medizinische Geräte, Prozesse unter der Erde.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 QUIZ & SPIELE -->
+<section class="slide">
+  <span class="kicker">Modul 3</span>
+  <h2 data-de="Quiz & Spiele · Der Stand-Magnet" data-en="Quiz & games · The booth magnet">Quiz & Spiele · Der Stand-Magnet</h2>
+  <div class="grid g2">
+    <figure>
+      <img src="03-quiz-game.jpg" alt="Interaktives Quiz am Messestand">
+      <figcaption data-de="5 Fragen, Ergebnis auf dem Handy, Lead nur mit Einwilligung."
+        data-en="5 questions, result on phone, lead only with consent.">5 Fragen, Ergebnis auf dem Handy, Lead nur mit Einwilligung.</figcaption></figure>
+    <div class="grid" style="gap:1rem">
+      <div class="card"><span class="solution-tag" data-de="SO FUNKTIONIERT ES" data-en="HOW IT WORKS">SO FUNKTIONIERT ES</span>
+        <ul style="list-style:none;display:grid;gap:.4rem;font-size:.9rem">
+          <li>✓ <span data-de="5–7 Fragen zur Branche / Produkt" data-en="5–7 questions about industry / product">5–7 Fragen zur Branche / Produkt</span></li>
+          <li>✓ <span data-de="Persönliches Ergebnis + Produktempfehlung" data-en="Personal result + product recommendation">Persönliches Ergebnis + Produktempfehlung</span></li>
+          <li>✓ <span data-de="Bestenliste + Tages-Gewinn" data-en="Leaderboard + daily prize">Bestenliste + Tages-Gewinn</span></li>
+          <li>✓ <span data-de="Lead-Formular nur mit Opt-in (DSGVO)" data-en="Lead form only with opt-in (GDPR)">Lead-Formular nur mit Opt-in (DSGVO)</span></li>
+        </ul></div>
+      <div class="card"><span class="solution-tag" data-de="EINSETZBAR AUF" data-en="RUNS ON">EINSETZBAR AUF</span>
+        <p data-de="• Eigenes Handy des Besuchers (QR-Code)<br>• Tablet am Stand (iPad / Android)<br>• Großbildschirm oder LED-Wand<br>• Messe-Website vor & nach der Messe"
+           data-en="• Visitor's own phone (QR code)<br>• Tablet at the booth<br>• Large screen or LED wall<br>• Fair website before & after the event">• Eigenes Handy des Besuchers (QR-Code)<br>• Tablet am Stand (iPad / Android)<br>• Großbildschirm oder LED-Wand<br>• Messe-Website vor & nach der Messe</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 AUGMENTED REALITY -->
+<section class="slide">
+  <span class="kicker">Modul 4</span>
+  <h2 data-de="Augmented Reality · Produkt in Originalgröße" data-en="Augmented reality · Product life-size">Augmented Reality · Produkt in Originalgröße</h2>
+  <div class="grid g2">
+    <figure>
+      <img src="04-augmented-reality.jpg" alt="AR-Produkt auf Smartphone im Raum">
+      <figcaption data-de="WebAR: kein App-Download, läuft direkt im Browser."
+        data-en="WebAR: no app download, runs directly in browser.">WebAR: kein App-Download, läuft direkt im Browser.</figcaption></figure>
+    <div class="grid" style="gap:1rem">
+      <div class="card"><span class="solution-tag">WEBAR</span>
+        <p data-de="Der Besucher scannt einen QR-Code und sieht Ihr Produkt sofort in 1:1 – auf dem Handy, ohne App, ohne Registrierung. Funktioniert auf iPhone und Android."
+           data-en="Visitors scan a QR code and see your product instantly 1:1 – on their phone, no app, no registration. Works on iPhone and Android.">Der Besucher scannt einen QR-Code und sieht Ihr Produkt sofort in 1:1 – auf dem Handy, ohne App, ohne Registrierung. Funktioniert auf iPhone und Android.</p></div>
+      <div class="card"><span class="solution-tag" data-de="OPTIONEN" data-en="OPTIONS">OPTIONEN</span>
+        <ul style="list-style:none;display:grid;gap:.4rem;font-size:.9rem">
+          <li>✓ <span data-de="Animationen: öffnen, drehen, zerlegen" data-en="Animations: open, rotate, explode">Animationen: öffnen, drehen, zerlegen</span></li>
+          <li>✓ <span data-de="Hotspots mit Text & Video" data-en="Hotspots with text & video">Hotspots mit Text & Video</span></li>
+          <li>✓ <span data-de="Foto-Funktion: Besucher teilen AR-Bild" data-en="Photo function: visitors share AR image">Foto-Funktion: Besucher teilen AR-Bild</span></li>
+          <li>✓ <span data-de="Jahreszeiten / Szenarien wechselbar" data-en="Seasons / scenarios switchable">Jahreszeiten / Szenarien wechselbar</span></li>
+        </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 SO ARBEITEN WIR + KONTAKT -->
+<section class="slide dark">
+  <span class="kicker" data-de="So arbeiten wir mit Messebauern" data-en="How we work with stand builders">So arbeiten wir mit Messebauern</span>
+  <h2 data-de="Sie bauen den Stand. Wir bringen das Erlebnis." data-en="You build the stand. We bring the experience.">Sie bauen den Stand. Wir bringen das Erlebnis.</h2>
+  <div class="grid g4" style="margin-top:1.5rem">
+    <div class="card"><span class="num">1</span><h3 data-de="Briefing" data-en="Briefing">Briefing</h3>
+      <p data-de="Wir sprechen mit Ihnen und Ihrem Kunden – 30 Min. reichen." data-en="We talk to you and your client – 30 min is enough.">Wir sprechen mit Ihnen und Ihrem Kunden – 30 Min. reichen.</p></div>
+    <div class="card"><span class="num">2</span><h3 data-de="Konzept" data-en="Concept">Konzept</h3>
+      <p data-de="In 5 Tagen: erste Skizze, Preis, Zeitplan. Kostenlos & unverbindlich." data-en="In 5 days: first sketch, price, timeline. Free & non-binding.">In 5 Tagen: erste Skizze, Preis, Zeitplan. Kostenlos & unverbindlich.</p></div>
+    <div class="card"><span class="num">3</span><h3 data-de="Produktion" data-en="Production">Produktion</h3>
+      <p data-de="3D-Druck, Elektronik, Programmierung, Test – alles bei uns in Augsburg." data-en="3D print, electronics, programming, testing – all at our Augsburg studio.">3D-Druck, Elektronik, Programmierung, Test – alles bei uns in Augsburg.</p></div>
+    <div class="card"><span class="num">4</span><h3 data-de="Lieferung" data-en="Delivery">Lieferung</h3>
+      <p data-de="Direkt zu Ihnen, an die Messe oder zum Kunden. Inkl. Video-Anleitung." data-en="Direct to you, to the fair or client. Video guide included.">Direkt zu Ihnen, an die Messe oder zum Kunden. Inkl. Video-Anleitung.</p></div>
+  </div>
+  <p class="lead" style="margin-top:2rem;text-align:center" data-de="Ihr Ansprechpartner: <b>Kareem Abdelwahab</b><br>Airbus Engineer · Founder K4 Engineering<br>📧 <a href='mailto:kareem@k4-engineering.eu' style='color:var(--accent)'>kareem@k4-engineering.eu</a><br><b>k4-engineering.eu</b>"
+     data-en="Your contact: <b>Kareem Abdelwahab</b><br>Airbus Engineer · Founder K4 Engineering<br>📧 <a href='mailto:kareem@k4-engineering.eu' style='color:var(--accent)'>kareem@k4-engineering.eu</a><br><b>k4-engineering.eu</b>">
+    Ihr Ansprechpartner: <b>Kareem Abdelwahab</b><br>Airbus Engineer · Founder K4 Engineering<br>📧 <a href="mailto:kareem@k4-engineering.eu" style="color:var(--accent)">kareem@k4-engineering.eu</a><br><b>k4-engineering.eu</b>
+  </p>
+  <footer>
+    <span data-de="© 2026 K4-Engineering · Ebereschenstraße 13, 86179 Augsburg · USt-IdNr. DE363351250"
+          data-en="© 2026 K4-Engineering · Ebereschenstraße 13, 86179 Augsburg · VAT DE363351250">© 2026 K4-Engineering · Ebereschenstraße 13, 86179 Augsburg · USt-IdNr. DE363351250</span><br>
+    <a href="https://k4-engineering.eu/impressum/" style="color:inherit">Impressum</a> ·
+    <a href="https://k4-engineering.eu/datenschutz/" style="color:inherit">Datenschutz</a>
+  </footer>
+</section>
+
+<div class="count" id="count"></div>
+<div class="nav">
+  <button onclick="go(-1)" aria-label="Zurück">←</button>
+  <button onclick="go(1)" aria-label="Weiter">→</button>
+</div>
+<script>
+const s=[...document.querySelectorAll('.slide')];let i=0;
+function show(n){i=(n+s.length)%s.length;s.forEach((e,k)=>e.classList.toggle('active',k===i));
+  document.getElementById('bar').style.width=((i+1)/s.length*100)+'%';
+  document.getElementById('count').textContent=(i+1)+' / '+s.length;}
+function go(d){show(i+d)}
+function setLang(l){document.documentElement.lang=l;
+  document.querySelectorAll('[data-de]').forEach(el=>{el.innerHTML=el.dataset[l]||el.innerHTML});
+  document.querySelectorAll('.langbtn').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));}
+addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')go(1);if(e.key==='ArrowLeft')go(-1)});
+let tx=null;addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>60)go(dx<0?1:-1);tx=null});
+setLang('de');show(0);
+</script>
+</body>
+</html>
