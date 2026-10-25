@@ -32,12 +32,18 @@ p.lead{font-size:clamp(1rem,1.4vw,1.15rem);color:var(--muted);max-width:62ch;lin
 .g2{grid-template-columns:1.05fr .95fr;align-items:center}
 .g4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
 @media(max-width:860px){.g2{grid-template-columns:1fr}}
-figure{border-radius:18px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.28);background:#ddd}
-figure img{width:100%;height:100%;object-fit:cover;display:block;min-height:320px;aspect-ratio:1/1}
+figure{border-radius:18px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.28);background:#ddd;position:relative}
+figure video{width:100%;display:block;object-fit:cover;aspect-ratio:16/9;min-height:220px;background:#000}
 figcaption{font-size:.8rem;padding:.7rem 1rem;background:var(--white);color:var(--muted)}
+.play-hint{position:absolute;bottom:1rem;right:1rem;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.05rem;cursor:pointer;z-index:2;border:none}
 .card{background:var(--white);border:1px solid #e8e4dd;border-radius:16px;padding:1.4rem;box-shadow:0 6px 22px rgba(0,0,0,.06)}
 .card .ico{font-size:1.6rem;margin-bottom:.5rem}
 .card p{font-size:.92rem;line-height:1.5}
+.dark .card{background:rgba(255,255,255,.08);border:1px solid rgba(201,169,97,.45)}
+.dark .card h3{color:var(--accent)}
+.dark .card p{color:var(--cream)}
+.dark .num{background:var(--accent);color:var(--primary-dark)}
+.accent-card{border-left:4px solid var(--accent)}
 .num{display:inline-flex;width:34px;height:34px;border-radius:50%;background:var(--primary);color:var(--white);align-items:center;justify-content:center;font-weight:800;margin-bottom:.7rem}
 .nav{position:fixed;bottom:22px;right:26px;display:flex;gap:.6rem;z-index:50}
 .nav button{width:46px;height:46px;border-radius:50%;border:none;background:var(--primary);color:var(--white);font-size:1.1rem;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
@@ -45,8 +51,10 @@ figcaption{font-size:.8rem;padding:.7rem 1rem;background:var(--white);color:var(
 .bar{position:fixed;top:0;left:0;height:4px;background:var(--accent);z-index:60;transition:width .3s}
 .count{position:fixed;bottom:34px;left:30px;font-size:.8rem;color:#9aa396;z-index:50}
 .tag{display:inline-block;background:rgba(30,58,95,.1);color:var(--primary);border-radius:99px;padding:.35rem .9rem;font-size:.8rem;font-weight:700;margin:.2rem .2rem}
+.dark .tag{background:rgba(201,169,97,.2);color:var(--accent)}
 .btn{display:inline-block;background:var(--primary);color:var(--white);text-decoration:none;border-radius:99px;padding:.7rem 1.4rem;font-weight:700;font-size:.9rem;margin-top:1rem}
 .btn:hover{background:var(--accent)}
+.btn.small{padding:.5rem 1rem;font-size:.8rem}
 .lang{position:fixed;top:18px;right:26px;z-index:70;display:flex;background:var(--white);border-radius:99px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.25)}
 .langbtn{border:none;background:transparent;padding:.5rem .95rem;font-weight:800;cursor:pointer;color:var(--muted)}
 .langbtn.on{background:var(--primary);color:var(--white)}
@@ -71,7 +79,12 @@ footer a{color:inherit;text-decoration:underline}
       data-en="Digital experiences<br>that draw visitors to your stand.">Digitale Erlebnisse,<br>die Besucher an Ihren Stand ziehen.</h1>
   <p class="lead" data-de="Vier modulare Lösungen für Messebauer und Aussteller: KI-Messeführer, 3D-Modelle, interaktive Spiele und Augmented Reality – entwickelt und produziert in Deutschland."
      data-en="Four modular solutions for stand builders and exhibitors: AI fair guide, 3D models, interactive games and augmented reality – developed and produced in Germany.">Vier modulare Lösungen für Messebauer und Aussteller: KI-Messeführer, 3D-Modelle, interaktive Spiele und Augmented Reality – entwickelt und produziert in Deutschland.</p>
-  <div><span class="tag">KI-Chatbot</span><span class="tag">3D-Druck + LED</span><span class="tag">WebAR</span><span class="tag">Quiz & Spiele</span></div>
+  <div>
+    <span class="tag" data-de="KI-Chatbot" data-en="AI chatbot">KI-Chatbot</span>
+    <span class="tag" data-de="3D-Druck + LED" data-en="3D printing + LED">3D-Druck + LED</span>
+    <span class="tag">WebAR</span>
+    <span class="tag" data-de="Quiz & Spiele" data-en="Quiz & games">Quiz & Spiele</span>
+  </div>
 </section>
 
 <!-- 2 PROBLEM -->
@@ -95,32 +108,35 @@ footer a{color:inherit;text-decoration:underline}
   <span class="kicker" data-de="Unsere 4 Lösungen" data-en="Our 4 solutions">Unsere 4 Lösungen</span>
   <h2 data-de="Modular kombinierbar. Technisch ausgereift." data-en="Modular and combinable. Technically mature.">Modular kombinierbar. Technisch ausgereift.</h2>
   <div class="grid g4">
-    <div class="card"><span class="num">1</span><h3>KI-Messeführer</h3>
+    <div class="card"><span class="num">1</span><h3 data-de="KI-Messeführer" data-en="AI fair guide">KI-Messeführer</h3>
       <p data-de="Chatbot für die ganze Messe. Besucher fragen, was sie suchen – die Antwort kommt sofort mit Standnummer." data-en="Chatbot for the whole fair. Visitors ask what they need – instant answer with booth number.">Chatbot für die ganze Messe. Besucher fragen, was sie suchen – die Antwort kommt sofort mit Standnummer.</p></div>
-    <div class="card"><span class="num">2</span><h3>3D-Modelle mit Licht</h3>
-      <p data-de="Beleuchtete Exponate und Schnittmodelle mit eigener Elektronik. Anfassen erlaubt." data-en="Illuminated exhibits and cutaway models with own electronics. Touching welcome.">Beleuchtete Exponate und Schnittmodelle mit eigener Elektronik. Anfassen erlaubt.</p></div>
-    <div class="card"><span class="num">3</span><h3>Quiz & Spiele</h3>
+    <div class="card"><span class="num">2</span><h3 data-de="Smarte interaktive 3D-Modelle" data-en="Smart interactive 3D models">Smarte interaktive 3D-Modelle</h3>
+      <p data-de="Beleuchtete Schnitt-Exponate mit eigener Elektronik, Sensoren und Licht-Szenarien. Besucher drücken einen Button, lösen einen Ablauf aus und verstehen das Produkt in Sekunden – anfassen erlaubt."
+         data-en="Illuminated cutaway exhibits with own electronics, sensors and light scenarios. Visitors press a button, trigger a sequence and understand the product in seconds – touching welcome.">Beleuchtete Schnitt-Exponate mit eigener Elektronik, Sensoren und Licht-Szenarien. Besucher drücken einen Button, lösen einen Ablauf aus und verstehen das Produkt in Sekunden – anfassen erlaubt.</p></div>
+    <div class="card"><span class="num">3</span><h3 data-de="Quiz & Spiele" data-en="Quiz & games">Quiz & Spiele</h3>
       <p data-de="Für Tablet oder Großbildschirm. Gewinnaktion mit Lead-Erfassung – nur mit Einwilligung." data-en="For tablet or large screen. Prize game with lead capture – consent only.">Für Tablet oder Großbildschirm. Gewinnaktion mit Lead-Erfassung – nur mit Einwilligung.</p></div>
-    <div class="card"><span class="num">4</span><h3>Augmented Reality</h3>
-      <p data-de="Produkt per Smartphone in Originalgröße im Raum – ohne App-Download." data-en="Product life-size in the room via smartphone – no app download.">Produkt per Smartphone in Originalgröße im Raum – ohne App-Download.</p></div>
+    <div class="card"><span class="num">4</span><h3 data-de="Augmented Reality" data-en="Augmented reality">Augmented Reality</h3>
+      <p data-de="Produkt per Smartphone oder Tablet in Originalgröße im Raum – ohne App-Download." data-en="Product life-size in the room via smartphone or tablet – no app download.">Produkt per Smartphone oder Tablet in Originalgröße im Raum – ohne App-Download.</p></div>
   </div>
   <p class="lead" data-de="Alle vier Module funktionieren einzeln oder im Verbund – Sie wählen, was zu Ihrem Kunden passt."
      data-en="All four modules work alone or together – you choose what fits your customer.">Alle vier Module funktionieren einzeln oder im Verbund – Sie wählen, was zu Ihrem Kunden passt.</p>
 </section>
 
-<!-- 4 KI-MESSEFÜHRER -->
+<!-- 4 KI-MESSEFÜHRER + VIDEO AI.mp4 -->
 <section class="slide">
   <span class="kicker">Modul 1</span>
-  <h2>KI-Messeführer · Chatbot für die ganze Messe</h2>
+  <h2 data-de="KI-Messeführer · Chatbot für die ganze Messe" data-en="AI fair guide · Chatbot for the whole fair">KI-Messeführer · Chatbot für die ganze Messe</h2>
   <div class="grid g2">
     <figure>
-      <img src="01-ki-fuehrer.jpg" alt="KI-Messeführer Chatbot auf Smartphone">
-      <figcaption data-de="QR-Code scannen – Frage tippen – Stand finden. Keine App, keine Anmeldung."
-        data-en="Scan QR – type question – find booth. No app, no registration.">QR-Code scannen – Frage tippen – Stand finden. Keine App, keine Anmeldung.</figcaption></figure>
+      <video poster="01-ki-fuehrer.jpg" autoplay muted loop playsinline preload="metadata">
+        <source src="AI.mp4" type="video/mp4">
+      </video>
+      <figcaption data-de="Live-Demo: Der KI-Messeführer beantwortet Besucherfragen in Sekunden – mit Halle, Stand und Kontaktkarte."
+        data-en="Live demo: the AI fair guide answers visitor questions in seconds – with hall, booth and contact card.">Live-Demo: Der KI-Messeführer beantwortet Besucherfragen in Sekunden – mit Halle, Stand und Kontaktkarte.</figcaption></figure>
     <div class="grid" style="gap:1rem">
       <div class="card"><span class="solution-tag" data-de="FÜR MESSE-ORGANISATOREN" data-en="FOR FAIR ORGANIZERS">FÜR MESSE-ORGANISATOREN</span>
-        <p data-de="Besucher tippen: „Wer macht 3D-Druck?" – der Bot nennt passende Aussteller mit Halle und Stand. Mehrsprachig (DE, EN, FR, NL, …). Funktioniert auf jedem Smartphone per QR-Code."
-           data-en="Visitors type: „Who does 3D printing?" – the bot lists matching exhibitors with hall and booth. Multilingual. Works on any phone via QR code.">Besucher tippen: „Wer macht 3D-Druck?" – der Bot nennt passende Aussteller mit Halle und Stand. Mehrsprachig (DE, EN, FR, NL, …). Funktioniert auf jedem Smartphone per QR-Code.</p></div>
+        <p data-de="Besucher tippen: „Wer macht 3D-Druck?" – der Bot nennt passende Aussteller mit Halle und Stand. Dazu eine Kontaktkarte mit Ansprechpartner, Rolle und Telefonnummer. Mehrsprachig (DE, EN, FR, NL, …). Funktioniert auf jedem Smartphone per QR-Code."
+           data-en="Visitors type: „Who does 3D printing?" – the bot lists matching exhibitors with hall and booth, plus a contact card with name, role and phone number. Multilingual. Works on any phone via QR code.">Besucher tippen: „Wer macht 3D-Druck?" – der Bot nennt passende Aussteller mit Halle und Stand. Dazu eine Kontaktkarte mit Ansprechpartner, Rolle und Telefonnummer. Mehrsprachig (DE, EN, FR, NL, …). Funktioniert auf jedem Smartphone per QR-Code.</p></div>
       <div class="card"><span class="solution-tag" data-de="WAS SIE BEKOMMEN" data-en="WHAT YOU GET">WAS SIE BEKOMMEN</span>
         <ul style="list-style:none;display:grid;gap:.4rem;font-size:.9rem">
           <li>✓ <span data-de="Web-App, keine Installation" data-en="Web app, no install">Web-App, keine Installation</span></li>
@@ -132,15 +148,17 @@ footer a{color:inherit;text-decoration:underline}
   </div>
 </section>
 
-<!-- 5 3D-MODELLE -->
+<!-- 5 3D-MODELLE + VIDEO Tree.mp4 -->
 <section class="slide">
   <span class="kicker">Modul 2</span>
-  <h2 data-de="3D-Modelle mit Licht · Begreifbar statt abstrakt" data-en="3D models with light · Tangible instead of abstract">3D-Modelle mit Licht · Begreifbar statt abstrakt</h2>
+  <h2 data-de="Smarte interaktive 3D-Modelle · Begreifbar statt abstrakt" data-en="Smart interactive 3D models · Tangible instead of abstract">Smarte interaktive 3D-Modelle · Begreifbar statt abstrakt</h2>
   <div class="grid g2">
     <figure>
-      <img src="02-3d-modell.jpg" alt="Beleuchtetes 3D-Schnittmodell">
-      <figcaption data-de="Querschnitt, Elektronik, Faseroptik – in einem Exponat."
-        data-en="Cutaway, electronics, fibre optics – in one exhibit.">Querschnitt, Elektronik, Faseroptik – in einem Exponat.</figcaption></figure>
+      <video poster="02-smart-tree.jpg" autoplay muted loop playsinline preload="metadata">
+        <source src="Tree.mp4" type="video/mp4">
+      </video>
+      <figcaption data-de="Unser Smart Tree in Aktion (Deutsche Baumpflegetage 2026): IoT-Sensordaten werden zu leuchtendem Saftstrom – mit Audio-Guide per Headset."
+        data-en="Our Smart Tree in action (Deutsche Baumpflegetage 2026): IoT sensor data becomes glowing sap flow – with audio guide via headset.">Unser Smart Tree in Aktion (Deutsche Baumpflegetage 2026): IoT-Sensordaten werden zu leuchtendem Saftstrom – mit Audio-Guide per Headset.</figcaption></figure>
     <div class="grid" style="gap:1rem">
       <div class="card"><span class="solution-tag" data-de="TECHNIK" data-en="TECHNOLOGY">TECHNIK</span>
         <ul style="list-style:none;display:grid;gap:.4rem;font-size:.9rem">
@@ -152,54 +170,67 @@ footer a{color:inherit;text-decoration:underline}
         </ul></div>
       <div class="card"><span class="solution-tag" data-de="EINSATZ" data-en="USE CASES">EINSATZ</span>
         <p data-de="Ideal, wenn das Produkt zu groß, zu teuer oder zu komplex für den Stand ist: Maschinen, Motoren, Infrastruktur, medizinische Geräte, Prozesse unter der Erde."
-           data-en="Ideal when the product is too large, expensive or complex for the booth: machines, engines, infrastructure, medical devices, underground processes.">Ideal, wenn das Produkt zu groß, zu teuer oder zu komplex für den Stand ist: Maschinen, Motoren, Infrastruktur, medizinische Geräte, Prozesse unter der Erde.</p></div>
+           data-en="Ideal when the product is too large, expensive or complex for the booth: machines, engines, infrastructure, medical devices, underground processes.">Ideal, wenn das Produkt zu groß, zu teuer oder zu komplex für den Stand ist: Maschinen, Motoren, Infrastruktur, medizinische Geräte, Prozesse unter der Erde.</p>
+        <a class="btn small" href="https://k4-engineering.eu/" target="_blank"
+           data-de="Live-Referenz: Smart Tree auf k4-engineering.eu →"
+           data-en="Live reference: Smart Tree on k4-engineering.eu →">Live-Referenz: Smart Tree auf k4-engineering.eu →</a></div>
     </div>
+  </div>
+  <div class="card accent-card">
+    <p data-de="<b>Customizing nach Ihrer Spezifikation:</b> Jedes Modell wird individuell für Ihren Kunden entwickelt – Maße, Materialien, Licht-Szenarien, Sensorik, Elektronik und Software exakt nach Ihren Vorgaben. Wie im Airbus-Engineering: nach Lastenheft, nicht von der Stange."
+       data-en="<b>Customised to your specification:</b> Every model is developed individually for your client – dimensions, materials, light scenarios, sensors, electronics and software exactly to your requirements. Like in Airbus engineering: built to spec, not off the shelf."><b>Customizing nach Ihrer Spezifikation:</b> Jedes Modell wird individuell für Ihren Kunden entwickelt – Maße, Materialien, Licht-Szenarien, Sensorik, Elektronik und Software exakt nach Ihren Vorgaben. Wie im Airbus-Engineering: nach Lastenheft, nicht von der Stange.</p>
   </div>
 </section>
 
-<!-- 6 QUIZ & SPIELE -->
+<!-- 6 QUIZ & SPIELE + VIDEO InteractiveGame.mp4 -->
 <section class="slide">
   <span class="kicker">Modul 3</span>
   <h2 data-de="Quiz & Spiele · Der Stand-Magnet" data-en="Quiz & games · The booth magnet">Quiz & Spiele · Der Stand-Magnet</h2>
   <div class="grid g2">
     <figure>
-      <img src="03-quiz-game.jpg" alt="Interaktives Quiz am Messestand">
-      <figcaption data-de="5 Fragen, Ergebnis auf dem Handy, Lead nur mit Einwilligung."
-        data-en="5 questions, result on phone, lead only with consent.">5 Fragen, Ergebnis auf dem Handy, Lead nur mit Einwilligung.</figcaption></figure>
+      <video poster="03-quiz-game.jpg" autoplay muted loop playsinline preload="metadata">
+        <source src="InteractiveGame.mp4" type="video/mp4">
+      </video>
+      <figcaption data-de="Live-Demo: Das Helm-Quiz läuft auf Tablet, Handy und Großbildschirm – mit Bestenliste und Gewinnaktion."
+        data-en="Live demo: the helmet quiz runs on tablet, phone and large screen – with leaderboard and prize draw.">Live-Demo: Das Helm-Quiz läuft auf Tablet, Handy und Großbildschirm – mit Bestenliste und Gewinnaktion.</figcaption></figure>
     <div class="grid" style="gap:1rem">
-      <div class="card"><span class="solution-tag" data-de="SO FUNKTIONIERT ES" data-en="HOW IT WORKS">SO FUNKTIONIERT ES</span>
-        <ul style="list-style:none;display:grid;gap:.4rem;font-size:.9rem">
-          <li>✓ <span data-de="5–7 Fragen zur Branche / Produkt" data-en="5–7 questions about industry / product">5–7 Fragen zur Branche / Produkt</span></li>
-          <li>✓ <span data-de="Persönliches Ergebnis + Produktempfehlung" data-en="Personal result + product recommendation">Persönliches Ergebnis + Produktempfehlung</span></li>
-          <li>✓ <span data-de="Bestenliste + Tages-Gewinn" data-en="Leaderboard + daily prize">Bestenliste + Tages-Gewinn</span></li>
-          <li>✓ <span data-de="Lead-Formular nur mit Opt-in (DSGVO)" data-en="Lead form only with opt-in (GDPR)">Lead-Formular nur mit Opt-in (DSGVO)</span></li>
-        </ul></div>
+      <div class="card"><span class="solution-tag" data-de="LIVE-DEMO" data-en="LIVE DEMO">LIVE-DEMO</span>
+        <p data-de="Dieses Spiel läuft bereits live: Wir haben es für einen Kunden aus der Baumpflege-Branche gebaut. Es erklärt Besuchern spielerisch die Vorteile seines Forsthelms – inklusive Gewinnaktion und Bestenliste."
+           data-en="This game is already live: we built it for a client in the tree-care industry. It playfully explains the advantages of his forestry helmet to visitors – including prize draw and leaderboard.">Dieses Spiel läuft bereits live: Wir haben es für einen Kunden aus der Baumpflege-Branche gebaut. Es erklärt Besuchern spielerisch die Vorteile seines Forsthelms – inklusive Gewinnaktion und Bestenliste.</p>
+        <a class="btn small" href="https://k4-engineering.eu/interactive-booth-game/" target="_blank"
+           data-de="Jetzt spielen →" data-en="Play now →">Jetzt spielen →</a></div>
       <div class="card"><span class="solution-tag" data-de="EINSETZBAR AUF" data-en="RUNS ON">EINSETZBAR AUF</span>
         <p data-de="• Eigenes Handy des Besuchers (QR-Code)<br>• Tablet am Stand (iPad / Android)<br>• Großbildschirm oder LED-Wand<br>• Messe-Website vor & nach der Messe"
            data-en="• Visitor's own phone (QR code)<br>• Tablet at the booth<br>• Large screen or LED wall<br>• Fair website before & after the event">• Eigenes Handy des Besuchers (QR-Code)<br>• Tablet am Stand (iPad / Android)<br>• Großbildschirm oder LED-Wand<br>• Messe-Website vor & nach der Messe</p></div>
     </div>
   </div>
+  <div class="card accent-card">
+    <p data-de="<b>Fun & Win – spielen und gewinnen:</b> Wer die beste Punktzahl schafft, wird sofort belohnt: etwas Süßes am Stand oder ein nützliches 3D-gedrucktes Giveaway mit Ihrem Logo (z. B. Handy-Ständer, Kabel-Organizer, Schlüsselanhänger). So bleibt Ihre Marke lange nach der Messe auf dem Schreibtisch des Kunden."
+       data-en="<b>Fun & win – play and earn:</b> Whoever scores best is rewarded instantly: something sweet at the booth or a useful 3D-printed giveaway with your logo (e.g. phone stand, cable organiser, keychain). Your brand stays on the client's desk long after the fair."><b>Fun & Win – spielen und gewinnen:</b> Wer die beste Punktzahl schafft, wird sofort belohnt: etwas Süßes am Stand oder ein nützliches 3D-gedrucktes Giveaway mit Ihrem Logo (z. B. Handy-Ständer, Kabel-Organizer, Schlüsselanhänger). So bleibt Ihre Marke lange nach der Messe auf dem Schreibtisch des Kunden.</p>
+  </div>
 </section>
 
-<!-- 7 AUGMENTED REALITY -->
+<!-- 7 AR + VIDEO AR.mp4 -->
 <section class="slide">
   <span class="kicker">Modul 4</span>
-  <h2 data-de="Augmented Reality · Produkt in Originalgröße" data-en="Augmented reality · Product life-size">Augmented Reality · Produkt in Originalgröße</h2>
+  <h2 data-de="Augmented Reality & 3D-Viewer · Produkt zum Anfassen" data-en="Augmented reality & 3D viewer · Product you can touch">Augmented Reality & 3D-Viewer · Produkt zum Anfassen</h2>
   <div class="grid g2">
     <figure>
-      <img src="04-augmented-reality.jpg" alt="AR-Produkt auf Smartphone im Raum">
-      <figcaption data-de="WebAR: kein App-Download, läuft direkt im Browser."
-        data-en="WebAR: no app download, runs directly in browser.">WebAR: kein App-Download, läuft direkt im Browser.</figcaption></figure>
+      <video poster="04-ar-tablet.jpg" autoplay muted loop playsinline preload="metadata">
+        <source src="AR.mp4" type="video/mp4">
+      </video>
+      <figcaption data-de="Live-Demo: Explosionsansicht auf dem Tablet – Berühren und Drehen öffnet Vorteil-Popups."
+        data-en="Live demo: exploded view on the tablet – touching and rotating opens advantage popups.">Live-Demo: Explosionsansicht auf dem Tablet – Berühren und Drehen öffnet Vorteil-Popups.</figcaption></figure>
     <div class="grid" style="gap:1rem">
-      <div class="card"><span class="solution-tag">WEBAR</span>
-        <p data-de="Der Besucher scannt einen QR-Code und sieht Ihr Produkt sofort in 1:1 – auf dem Handy, ohne App, ohne Registrierung. Funktioniert auf iPhone und Android."
-           data-en="Visitors scan a QR code and see your product instantly 1:1 – on their phone, no app, no registration. Works on iPhone and Android.">Der Besucher scannt einen QR-Code und sieht Ihr Produkt sofort in 1:1 – auf dem Handy, ohne App, ohne Registrierung. Funktioniert auf iPhone und Android.</p></div>
+      <div class="card"><span class="solution-tag">WEBAR & 3D</span>
+        <p data-de="Der Besucher hält das Tablet oder scannt den QR-Code: Ihr Produkt erscheint als 3D-Modell – als Explosionsansicht (Collapse-View). Dreht oder berührt er ein Bauteil, öffnen sich Popup-Botschaften, die den Vorteil dieses Features erklären. Ohne App, ohne Registrierung."
+           data-en="The visitor holds the tablet or scans the QR code: your product appears as a 3D model – in exploded (collapse) view. When he rotates or touches a part, popup messages open explaining the advantage of that feature. No app, no registration.">Der Besucher hält das Tablet oder scannt den QR-Code: Ihr Produkt erscheint als 3D-Modell – als Explosionsansicht (Collapse-View). Dreht oder berührt er ein Bauteil, öffnen sich Popup-Botschaften, die den Vorteil dieses Features erklären. Ohne App, ohne Registrierung.</p></div>
       <div class="card"><span class="solution-tag" data-de="OPTIONEN" data-en="OPTIONS">OPTIONEN</span>
         <ul style="list-style:none;display:grid;gap:.4rem;font-size:.9rem">
           <li>✓ <span data-de="Animationen: öffnen, drehen, zerlegen" data-en="Animations: open, rotate, explode">Animationen: öffnen, drehen, zerlegen</span></li>
           <li>✓ <span data-de="Hotspots mit Text & Video" data-en="Hotspots with text & video">Hotspots mit Text & Video</span></li>
           <li>✓ <span data-de="Foto-Funktion: Besucher teilen AR-Bild" data-en="Photo function: visitors share AR image">Foto-Funktion: Besucher teilen AR-Bild</span></li>
-          <li>✓ <span data-de="Jahreszeiten / Szenarien wechselbar" data-en="Seasons / scenarios switchable">Jahreszeiten / Szenarien wechselbar</span></li>
+          <li>✓ <span data-de="Produkt in Originalgröße im Raum (1:1)" data-en="Product life-size in the room (1:1)">Produkt in Originalgröße im Raum (1:1)</span></li>
         </ul></div>
     </div>
   </div>
@@ -214,7 +245,7 @@ footer a{color:inherit;text-decoration:underline}
       <p data-de="Wir sprechen mit Ihnen und Ihrem Kunden – 30 Min. reichen." data-en="We talk to you and your client – 30 min is enough.">Wir sprechen mit Ihnen und Ihrem Kunden – 30 Min. reichen.</p></div>
     <div class="card"><span class="num">2</span><h3 data-de="Konzept" data-en="Concept">Konzept</h3>
       <p data-de="In 5 Tagen: erste Skizze, Preis, Zeitplan. Kostenlos & unverbindlich." data-en="In 5 days: first sketch, price, timeline. Free & non-binding.">In 5 Tagen: erste Skizze, Preis, Zeitplan. Kostenlos & unverbindlich.</p></div>
-    <div class="card"><span class="num">3</span><h3 data-de="Produktion" data-en="Production">Produktion</h3>
+    <div class="card"><span class="num">3</span><h3 data-de="Produktion" data-en="Produktion">Produktion</h3>
       <p data-de="3D-Druck, Elektronik, Programmierung, Test – alles bei uns in Augsburg." data-en="3D print, electronics, programming, testing – all at our Augsburg studio.">3D-Druck, Elektronik, Programmierung, Test – alles bei uns in Augsburg.</p></div>
     <div class="card"><span class="num">4</span><h3 data-de="Lieferung" data-en="Delivery">Lieferung</h3>
       <p data-de="Direkt zu Ihnen, an die Messe oder zum Kunden. Inkl. Video-Anleitung." data-en="Direct to you, to the fair or client. Video guide included.">Direkt zu Ihnen, an die Messe oder zum Kunden. Inkl. Video-Anleitung.</p></div>
@@ -238,7 +269,25 @@ footer a{color:inherit;text-decoration:underline}
 </div>
 <script>
 const s=[...document.querySelectorAll('.slide')];let i=0;
+
+// Video-Handling: Autoplay, Fallback-Button, nur ein Video gleichzeitig
+const vids=[...document.querySelectorAll('figure video')];
+vids.forEach(v=>{
+  const hint=document.createElement('button');
+  hint.className='play-hint';hint.textContent='▶';hint.style.display='none';
+  hint.setAttribute('aria-label','Video abspielen');
+  v.parentNode.appendChild(hint);
+  const go=()=>{const p=v.play();
+    if(p!==undefined){p.then(()=>{hint.style.display='none';}).catch(()=>{hint.style.display='flex';});}
+    else{hint.style.display='flex';}};
+  v._go=go;
+  v.addEventListener('click',go);
+  hint.addEventListener('click',go);
+});
+
 function show(n){i=(n+s.length)%s.length;s.forEach((e,k)=>e.classList.toggle('active',k===i));
+  vids.forEach(v=>{const act=v.closest('.slide').classList.contains('active');
+    if(act){v._go();}else{v.pause();}});
   document.getElementById('bar').style.width=((i+1)/s.length*100)+'%';
   document.getElementById('count').textContent=(i+1)+' / '+s.length;}
 function go(d){show(i+d)}
