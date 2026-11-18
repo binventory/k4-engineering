@@ -2,7 +2,7 @@
 import { createHmac, createHash, timingSafeEqual } from "node:crypto";
 
 export const PROVIDERS = {
-  groq:       { name: "Groq",          base: "https://api.groq.com/openai/v1", model: "llama-3.3-70b-versatile" },
+  groq:       { name: "Groq",          base: "https://api.groq.com/openai/v1", model: "openai/gpt-oss-120b" },
   mistral:    { name: "Mistral",       base: "https://api.mistral.ai/v1", model: "mistral-small-latest" },
   cerebras:   { name: "Cerebras",      base: "https://api.cerebras.ai/v1", model: "llama-3.3-70b" },
   gemini:     { name: "Google Gemini", base: "https://generativelanguage.googleapis.com/v1beta/openai", model: "gemini-2.0-flash" },
