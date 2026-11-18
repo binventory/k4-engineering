@@ -43,17 +43,19 @@ $('newf').onclick=()=>editFair('');
 async function editFair(slug){
   let f={}; if(slug){f=(await call('getFair',{slug})).fair;} const isNew=!slug;
   const provs='<option value="">(global default)</option>'+Object.entries(ST.providers).map(([id,p])=>'<option value="'+id+'"'+(f.provider===id?' selected':'')+'>'+esc(p.name)+'</option>').join('');
-  const ads=(f.ads||[]).map(a=>[a.text,a.url,a.cta].map(x=>x||'').join(' | ')).join('\n');
+  const ads=(f.ads||[]).map(a=>[a.text,a.url,a.cta,a.image].map(x=>x||'').join(' | ')).join('\n');
   $('editor').classList.remove('hide'); $('editor').innerHTML='<h2>'+(isNew?'New fair':'Edit '+esc(slug))+'</h2><div class="row">'+
    '<div><label>Slug (URL: ?fair=slug)</label><input id="e_slug" value="'+esc(slug)+'" '+(isNew?'':'readonly')+' placeholder="coiltech"></div><div><label>Fair name</label><input id="e_name" value="'+esc(f.name)+'"></div><div><label>Dates</label><input id="e_dates" value="'+esc(f.dates)+'"></div><div><label>Venue</label><input id="e_venue" value="'+esc(f.venue)+'"></div><div><label>Accent colour</label><input id="e_accent" value="'+esc(f.accent||'#0b5fa5')+'"></div><div><label>Organiser contact (shown when the bot does not know)</label><input id="e_contact" value="'+esc(f.organiser_contact)+'"></div><div><label>AI provider for this fair</label><select id="e_prov">'+provs+'</select></div></div>'+
    '<label>Welcome message</label><textarea id="e_welcome">'+esc(f.welcome)+'</textarea><label>Suggested questions (one per line, 4 shown)</label><textarea id="e_q">'+esc((f.questions||[]).join('\n'))+'</textarea>'+
-   '<label>Banner ad (one per line: text | https://link | button text). The first is shown and labelled "Anzeige".</label><textarea id="e_ads">'+esc(ads)+'</textarea>'+
+   '<label>Banner ad (one per line: text | https://link | button text | https://image-url optional). The first is shown and labelled "Anzeige".</label><textarea id="e_ads">'+esc(ads)+'</textarea>'+
+   '<label>Floor plan (JSON, optional – halls, links, entrance; leave empty for none)</label><textarea id="e_layout" style="min-height:120px;font-family:monospace;font-size:.8rem">'+esc(f.layout?JSON.stringify(f.layout):'')+'</textarea>'+
    '<label>General information (dates, venue, tickets, opening hours, travel, programme, rules). The bot answers from this text only.</label><textarea id="e_info" style="min-height:200px">'+esc(f.info)+'</textarea>'+
    '<label>Exhibitors CSV (UTF-8, header row; columns: name, stand, country, sector, description, products, keywords, website, sponsored) – currently '+(f.exhibitors||[]).length+' exhibitors</label><input type="file" id="e_csv" accept=".csv,.txt"><label><input type="radio" name="mode" value="replace" checked style="width:auto"> replace all &nbsp; <input type="radio" name="mode" value="append" style="width:auto"> append</label>'+
    '<button id="e_save">Save fair</button> '+(isNew?'':'<button class="d" id="e_del">Delete fair</button>');
   $('e_save').onclick=async()=>{
     const slug2=($('e_slug').value||'').trim().toLowerCase(); const body={slug:slug2,name:$('e_name').value,dates:$('e_dates').value,venue:$('e_venue').value,accent:$('e_accent').value,organiser_contact:$('e_contact').value,provider:$('e_prov').value,welcome:$('e_welcome').value,
-      questions:$('e_q').value.split('\n'),ads:$('e_ads').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const[a,b,c]=l.split('|').map(x=>(x||'').trim());return{text:a,url:b,cta:c};}),info:$('e_info').value};
+      questions:$('e_q').value.split('\n'),ads:$('e_ads').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const[a,b,c,d]=l.split('|').map(x=>(x||'').trim());return{text:a,url:b,cta:c,image:d};}),info:$('e_info').value};
+    const lt=$('e_layout').value.trim(); if(lt){try{body.layout=JSON.parse(lt);}catch(e){say('Floor plan is not valid JSON.',1);return;}}else body.layout=null;
     const file=$('e_csv').files[0]; if(file){const rows=parseCsv(await file.text()); if(!rows.length){say('CSV had no usable rows (needs a header row with a "name" column).',1);return;} body.exhibitors=rows; body.mode=document.querySelector('input[name=mode]:checked').value;}
     try{const j=await call('saveFair',body);say('Saved. Exhibitors in this fair: '+j.count);$('editor').classList.add('hide');refresh();}catch(e){say(e.message,1);}};
   if(!isNew)$('e_del').onclick=async()=>{if(confirm('Delete this fair?')){await call('deleteFair',{slug});$('editor').classList.add('hide');refresh();}};
