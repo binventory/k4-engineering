@@ -19,10 +19,11 @@ header p{margin:2px 0 0;font-size:.85rem;opacity:.9}
 .demo{display:inline-block;background:rgba(255,255,255,.2);border-radius:6px;padding:1px 7px;font-size:.72rem;margin-left:6px;vertical-align:middle}
 main{flex:1;width:100%;max-width:760px;margin:0 auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
 .ad{border:1px dashed var(--bd);border-radius:10px;background:var(--card);padding:8px 12px;font-size:.88rem;display:flex;gap:10px;align-items:center}
+.ad{transition:opacity .35s}.ad.fade,.feat.fade{opacity:0}.feat{transition:opacity .35s}.adt{flex:1}.dots2{display:flex;gap:3px;flex:none}.dots2 i{width:6px;height:6px;border-radius:50%;background:var(--bd)}.dots2 i.on{background:var(--ac)}
 .ad img{height:54px;max-width:120px;object-fit:contain;border-radius:6px;flex:none}
 .ad b.tag{font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);border:1px solid var(--bd);border-radius:4px;padding:0 5px;flex:none}
 .ad a{color:var(--ac);text-decoration:none;font-weight:600}
-.feat{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.feat{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}.feat .c{flex:1 0 210px}
 .feat .c{flex:none;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;font-size:.85rem;width:210px;white-space:normal}
 .feat .c small{color:var(--mut);display:block}.feat .c .tag{font-size:.65rem;text-transform:uppercase;color:var(--mut)}
 .feat .c a{color:var(--ac);font-weight:600;text-decoration:none;font-size:.8rem}
@@ -43,11 +44,12 @@ footer{font-size:.74rem;color:var(--mut);text-align:center;padding:10px 14px 16p
 .dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mut);margin:0 2px;animation:b 1s infinite}
 .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
 @keyframes b{0%,80%,100%{opacity:.25}40%{opacity:1}}
-dialog{border:0;border-radius:14px;padding:0;width:min(720px,94vw);background:var(--card);color:var(--tx)}
+dialog{border:0;max-height:92vh;border-radius:14px;padding:0;width:min(720px,94vw);background:var(--card);color:var(--tx)}
 dialog::backdrop{background:rgba(0,0,0,.5)}
 .dh{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--bd)}
 .dh button{font:inherit;background:none;border:1px solid var(--bd);border-radius:8px;color:var(--tx);padding:3px 10px;cursor:pointer}
 #mapbox{padding:10px 14px 14px}#mapbox svg{width:100%;height:auto;display:block;background:var(--bg);border-radius:10px}
+.tabs{display:flex;gap:6px;margin-bottom:8px}.tabs button{font:inherit;font-size:.85rem;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:3px 12px;cursor:pointer}.tabs button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
 .leg{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-size:.8rem;color:var(--mut)}
 </style>
 </head>
@@ -68,10 +70,10 @@ const FAIR = (new URLSearchParams(location.search).get('fair') || 'coiltech').to
 const API = '/.netlify/functions/';
 const EN_FOOT='Demo by K4-Engineering, Augsburg. Unofficial demonstration, not an offer by the organiser. Answers come only from the sample data provided. Your input is sent to an AI service to answer and is not stored.';
 const UI = {
-  de:{n:'Deutsch',ph:'Frage zur Messe stellen …',ad:'Anzeige',busy:'Der Assistent ist gerade ausgelastet. Bitte in einer Minute erneut versuchen.',err:'Das hat leider nicht geklappt. Bitte erneut versuchen.',rate:'Zu viele Anfragen. Bitte später erneut versuchen.',nc:'Der Assistent ist noch nicht eingerichtet.',map:'Hallenplan',close:'Schließen',stand:'Stand',more:'Website',
+  de:{n:'Deutsch',ph:'Frage zur Messe stellen …',ad:'Anzeige',busy:'Der Assistent ist gerade ausgelastet. Bitte in einer Minute erneut versuchen.',err:'Das hat leider nicht geklappt. Bitte erneut versuchen.',rate:'Zu viele Anfragen. Bitte später erneut versuchen.',nc:'Der Assistent ist noch nicht eingerichtet.',map:'Hallenplan',orig:'Originalplan',close:'Schließen',stand:'Stand',more:'Website',
      foot:'Demo von K4-Engineering, Augsburg. Inoffizielle Demonstration, kein Angebot des Veranstalters. Antworten stammen nur aus den hinterlegten Beispieldaten. Eingaben werden zur Beantwortung an einen KI-Dienst übertragen und nicht gespeichert.',imp:'Impressum',dp:'Datenschutz',exb:'Beispiel-Aussteller',hint:'Sprechen Sie in Ihrer Sprache – der Assistent antwortet in derselben.',
      welcome:n=>'Willkommen! Ich bin der Demo-Assistent für '+n+'. Fragen Sie mich nach Ausstellern, Themen und Standorten – in jeder Sprache.',q:['Welche Firmen stellen aus?','Wo ist der Info-Stand?','Wann und wo findet die Messe statt?']},
-  en:{n:'English',ph:'Ask about the fair …',ad:'Ad',busy:'The assistant is busy right now. Please try again in a minute.',err:'Something went wrong. Please try again.',rate:'Too many requests. Please try again later.',nc:'The assistant is not set up yet.',map:'Hall plan',close:'Close',stand:'Stand',more:'Website',
+  en:{n:'English',ph:'Ask about the fair …',ad:'Ad',busy:'The assistant is busy right now. Please try again in a minute.',err:'Something went wrong. Please try again.',rate:'Too many requests. Please try again later.',nc:'The assistant is not set up yet.',map:'Hall plan',orig:'Original plan',close:'Close',stand:'Stand',more:'Website',
      foot:EN_FOOT,imp:'Legal notice',dp:'Privacy',exb:'Sample exhibitors',hint:'Write in your own language – the assistant answers in the same one.',
      welcome:n=>'Welcome! I am the demo assistant for '+n+'. Ask me about exhibitors, topics and stand locations – in any language.',q:['Which companies are exhibiting?','Where is the help desk?','When and where is the fair?']},
   ar:{n:'العربية',ph:'اسأل عن المعرض …',ad:'إعلان',busy:'المساعد مشغول الآن. حاول مرة أخرى بعد دقيقة.',err:'حدث خطأ ما. حاول مرة أخرى.',rate:'عدد الطلبات كبير. حاول لاحقاً.',nc:'المساعد غير مُعدّ بعد.',map:'خريطة القاعات',close:'إغلاق',stand:'الجناح',more:'الموقع',
@@ -122,7 +124,7 @@ async function ask(text){
 const NS='http://www.w3.org/2000/svg';
 function el(n,a,txt){ const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); if(txt!=null) e.textContent=txt; return e; }
 function icons(svg,list,x,y,w){ list.forEach((ic,i)=>{ const per=Math.max(1,Math.floor((w-2)/4.4)), r=Math.floor(i/per), c=i%per; svg.appendChild(el('text',{x:x+2.2+c*4.4,y:y+r*4.6,'font-size':3.6,'dominant-baseline':'hanging'},ICON[ic]||'')); }); }
-function showMap(hl){
+function showMap(hl,tab){
   const lay=META&&META.layout; if(!lay) return; hl=hl||[]; const svg=el('svg',{viewBox:'0 0 100 82',role:'img','aria-label':T.map}); const used=new Set();
   (lay.links||[]).forEach(r=>svg.appendChild(el('rect',{x:r.x,y:r.y,width:r.w,height:r.h,fill:'#9aa3ad',opacity:.55})));
   const dim=h=>hl.length&&!hl.includes(h.id);
@@ -133,7 +135,10 @@ function showMap(hl){
   if(lay.entrance){ const e=lay.entrance; svg.appendChild(el('rect',{x:e.x,y:e.y,width:e.w,height:e.h,rx:1.2,fill:'#3c434b'}));
     svg.appendChild(el('text',{x:e.x+e.w/2,y:e.y+2,'font-size':3.3,'font-weight':700,fill:'#ff8a3d','text-anchor':'middle','dominant-baseline':'hanging'},'▼ '+(e.label||'Entrance')));
     (e.icons||[]).forEach(i=>used.add(i)); icons(svg,e.icons||[],e.x,e.y+e.h-5.8,e.w); }
-  $('mapbox').innerHTML=''; $('mapbox').appendChild(svg);
+  $('mapbox').innerHTML='';
+  if(lay.has_image){ const tb=document.createElement('div'); tb.className='tabs'; [['svg',T.map],['img',T.orig]].forEach(([k,lb])=>{const b=document.createElement('button'); b.type='button'; b.textContent=lb; if((tab||'svg')===k) b.className='on'; b.onclick=()=>showMap(hl,k); tb.appendChild(b);}); $('mapbox').appendChild(tb); }
+  if(tab==='img'&&lay.has_image){ const im=document.createElement('img'); im.src=API+'da-plan?fair='+encodeURIComponent(FAIR); im.alt=T.map; im.style.cssText='width:100%;border-radius:10px'; $('mapbox').appendChild(im); $('dt').textContent=T.orig; const d=$('dlg'); if(!d.open) d.showModal(); return; }
+  $('mapbox').appendChild(svg);
   const lg=document.createElement('div'); lg.className='leg'; const lab=ILAB[L==='de'?'de':'en']; [...used].forEach(i=>{const s=document.createElement('span'); s.textContent=(ICON[i]||'')+' '+(lab[i]||i); lg.appendChild(s);}); $('mapbox').appendChild(lg);
   if(lay.note){ const n=document.createElement('div'); n.className='leg'; n.textContent=lay.note; $('mapbox').appendChild(n); }
   $('dt').textContent=T.map+(hl.length?' · '+hl.map(id=>(lay.halls.find(h=>h.id===id)||{}).name||id).join(', '):''); const d=$('dlg'); if(!d.open) d.showModal();
@@ -149,12 +154,20 @@ fetch(API+'da-meta?fair='+encodeURIComponent(FAIR)).then(r=>r.ok?r.json():Promis
   if(/^#[0-9a-fA-F]{6}$/.test(m.accent)) document.documentElement.style.setProperty('--ac',m.accent);
   $('t').innerHTML=esc(m.name)+'<span class="demo">DEMO</span>'; $('sub').innerHTML=[m.dates,m.venue].filter(Boolean).map(x=>'<bdi>'+esc(x)+'</bdi>').join(' · ');
   if(m.layout&&(m.layout.halls||[]).length){ $('mapbtn').hidden=false; $('mapbtn').onclick=()=>showMap([]); }
-  (m.ads||[]).slice(0,1).forEach(a=>{const d=document.createElement('div');d.className='ad'; const u=safeUrl(a.url), img=/^https:\/\//i.test(a.image||'')?a.image:'';
-    d.innerHTML='<b class="tag">'+esc(T.ad)+'</b>'+(img?'<img src="'+esc(img)+'" alt="" loading="lazy">':'')+'<span>'+esc(a.text||'')+(u?' <a href="'+esc(u)+'" target="_blank" rel="noopener sponsored">'+esc(a.cta||'→')+'</a>':'')+'</span>';$('adbox').appendChild(d);});
-  if((m.featured||[]).length){ $('feat').innerHTML=m.featured.map((f,i)=>{ const u=safeUrl(f.website), h=hallsIn(f.stand)[0];
+  const ads=(m.ads||[]).filter(a=>a.text||a.image), iv=Math.max(8,m.ad_interval||30)*1000;
+  if(ads.length){ const d=document.createElement('div'); d.className='ad'; d.innerHTML='<b class="tag">'+esc(T.ad)+'</b><span class="adi"></span><span class="adt"></span><span class="dots2"></span>'; $('adbox').appendChild(d);
+    let ai=0; const draw=()=>{ const a=ads[ai%ads.length], u=safeUrl(a.url), img=/^https:\/\//i.test(a.image||'')?a.image:'';
+      d.querySelector('.adi').innerHTML=img?'<img src="'+esc(img)+'" alt="" loading="lazy">':''; 
+      d.querySelector('.adt').innerHTML=esc(a.text||'')+(u?' <a href="'+esc(u)+'" target="_blank" rel="noopener sponsored">'+esc(a.cta||'→')+'</a>':'');
+      d.querySelector('.dots2').innerHTML=ads.length>1?ads.map((_,k)=>'<i'+(k===ai%ads.length?' class="on"':'')+'></i>').join(''):''; };
+    draw(); if(ads.length>1) setInterval(()=>{ if(document.hidden) return; d.classList.add('fade'); setTimeout(()=>{ai++;draw();d.classList.remove('fade');},350); },iv); }
+  const feat=m.featured||[]; if(feat.length){
+    const card=f=>{ const u=safeUrl(f.website), h=hallsIn(f.stand)[0];
       return '<div class="c"><span class="tag">'+esc(T.ad)+'</span><b>'+esc(f.name)+'</b>'+(f.stand?'<small>'+esc(T.stand+' '+f.stand)+'</small>':'')+(f.description?'<small>'+esc(f.description)+'</small>':'')+
-        (u?'<a href="'+esc(u)+'" target="_blank" rel="noopener sponsored">'+esc(T.more)+' →</a> ':'')+(h?'<button type="button" data-h="'+esc(h)+'">📍 '+esc(T.map)+'</button>':'')+'</div>'; }).join('');
-    $('feat').querySelectorAll('button[data-h]').forEach(b=>b.onclick=()=>showMap([b.dataset.h])); } else $('feat').style.display='none';
+        (u?'<a href="'+esc(u)+'" target="_blank" rel="noopener sponsored">'+esc(T.more)+' →</a> ':'')+(h?'<button type="button" data-h="'+esc(h)+'">📍 '+esc(T.map)+'</button>':'')+'</div>'; };
+    let fo=0; const per=3; const fd=()=>{ const set=[]; for(let k=0;k<Math.min(per,feat.length);k++) set.push(feat[(fo+k)%feat.length]); $('feat').innerHTML=set.map(card).join('');
+      $('feat').querySelectorAll('button[data-h]').forEach(b=>b.onclick=()=>showMap([b.dataset.h])); };
+    fd(); if(feat.length>per) setInterval(()=>{ if(document.hidden) return; $('feat').classList.add('fade'); setTimeout(()=>{fo=(fo+per)%feat.length;fd();$('feat').classList.remove('fade');},350); },iv*1.5); } else $('feat').style.display='none';
   add('assistant',(L==='de'&&m.welcome)?m.welcome:T.welcome(m.name));
   const qs=(L==='de'||L==='en')&&(m.questions||[]).length?m.questions.slice(0,4):T.q;
   $('chips').innerHTML=qs.map(q=>'<button type="button">'+esc(q)+'</button>').join('');
