@@ -1,4 +1,4 @@
-import { PROVIDERS, bump, checkToken, clientIp, deleteFair, getFair, getSetting, ipHash, json, listFairs, makeToken, passwordOk, saveFair, setSetting, settings, slugOk } from "../lib/da.mjs";
+import { PROVIDERS, bump, checkToken, clientIp, deleteFair, getFair, getSetting, ipHash, json, listFairs, listStats, makeToken, passwordOk, saveFair, setSetting, settings, slugOk } from "../lib/da.mjs";
 
 const str = (v, n = 4000) => String(v ?? "").trim().slice(0, n);
 const ICONS = new Set(["wc", "food", "coffee", "bar", "info", "doctor", "cloak", "charge", "poster", "conf", "lost"]);
@@ -9,6 +9,7 @@ const cleanLayout = (l) => {
   if (!l || typeof l !== "object") return null;
   return {
     note: str(l.note, 200),
+    image: /^data:image\/(jpeg|webp|png);base64,[A-Za-z0-9+\/=]+$/.test(l.image || "") && l.image.length <= 700000 ? l.image : undefined,
     halls: arr(l.halls, 20).map((h) => ({ id: str(h.id, 8), name: str(h.name, 30), color: /^#[0-9a-fA-F]{6}$/.test(h.color) ? h.color : "#888888", ...rect(h), icons: arr(h.icons, 10).filter((i) => ICONS.has(i)) })),
     links: arr(l.links, 30).map(rect),
     entrance: l.entrance ? { ...rect(l.entrance), label: str(l.entrance.label, 30), icons: arr(l.entrance.icons, 10).filter((i) => ICONS.has(i)) } : null,
@@ -27,7 +28,9 @@ export default async (req, ctx) => {
 
     if (b.action === "state") {
       const s = await settings(), sec = await getSetting("secrets");
-      const fairs = (await listFairs()).map((r) => ({ slug: r.slug, name: r.data?.name || "", count: (r.data?.exhibitors || []).length }));
+      const st = {}; for (const r of await listStats()) { const [, sl, d] = String(r.k).split(":"); (st[sl] ??= {})[d] = r.n; }
+      const wk = Date.now() - 7 * 864e5, tally = (sl) => { const o = st[sl] || {}; let t = 0, w = 0; for (const [d, n] of Object.entries(o)) { t += n; if (Date.parse(d) >= wk) w += n; } return { total: t, week: w }; };
+      const fairs = (await listFairs()).map((r) => ({ slug: r.slug, name: r.data?.name || "", count: (r.data?.exhibitors || []).length, questions: tally(r.slug) }));
       return json({
         fairs, provider: s.provider, rate_per_hour: s.rate_per_hour, daily_cap: s.daily_cap,
         providers: Object.fromEntries(Object.entries(PROVIDERS).map(([id, p]) => [id, {
@@ -44,8 +47,9 @@ export default async (req, ctx) => {
       for (const k of ["name", "dates", "venue", "organiser_contact", "welcome", "info"]) if (k in b) f[k] = str(b[k], k === "info" ? 40000 : 600);
       if ("accent" in b) f.accent = /^#[0-9a-fA-F]{6}$/.test(b.accent) ? b.accent : "#0b5fa5";
       if ("questions" in b) f.questions = (Array.isArray(b.questions) ? b.questions : []).map((q) => str(q, 200)).filter(Boolean).slice(0, 8);
-      if ("ads" in b) f.ads = (Array.isArray(b.ads) ? b.ads : []).slice(0, 5).map((a) => ({ text: str(a.text, 300), url: /^https?:\/\//i.test(a.url || "") ? str(a.url, 500) : "", cta: str(a.cta, 40) || "→", image: /^https:\/\//i.test(a.image || "") ? str(a.image, 500) : "" }));
+      if ("ads" in b) f.ads = (Array.isArray(b.ads) ? b.ads : []).slice(0, 12).map((a) => ({ text: str(a.text, 300), url: /^https?:\/\//i.test(a.url || "") ? str(a.url, 500) : "", cta: str(a.cta, 40) || "→", image: /^https:\/\//i.test(a.image || "") ? str(a.image, 500) : "" }));
       if ("layout" in b) { if (b.layout === null || b.layout === "") delete f.layout; else f.layout = cleanLayout(b.layout); }
+      if ("ad_interval" in b) f.ad_interval = Math.max(8, Math.min(600, Number(b.ad_interval) || 30));
       if ("provider" in b) { if (PROVIDERS[b.provider]) f.provider = b.provider; else delete f.provider; }
       if (Array.isArray(b.exhibitors)) {
         const clean = b.exhibitors.slice(0, 5000).map((e) => {

@@ -11,7 +11,7 @@ export default async (req) => {
   const featured = exh.filter((e) => e.sponsored).map((e) => ({ name: e.name, stand: e.stand || "", sector: e.sector || "", website: e.website || "", description: String(e.description || "").slice(0, 160) }));
   return json({
     name: fair.name || "", dates: fair.dates || "", venue: fair.venue || "", accent: fair.accent || "#0b5fa5",
-    welcome: fair.welcome || "", questions: fair.questions || [], ads: fair.ads || [], featured, layout: fair.layout || null,
+    welcome: fair.welcome || "", questions: fair.questions || [], ads: fair.ads || [], featured, layout: fair.layout ? { ...fair.layout, image: undefined, has_image: !!fair.layout.image } : null, ad_interval: Math.max(8, Math.min(600, Number(fair.ad_interval) || 30)),
     sector_examples: Object.fromEntries(Object.entries(sectors).map(([k, v]) => [k, v.slice(0, 3)])), count: exh.length,
   });
 };

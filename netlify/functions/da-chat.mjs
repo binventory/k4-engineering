@@ -21,6 +21,7 @@ export default async (req, ctx) => {
     if ((await bump(`ip:${ipHash(clientIp(req, ctx))}:${hour}`, 3600)) > s.rate_per_hour) return json({ error: "rate" }, 429);
     if ((await bump(`day:${day}`, 86400)) > s.daily_cap) return json({ error: "rate" }, 429);
 
+    await bump(`stat:${slug}:${day}`, 31536000).catch(() => {});
     const conf = await llmConf(fair);
     const exh = fair.exhibitors || [];
     const last = clean.at(-1).content;
