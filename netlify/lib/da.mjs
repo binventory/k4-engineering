@@ -181,8 +181,18 @@ const exLine = (e) => {
   if (e.website) p.push(e.website);
   return "- " + p.join(" | ") + (e.sponsored ? " [SPONSORED]" : "");
 };
+// Conference / event programme as plain lines for the prompt (sample data unless the organiser supplies it).
+export function programText(fair) {
+  const ev = fair?.program?.events;
+  if (!Array.isArray(ev) || !ev.length) return "";
+  const lines = ev.slice().sort((a, b) => `${a.date} ${a.start}`.localeCompare(`${b.date} ${b.start}`)).map((e) =>
+    [`${e.date} ${e.start}${e.end ? "-" + e.end : ""}`, e.type || "talk", e.title, e.room || "",
+      (e.speakers || []).length ? "Speakers: " + e.speakers.map((x) => [x.name, x.role, x.company].filter(Boolean).join(", ")).join("; ") : "",
+      String(e.desc || "").slice(0, 260)].filter(Boolean).join(" | "));
+  return lines.join("\n").slice(0, 9000);
+}
 export function systemPrompt(fair, exh) {
-  const name = fair.name || "the fair", contact = fair.organiser_contact || "the organiser";
+  const name = fair.name || "the fair", contact = fair.organiser_contact || "the organiser", prog = programText(fair);
   return `You are the visitor assistant for the trade fair "${name}" (an unofficial demo).
 STRICT RULES:
 1. Answer ONLY with facts from FAIR DATA below. Never use outside knowledge, never guess, never browse.
@@ -197,7 +207,7 @@ STRICT RULES:
 FAIR DATA
 --- General information ---
 ${String(fair.info || "").trim()}
---- Exhibitors (${exh.length}) ---
+${prog ? `--- Programme / events (${String(fair.program?.note || "sample data").slice(0, 120)}) ---\n${prog}\n` : ""}--- Exhibitors (${exh.length}) ---
 ${exh.map(exLine).join("\n")}`;
 }
 export async function searchTerms(conf, q) {
