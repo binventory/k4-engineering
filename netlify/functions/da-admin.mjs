@@ -1,6 +1,19 @@
 import { PROVIDERS, bump, checkToken, clientIp, deleteFair, getFair, getSetting, ipHash, json, listFairs, makeToken, passwordOk, saveFair, setSetting, settings, slugOk } from "../lib/da.mjs";
 
 const str = (v, n = 4000) => String(v ?? "").trim().slice(0, n);
+const ICONS = new Set(["wc", "food", "coffee", "bar", "info", "doctor", "cloak", "charge", "poster", "conf", "lost"]);
+const num = (v) => Math.max(0, Math.min(100, Number(v) || 0));
+const rect = (r) => ({ x: num(r?.x), y: num(r?.y), w: num(r?.w), h: num(r?.h) });
+const arr = (v, n) => (Array.isArray(v) ? v.slice(0, n) : []);
+const cleanLayout = (l) => {
+  if (!l || typeof l !== "object") return null;
+  return {
+    note: str(l.note, 200),
+    halls: arr(l.halls, 20).map((h) => ({ id: str(h.id, 8), name: str(h.name, 30), color: /^#[0-9a-fA-F]{6}$/.test(h.color) ? h.color : "#888888", ...rect(h), icons: arr(h.icons, 10).filter((i) => ICONS.has(i)) })),
+    links: arr(l.links, 30).map(rect),
+    entrance: l.entrance ? { ...rect(l.entrance), label: str(l.entrance.label, 30), icons: arr(l.entrance.icons, 10).filter((i) => ICONS.has(i)) } : null,
+  };
+};
 
 export default async (req, ctx) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
@@ -31,7 +44,8 @@ export default async (req, ctx) => {
       for (const k of ["name", "dates", "venue", "organiser_contact", "welcome", "info"]) if (k in b) f[k] = str(b[k], k === "info" ? 40000 : 600);
       if ("accent" in b) f.accent = /^#[0-9a-fA-F]{6}$/.test(b.accent) ? b.accent : "#0b5fa5";
       if ("questions" in b) f.questions = (Array.isArray(b.questions) ? b.questions : []).map((q) => str(q, 200)).filter(Boolean).slice(0, 8);
-      if ("ads" in b) f.ads = (Array.isArray(b.ads) ? b.ads : []).slice(0, 5).map((a) => ({ text: str(a.text, 300), url: /^https?:\/\//i.test(a.url || "") ? str(a.url, 500) : "", cta: str(a.cta, 40) || "→" }));
+      if ("ads" in b) f.ads = (Array.isArray(b.ads) ? b.ads : []).slice(0, 5).map((a) => ({ text: str(a.text, 300), url: /^https?:\/\//i.test(a.url || "") ? str(a.url, 500) : "", cta: str(a.cta, 40) || "→", image: /^https:\/\//i.test(a.image || "") ? str(a.image, 500) : "" }));
+      if ("layout" in b) { if (b.layout === null || b.layout === "") delete f.layout; else f.layout = cleanLayout(b.layout); }
       if ("provider" in b) { if (PROVIDERS[b.provider]) f.provider = b.provider; else delete f.provider; }
       if (Array.isArray(b.exhibitors)) {
         const clean = b.exhibitors.slice(0, 5000).map((e) => {
