@@ -206,5 +206,5 @@
     loadList(); loadPhotos().then(badge);
   }
 
-  window.NB = { init, t, addCompany: (e) => { if (!DA) return null; const c = addCompany(e); badge(); return c; }, actions, open };
+  window.NB = { init, t, addNote: (x, s) => addNote(x, s), addCompany: (e) => { if (!DA) return null; const c = addCompany(e); badge(); return c; }, actions, open };
 })();
