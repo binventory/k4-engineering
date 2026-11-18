@@ -29,7 +29,7 @@ $('pw').addEventListener('keydown',e=>{if(e.key==='Enter')$('go').click();});
 async function start(){ $('login').classList.add('hide'); $('app').classList.remove('hide'); await refresh(); }
 async function refresh(){
   ST=await call('state');
-  $('fl').innerHTML='<tr><th>Link</th><th>Name</th><th>Exhibitors</th><th></th></tr>'+ST.fairs.map(f=>'<tr><td><a href="../?fair='+esc(f.slug)+'" target="_blank">?fair='+esc(f.slug)+'</a></td><td>'+esc(f.name)+'</td><td>'+f.count+'</td><td><button class="l" data-e="'+esc(f.slug)+'">edit</button> · <button class="l" data-s="'+esc(f.slug)+'">sponsors</button></td></tr>').join('')||'<tr><td>No fairs yet.</td></tr>';
+  $('fl').innerHTML='<tr><th>Link</th><th>Name</th><th>Exhibitors</th><th>Questions (7 days / total)</th><th></th></tr>'+ST.fairs.map(f=>'<tr><td><a href="../?fair='+esc(f.slug)+'" target="_blank">?fair='+esc(f.slug)+'</a></td><td>'+esc(f.name)+'</td><td>'+f.count+'</td><td>'+(f.questions?f.questions.week+' / '+f.questions.total:'–')+'</td><td><button class="l" data-e="'+esc(f.slug)+'">edit</button> · <button class="l" data-s="'+esc(f.slug)+'">sponsors</button></td></tr>').join('')||'<tr><td>No fairs yet.</td></tr>';
   $('fl').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>editFair(b.dataset.e));
   $('fl').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>sponsors(b.dataset.s));
   const opts=Object.entries(ST.providers).map(([id,p])=>'<option value="'+id+'"'+(ST.provider===id?' selected':'')+'>'+esc(p.name)+'</option>').join('');
@@ -40,6 +40,51 @@ async function refresh(){
     try{await call('saveLlm',{provider:$('l_prov').value,providers,keys,delKeys,rate_per_hour:$('l_rate').value,daily_cap:$('l_cap').value});say('AI settings saved.');refresh();}catch(e){say(e.message,1);}};
 }
 $('newf').onclick=()=>editFair('');
+
+let LAY=null;
+const ICONS=['wc','food','coffee','bar','info','doctor','cloak','charge','poster','conf','lost'], EMO={wc:'🚻',food:'🍴',coffee:'☕',bar:'🍺',info:'ℹ️',doctor:'✚',cloak:'🧥',charge:'🔌',poster:'🖼️',conf:'🧲',lost:'🔎'};
+const NS='http://www.w3.org/2000/svg';
+function el(n,a,t){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e;}
+function drawPlan(box,L){
+  const svg=el('svg',{viewBox:'0 0 100 82'}); svg.style.cssText='width:100%;max-width:520px;background:#eef1f5;border-radius:8px';
+  (L.links||[]).forEach(r=>svg.appendChild(el('rect',{x:r.x,y:r.y,width:r.w,height:r.h,fill:'#9aa3ad',opacity:.55})));
+  const row=(ic,x,y,w)=>(ic||[]).forEach((i,k)=>{const per=Math.max(1,Math.floor((w-2)/4.4));svg.appendChild(el('text',{x:x+2.2+(k%per)*4.4,y:y+Math.floor(k/per)*4.6,'font-size':3.6,'dominant-baseline':'hanging'},EMO[i]||''));});
+  (L.halls||[]).forEach(h=>{svg.appendChild(el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,rx:1.2,fill:h.color||'#888',opacity:.95}));
+    svg.appendChild(el('text',{x:h.x+2.5,y:h.y+2.2,'font-size':9,'font-weight':700,fill:'#fff','dominant-baseline':'hanging'},h.id));
+    const per=Math.max(1,Math.floor((h.w-2)/4.4)); row(h.icons,h.x,h.y+h.h-Math.ceil((h.icons||[]).length/per)*4.6-1.2,h.w);});
+  if(L.entrance){const e=L.entrance;svg.appendChild(el('rect',{x:e.x,y:e.y,width:e.w,height:e.h,rx:1.2,fill:'#3c434b'}));svg.appendChild(el('text',{x:e.x+e.w/2,y:e.y+2,'font-size':3.3,'font-weight':700,fill:'#ff8a3d','text-anchor':'middle','dominant-baseline':'hanging'},'▼ '+(e.label||'')));row(e.icons,e.x,e.y+e.h-5.8,e.w);}
+  box.innerHTML=''; box.appendChild(svg);
+}
+async function shrinkImg(file,rot){
+  const bmp=await createImageBitmap(file); const sc=Math.min(1,1600/Math.max(bmp.width,bmp.height)); let w=Math.round(bmp.width*sc),h=Math.round(bmp.height*sc);
+  const c=document.createElement('canvas'); const cx=c.getContext('2d'); if(rot){c.width=h;c.height=w;cx.translate(h,0);cx.rotate(Math.PI/2);}else{c.width=w;c.height=h;}
+  cx.drawImage(bmp,0,0,w,h); let q=.82,d=c.toDataURL('image/webp',q); while(d.length>650000&&q>.35){q-=.1;d=c.toDataURL('image/webp',q);} return d;
+}
+function layEditor(){
+  const box=$('lay'); if(!LAY) LAY=null;
+  const L=LAY||{halls:[],links:[],entrance:null,note:''};
+  const n=(k,v)=>'<input type="number" min="0" max="100" step="0.5" data-k="'+k+'" value="'+(v??0)+'" style="width:58px;padding:4px">';
+  const hallRow=(h,i)=>'<tr data-i="'+i+'"><td><input data-f="id" value="'+esc(h.id)+'" style="width:44px;padding:4px"></td><td><input data-f="name" value="'+esc(h.name)+'" style="width:90px;padding:4px"></td><td><input type="color" data-f="color" value="'+esc(h.color||'#888888')+'" style="width:40px;padding:0;height:28px"></td><td><div style="display:flex;gap:3px">'+n('x',h.x)+n('y',h.y)+n('w',h.w)+n('h',h.h)+'</div></td><td><input data-f="icons" value="'+esc((h.icons||[]).join(','))+'" style="min-width:150px;padding:4px"></td><td><button class="l" data-del="'+i+'" style="color:#b3261e">✕</button></td></tr>';
+  const E=L.entrance||{x:62,y:69,w:32,h:12,label:'Eingang',icons:[]};
+  box.innerHTML='<p><small>Draw the plan with simple blocks (coordinates 0–100 left→right / 0–82 top→bottom). Icons per hall: '+ICONS.map(i=>EMO[i]+' '+i).join(' · ')+' (type the names, comma separated). Optional: upload the original plan as a picture – visitors can switch to it.</small></p>'+
+   '<div style="overflow-x:auto"><table><tr><th>No.</th><th>Name</th><th>Colour</th><th>x · y · width · height</th><th>Icons</th><th></th></tr>'+(L.halls||[]).map(hallRow).join('')+'</table><button class="l" id="lay_add">+ Add hall</button>'+
+   '<div class="row"><div><label>Entrance label</label><input id="lay_el" value="'+esc(E.label)+'"></div><div><label>Entrance block x · y · w · h</label><div id="lay_ent">'+n('ex',E.x)+n('ey',E.y)+n('ew',E.w)+n('eh',E.h)+'</div></div><div><label>Entrance icons</label><input id="lay_ei" value="'+esc((E.icons||[]).join(','))+'"></div></div>'+
+   '<label>Corridors (one per line: x,y,w,h)</label><textarea id="lay_links" style="min-height:60px">'+esc((L.links||[]).map(r=>[r.x,r.y,r.w,r.h].join(',')).join('\n'))+'</textarea>'+
+   '<label>Note under the plan</label><input id="lay_note" value="'+esc(L.note||'')+'">'+
+   '<label>Original plan image (JPG/PNG/WebP, shrunk automatically)</label><input type="file" id="lay_img" accept="image/*"> '+(L.image?'<small>image stored ✓</small> <button class="l" id="lay_rot">rotate 90°</button> <button class="l" id="lay_rm" style="color:#b3261e">remove</button>':'')+
+   '<div id="lay_prev" style="margin-top:10px"></div>';
+  const sync=()=>{ const halls=[...box.querySelectorAll('tr[data-i]')].map(tr=>{const g=f=>tr.querySelector('[data-f='+f+']').value, k=x=>Number(tr.querySelector('[data-k='+x+']').value)||0;
+      return {id:g('id').trim(),name:g('name').trim(),color:g('color'),x:k('x'),y:k('y'),w:k('w'),h:k('h'),icons:g('icons').split(',').map(x=>x.trim()).filter(x=>ICONS.includes(x))};}).filter(h=>h.id);
+    const ek=x=>Number(box.querySelector('[data-k='+x+']').value)||0, ei=$('lay_ei').value.split(',').map(x=>x.trim()).filter(x=>ICONS.includes(x));
+    const links=$('lay_links').value.split('\n').map(l=>l.split(',').map(Number)).filter(a=>a.length===4&&a.every(Number.isFinite)).map(([x,y,w,h])=>({x,y,w,h}));
+    LAY={...(LAY||{}),halls,links,note:$('lay_note').value,entrance:{x:ek('ex'),y:ek('ey'),w:ek('ew'),h:ek('eh'),label:$('lay_el').value,icons:ei}}; drawPlan($('lay_prev'),LAY); };
+  box.oninput=sync; sync();
+  $('lay_add').onclick=()=>{sync();LAY.halls.push({id:String((LAY.halls.length||0)+1),name:'Halle '+((LAY.halls.length||0)+1),color:'#2f80c8',x:10,y:10,w:30,h:22,icons:[]});layEditor();};
+  box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{sync();LAY.halls.splice(+b.dataset.del,1);layEditor();});
+  $('lay_img').onchange=async e=>{const f=e.target.files[0]; if(!f)return; try{sync();LAY.image=await shrinkImg(f,false);layEditor();}catch(x){say('Could not read the image.',1);}};
+  if($('lay_rm')) $('lay_rm').onclick=()=>{sync();delete LAY.image;layEditor();};
+  if($('lay_rot')) $('lay_rot').onclick=async()=>{sync();const img=new Image();img.onload=async()=>{const c=document.createElement('canvas');c.width=img.height;c.height=img.width;const x=c.getContext('2d');x.translate(img.height,0);x.rotate(Math.PI/2);x.drawImage(img,0,0);LAY.image=c.toDataURL('image/webp',.8);layEditor();};img.src=LAY.image;};
+}
 async function editFair(slug){
   let f={}; if(slug){f=(await call('getFair',{slug})).fair;} const isNew=!slug;
   const provs='<option value="">(global default)</option>'+Object.entries(ST.providers).map(([id,p])=>'<option value="'+id+'"'+(f.provider===id?' selected':'')+'>'+esc(p.name)+'</option>').join('');
@@ -48,14 +93,23 @@ async function editFair(slug){
    '<div><label>Slug (URL: ?fair=slug)</label><input id="e_slug" value="'+esc(slug)+'" '+(isNew?'':'readonly')+' placeholder="coiltech"></div><div><label>Fair name</label><input id="e_name" value="'+esc(f.name)+'"></div><div><label>Dates</label><input id="e_dates" value="'+esc(f.dates)+'"></div><div><label>Venue</label><input id="e_venue" value="'+esc(f.venue)+'"></div><div><label>Accent colour</label><input id="e_accent" value="'+esc(f.accent||'#0b5fa5')+'"></div><div><label>Organiser contact (shown when the bot does not know)</label><input id="e_contact" value="'+esc(f.organiser_contact)+'"></div><div><label>AI provider for this fair</label><select id="e_prov">'+provs+'</select></div></div>'+
    '<label>Welcome message</label><textarea id="e_welcome">'+esc(f.welcome)+'</textarea><label>Suggested questions (one per line, 4 shown)</label><textarea id="e_q">'+esc((f.questions||[]).join('\n'))+'</textarea>'+
    '<label>Banner ad (one per line: text | https://link | button text | https://image-url optional). The first is shown and labelled "Anzeige".</label><textarea id="e_ads">'+esc(ads)+'</textarea>'+
-   '<label>Floor plan (JSON, optional – halls, links, entrance; leave empty for none)</label><textarea id="e_layout" style="min-height:120px;font-family:monospace;font-size:.8rem">'+esc(f.layout?JSON.stringify(f.layout):'')+'</textarea>'+
+   '<label>Ad rotation: seconds each ad is shown (banner ads above rotate through all lines; sponsor cards rotate too)</label><input id="e_adiv" type="number" min="8" max="600" value="'+(f.ad_interval||30)+'" style="max-width:140px">'+
+   '<label>Floor plan (visitors open it with the "Hallenplan" button; hall numbers in answers like 1-F14 get a pin)</label><div id="lay"></div>'+
    '<label>General information (dates, venue, tickets, opening hours, travel, programme, rules). The bot answers from this text only.</label><textarea id="e_info" style="min-height:200px">'+esc(f.info)+'</textarea>'+
    '<label>Exhibitors CSV (UTF-8, header row; columns: name, stand, country, sector, description, products, keywords, website, sponsored) – currently '+(f.exhibitors||[]).length+' exhibitors</label><input type="file" id="e_csv" accept=".csv,.txt"><label><input type="radio" name="mode" value="replace" checked style="width:auto"> replace all &nbsp; <input type="radio" name="mode" value="append" style="width:auto"> append</label>'+
+   '<fieldset><legend><b>Website knowledge</b></legend><p><small>The assistant can also answer from each company\'s own public website. This reads the homepage (+ up to 2 product/about pages, respecting robots.txt), writes a short factual profile with the AI and stores it with the exhibitor. Needs a website column in the CSV. Run it again any time.</small></p><button type="button" id="e_crawl" class="l" style="font-weight:600">▶ Fetch website info for companies without a profile</button> <label style="display:inline"><input type="checkbox" id="e_crawl_all" style="width:auto"> redo all</label><pre id="e_crawl_log" style="white-space:pre-wrap;font-size:.8rem;max-height:220px;overflow:auto;background:#f3f5f8;padding:8px;border-radius:6px;display:none"></pre></fieldset>'+
    '<button id="e_save">Save fair</button> '+(isNew?'':'<button class="d" id="e_del">Delete fair</button>');
+  LAY=f.layout?JSON.parse(JSON.stringify(f.layout)):null; layEditor();
+  $('e_crawl').onclick=async()=>{ if(isNew){say('Save the fair first.',1);return;} const log=$('e_crawl_log'); log.style.display='block'; log.textContent=''; const L=t=>{log.textContent+=t+'\n';log.scrollTop=log.scrollHeight;};
+    const all=$('e_crawl_all').checked; const fr=(await call('getFair',{slug})).fair; const todo=(fr.exhibitors||[]).map((e,i)=>({e,i})).filter(x=>x.e.website&&(all||!x.e.has_profile));
+    if(!todo.length){L('Nothing to do: no companies with a website and without a profile.');return;} L(todo.length+' companies …'); let ok=0;
+    for(const {e,i} of todo){ try{ const r=await call('crawlFetch',{slug,index:i}); const s2=await call('crawlSave',{slug,index:i,text:r.text,url:r.url}); ok++; L('✓ '+e.name+' – '+s2.profile.slice(0,90)+' …'); }catch(x){ L('✗ '+e.name+' – '+({robots:'site disallows robots',fetch:'could not load',empty:'no readable text',none:'no usable info',busy:'AI busy (try again later)',llm:'AI error',bad_url:'bad URL'}[x.message]||x.message)); if(x.message==='busy') await new Promise(r=>setTimeout(r,8000)); }
+      await new Promise(r=>setTimeout(r,1200)); }
+    L('Done: '+ok+' of '+todo.length+' profiles saved.'); };
   $('e_save').onclick=async()=>{
     const slug2=($('e_slug').value||'').trim().toLowerCase(); const body={slug:slug2,name:$('e_name').value,dates:$('e_dates').value,venue:$('e_venue').value,accent:$('e_accent').value,organiser_contact:$('e_contact').value,provider:$('e_prov').value,welcome:$('e_welcome').value,
       questions:$('e_q').value.split('\n'),ads:$('e_ads').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const[a,b,c,d]=l.split('|').map(x=>(x||'').trim());return{text:a,url:b,cta:c,image:d};}),info:$('e_info').value};
-    const lt=$('e_layout').value.trim(); if(lt){try{body.layout=JSON.parse(lt);}catch(e){say('Floor plan is not valid JSON.',1);return;}}else body.layout=null;
+    body.ad_interval=$('e_adiv').value; body.layout=(LAY&&(LAY.halls||[]).length)?LAY:null;
     const file=$('e_csv').files[0]; if(file){const rows=parseCsv(await file.text()); if(!rows.length){say('CSV had no usable rows (needs a header row with a "name" column).',1);return;} body.exhibitors=rows; body.mode=document.querySelector('input[name=mode]:checked').value;}
     try{const j=await call('saveFair',body);say('Saved. Exhibitors in this fair: '+j.count);$('editor').classList.add('hide');refresh();}catch(e){say(e.message,1);}};
   if(!isNew)$('e_del').onclick=async()=>{if(confirm('Delete this fair?')){await call('deleteFair',{slug});$('editor').classList.add('hide');refresh();}};
