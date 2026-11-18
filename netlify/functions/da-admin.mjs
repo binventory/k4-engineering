@@ -1,4 +1,4 @@
-import { PROVIDERS, bump, checkToken, clientIp, deleteFair, getFair, getSetting, ipHash, json, listFairs, listStats, makeToken, passwordOk, saveFair, setSetting, settings, slugOk } from "../lib/da.mjs";
+import { PROVIDERS, bump, checkToken, clientIp, deleteFair, getFair, getSetting, ipHash, json, listFairs, listStats, llmConf, fetchSiteText, summarizeSite, makeToken, passwordOk, saveFair, setSetting, settings, slugOk } from "../lib/da.mjs";
 
 const str = (v, n = 4000) => String(v ?? "").trim().slice(0, n);
 const ICONS = new Set(["wc", "food", "coffee", "bar", "info", "doctor", "cloak", "charge", "poster", "conf", "lost"]);
@@ -38,7 +38,7 @@ export default async (req, ctx) => {
         }])),
       });
     }
-    if (b.action === "getFair") { const f = await getFair(str(b.slug, 41)); return f ? json({ fair: { ...f, exhibitors: (f.exhibitors || []).map((e) => ({ name: e.name, stand: e.stand || "", sponsored: !!e.sponsored })) } }) : json({ error: "unknown_fair" }, 404); }
+    if (b.action === "getFair") { const f = await getFair(str(b.slug, 41)); return f ? json({ fair: { ...f, exhibitors: (f.exhibitors || []).map((e) => ({ name: e.name, stand: e.stand || "", sponsored: !!e.sponsored, website: e.website || "", has_profile: !!e.profile })) } }) : json({ error: "unknown_fair" }, 404); }
 
     if (b.action === "saveFair") {
       const slug = str(b.slug, 41).toLowerCase();
@@ -55,13 +55,30 @@ export default async (req, ctx) => {
         const clean = b.exhibitors.slice(0, 5000).map((e) => {
           const o = { name: str(e.name, 200) };
           for (const k of ["stand", "country", "sector", "description", "products", "keywords", "website"]) if (e[k]) o[k] = str(e[k], 600);
+          if (e.profile) o.profile = str(e.profile, 900);
           if (e.sponsored) o.sponsored = true;
           return o;
         }).filter((e) => e.name);
+        if (b.mode !== "append") { const old = new Map((f.exhibitors || []).filter((e) => e.profile).map((e) => [e.name.toLowerCase(), e])); for (const e of clean) { const o = old.get(e.name.toLowerCase()); if (o && !e.profile) { e.profile = o.profile; if (o.profile_src) e.profile_src = o.profile_src; if (o.profile_at) e.profile_at = o.profile_at; } } }
         f.exhibitors = b.mode === "append" ? [...(f.exhibitors || []), ...clean] : clean;
       }
       await saveFair(slug, f);
       return json({ ok: true, count: (f.exhibitors || []).length });
+    }
+    if (b.action === "crawlFetch") {
+      const f = await getFair(str(b.slug, 41)), e = f?.exhibitors?.[Number(b.index)];
+      if (!e?.website) return json({ error: "no_website" }, 400);
+      try { return json(await fetchSiteText(e.website)); } catch (x) { return json({ error: String(x.message || "fetch") }, 422); }
+    }
+    if (b.action === "crawlSave") {
+      const slug = str(b.slug, 41), f = await getFair(slug), i = Number(b.index), e = f?.exhibitors?.[i];
+      if (!e) return json({ error: "unknown" }, 404);
+      let out; try { out = await summarizeSite(await llmConf(f), e.name, str(b.text, 7500)); } catch (x) { return json({ error: String(x.message || "llm") === "busy" ? "busy" : "llm" }, 422); }
+      out = String(out || "").replace(/\s+/g, " ").trim();
+      if (!out || /^NONE\b/i.test(out)) return json({ error: "none" }, 422);
+      e.profile = out.slice(0, 700); e.profile_src = str(b.url, 300); e.profile_at = new Date().toISOString().slice(0, 10);
+      await saveFair(slug, f);
+      return json({ ok: true, profile: e.profile });
     }
     if (b.action === "deleteFair") { const slug = str(b.slug, 41); if (slugOk(slug)) await deleteFair(slug); return json({ ok: true }); }
     if (b.action === "sponsors") {
