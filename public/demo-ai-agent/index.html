@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#0b5fa5">
+<link rel="manifest" href="/.netlify/functions/da-manifest?fair=coiltech">
+<link rel="icon" type="image/png" href="/demo-ai-agent/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/demo-ai-agent/icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Messe-Assistent"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Besucher-Assistent (Demo) | K4-Engineering</title>
 <style>
 :root{--ac:#0b5fa5;--bg:#f4f6f9;--card:#fff;--tx:#18212b;--mut:#5d6b7a;--bd:#dde3ea}
@@ -25,7 +31,7 @@ main{flex:1;width:100%;max-width:760px;margin:0 auto;padding:12px 14px;display:f
 .ad a{color:var(--ac);text-decoration:none;font-weight:600}
 .feat{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}.feat .c{flex:1 0 210px}
 .feat .c{flex:none;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;font-size:.85rem;width:210px;white-space:normal}
-.feat .c small{color:var(--mut);display:block}.feat .c .tag{font-size:.65rem;text-transform:uppercase;color:var(--mut)}
+.feat .c small{color:var(--mut);display:block}.feat .c .tag{font-size:.65rem;text-transform:uppercase;color:var(--mut);margin-inline-end:6px}
 .feat .c a{color:var(--ac);font-weight:600;text-decoration:none;font-size:.8rem}
 .feat .c button{font:inherit;font-size:.78rem;background:none;border:0;color:var(--ac);cursor:pointer;padding:0;font-weight:600}
 #chat{flex:1;display:flex;flex-direction:column;gap:10px;min-height:240px}
@@ -65,9 +71,11 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 </main>
 <footer id="ft"></footer>
 <dialog id="dlg"><div class="dh"><b id="dt"></b><button type="button" id="dc"></button></div><div id="mapbox"></div></dialog>
+<script src="/demo-ai-agent/nb.js"></script>
 <script>
 const FAIR = (new URLSearchParams(location.search).get('fair') || 'coiltech').toLowerCase().replace(/[^a-z0-9-]/g,'');
 const API = '/.netlify/functions/';
+document.querySelector('link[rel=manifest]').href = API + 'da-manifest?fair=' + FAIR;
 const EN_FOOT='Demo by K4-Engineering, Augsburg. Unofficial demonstration, not an offer by the organiser. Answers come only from the sample data provided. Your input is sent to an AI service to answer and is not stored.';
 const UI = {
   de:{n:'Deutsch',ph:'Frage zur Messe stellen …',ad:'Anzeige',busy:'Der Assistent ist gerade ausgelastet. Bitte in einer Minute erneut versuchen.',err:'Das hat leider nicht geklappt. Bitte erneut versuchen.',rate:'Zu viele Anfragen. Bitte später erneut versuchen.',nc:'Der Assistent ist noch nicht eingerichtet.',map:'Hallenplan',orig:'Originalplan',close:'Schließen',stand:'Stand',more:'Website',
@@ -110,14 +118,14 @@ function add(role,text,cls){ const d=document.createElement('div'); d.className=
   chat.appendChild(d); d.scrollIntoView({block:'end',behavior:'smooth'}); return d; }
 async function ask(text){
   if(busy||!text.trim()) return; busy=true; $('b').disabled=true; $('chips').style.display='none';
-  add('user',text); hist.push({role:'user',content:text});
+  add('user',text); hist.push({role:'user',content:text}); let net=false;
   const w=document.createElement('div'); w.className='m a'; w.innerHTML='<span class="dots"><span></span><span></span><span></span></span>'; chat.appendChild(w); w.scrollIntoView({block:'end'});
   try{
-    const r=await fetch(API+'da-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fair:FAIR,messages:hist})});
+    const r=await fetch(API+'da-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fair:FAIR,messages:hist})}).catch(e=>{net=true;throw e;});
     const j=await r.json().catch(()=>({})); w.remove();
-    if(r.ok&&j.reply){hist.push({role:'assistant',content:j.reply});add('assistant',j.reply);}
+    if(r.ok&&j.reply){hist.push({role:'assistant',content:j.reply});const d=add('assistant',j.reply); if(window.NB) NB.actions(d,j.reply,text);}
     else{hist.pop();add('assistant',j.error==='rate'?T.rate:j.error==='busy'?T.busy:j.error==='not_configured'?T.nc:T.err,'err');}
-  }catch(e){w.remove();hist.pop();add('assistant',T.err,'err');}
+  }catch(e){w.remove();hist.pop();add('assistant',((net||navigator.onLine===false)&&window.NB)?NB.t('off'):T.err,'err');}
   busy=false; $('b').disabled=false; $('q').focus();
 }
 // ---- floor plan (SVG drawn from the fair's layout data) ----
@@ -151,7 +159,7 @@ $('f').addEventListener('submit',e=>{e.preventDefault();const v=$('q').value;$('
 $('q').placeholder=T.ph; $('q').setAttribute('aria-label',T.ph); $('mapbtn').textContent='🗺 '+T.map;
 fetch(API+'da-meta?fair='+encodeURIComponent(FAIR)).then(r=>r.ok?r.json():Promise.reject()).then(m=>{
   META=m; document.title=m.name+' · '+(L==='de'?'Besucher-Assistent (Demo)':'Visitor assistant (demo)');
-  if(/^#[0-9a-fA-F]{6}$/.test(m.accent)) document.documentElement.style.setProperty('--ac',m.accent);
+  if(/^#[0-9a-fA-F]{6}$/.test(m.accent)){ document.documentElement.style.setProperty('--ac',m.accent); document.querySelector('meta[name=theme-color]').content=m.accent; }
   $('t').innerHTML=esc(m.name)+'<span class="demo">DEMO</span>'; $('sub').innerHTML=[m.dates,m.venue].filter(Boolean).map(x=>'<bdi>'+esc(x)+'</bdi>').join(' · ');
   if(m.layout&&(m.layout.halls||[]).length){ $('mapbtn').hidden=false; $('mapbtn').onclick=()=>showMap([]); }
   const ads=(m.ads||[]).filter(a=>a.text||a.image), iv=Math.max(8,m.ad_interval||30)*1000;
@@ -164,9 +172,10 @@ fetch(API+'da-meta?fair='+encodeURIComponent(FAIR)).then(r=>r.ok?r.json():Promis
   const feat=m.featured||[]; if(feat.length){
     const card=f=>{ const u=safeUrl(f.website), h=hallsIn(f.stand)[0];
       return '<div class="c"><span class="tag">'+esc(T.ad)+'</span><b>'+esc(f.name)+'</b>'+(f.stand?'<small>'+esc(T.stand+' '+f.stand)+'</small>':'')+(f.description?'<small>'+esc(f.description)+'</small>':'')+
-        (u?'<a href="'+esc(u)+'" target="_blank" rel="noopener sponsored">'+esc(T.more)+' →</a> ':'')+(h?'<button type="button" data-h="'+esc(h)+'">📍 '+esc(T.map)+'</button>':'')+'</div>'; };
+        (u?'<a href="'+esc(u)+'" target="_blank" rel="noopener sponsored">'+esc(T.more)+' →</a> ':'')+(h?'<button type="button" data-h="'+esc(h)+'">📍 '+esc(T.map)+'</button> ':'')+(window.NB?'<button type="button" data-s="'+esc(f.name)+'">☆ '+esc(NB.t('save'))+'</button>':'')+'</div>'; };
     let fo=0; const per=3; const fd=()=>{ const set=[]; for(let k=0;k<Math.min(per,feat.length);k++) set.push(feat[(fo+k)%feat.length]); $('feat').innerHTML=set.map(card).join('');
-      $('feat').querySelectorAll('button[data-h]').forEach(b=>b.onclick=()=>showMap([b.dataset.h])); };
+      $('feat').querySelectorAll('button[data-h]').forEach(b=>b.onclick=()=>showMap([b.dataset.h]));
+      $('feat').querySelectorAll('button[data-s]').forEach(b=>b.onclick=()=>{ const f=feat.find(x=>x.name===b.dataset.s); if(f){ NB.addCompany(f); b.textContent='✓ '+NB.t('saved'); b.disabled=true; } }); };
     fd(); if(feat.length>per) setInterval(()=>{ if(document.hidden) return; $('feat').classList.add('fade'); setTimeout(()=>{fo=(fo+per)%feat.length;fd();$('feat').classList.remove('fade');},350); },iv*1.5); } else $('feat').style.display='none';
   add('assistant',(L==='de'&&m.welcome)?m.welcome:T.welcome(m.name));
   const qs=(L==='de'||L==='en')&&(m.questions||[]).length?m.questions.slice(0,4):T.q;
@@ -176,6 +185,9 @@ fetch(API+'da-meta?fair='+encodeURIComponent(FAIR)).then(r=>r.ok?r.json():Promis
   const h=document.createElement('div');h.className='ad';h.style.borderStyle='solid';h.innerHTML='<span><b>'+esc(T.exb)+' ('+m.count+')</b> – '+esc(ex)+'<br><small>'+esc(T.hint)+'</small></span>';$('adbox').appendChild(h);
 }).catch(()=>{ $('t').textContent='Demo'; add('assistant',T.err,'err'); });
 $('ft').innerHTML=esc(T.foot)+'<br><a href="/impressum">'+esc(T.imp)+'</a> · <a href="/datenschutz">'+esc(T.dp)+'</a>';
+// ---- visitor notebook + installable app (PWA) ----
+if(window.NB) NB.init({FAIR,L,T,esc,safeUrl,meta:()=>META,showMap});
+if('serviceWorker' in navigator) addEventListener('load',()=>navigator.serviceWorker.register('/demo-ai-agent/sw.js',{scope:'/demo-ai-agent/'}).catch(()=>{}));
 </script>
 </body>
 </html>
