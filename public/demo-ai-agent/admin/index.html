@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Fair-Agent admin</title>
+<style>body{font:15px/1.45 system-ui,sans-serif;max-width:920px;margin:0 auto;padding:14px;color:#1b2430;background:#f5f7fa}
+h1{font-size:1.3rem}h2{font-size:1.05rem;margin:0 0 8px}section{background:#fff;border:1px solid #dde3ea;border-radius:10px;padding:14px;margin:14px 0}
+label{display:block;margin:8px 0 3px;font-size:.85rem;color:#566}input,select,textarea{font:inherit;width:100%;padding:7px;border:1px solid #cbd3dc;border-radius:7px;box-sizing:border-box}
+textarea{min-height:90px}button{font:inherit;padding:8px 16px;border:0;border-radius:8px;background:#0b5fa5;color:#fff;cursor:pointer;margin-top:10px}button.d{background:#b3261e}button.l{background:none;color:#0b5fa5;padding:0;margin:0}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.ok{background:#e6f4ea;border:1px solid #b9dfc4;padding:8px 12px;border-radius:8px}.er{background:#fdecea;border:1px solid #f3b8b3;padding:8px 12px;border-radius:8px}
+table{width:100%;border-collapse:collapse}td,th{padding:5px;border-bottom:1px solid #e3e8ee;text-align:left;font-size:.88rem}small{color:#667}fieldset{border:1px solid #e3e8ee;border-radius:8px;margin:10px 0}.hide{display:none}</style></head>
+<body>
+<div id="login"><h1>Fair-Agent · admin</h1><p><input type="password" id="pw" placeholder="Admin password" autocomplete="current-password" style="max-width:320px"></p><button id="go">Login</button></div>
+<div id="app" class="hide"><h1>Fair-Agent admin <small><button class="l" id="out">logout</button></small></h1><div id="msg"></div>
+<section><h2>Fairs</h2><table id="fl"></table><p><button class="l" id="newf">+ New fair</button></p></section>
+<section id="editor" class="hide"></section>
+<section><h2>AI provider &amp; keys</h2><p><small>Keys are stored server-side (Supabase) and are never shown again. Leave a key field empty to keep the stored one. All providers use the OpenAI-compatible chat API.</small></p><div id="llm"></div></section>
+</div>
+<script>
+const API='/.netlify/functions/da-admin'; let TOKEN=sessionStorage.getItem('da_t')||''; let ST=null;
+const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function say(t,err){$('msg').innerHTML=t?'<p class="'+(err?'er':'ok')+'">'+esc(t)+'</p>':'';}
+async function call(action,data={}){
+  const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json',...(TOKEN?{Authorization:'Bearer '+TOKEN}:{})},body:JSON.stringify({action,...data})});
+  const j=await r.json().catch(()=>({})); if(r.status===401&&action!=='login'){logout();throw new Error('auth');} if(!r.ok) throw new Error(j.error||('HTTP '+r.status)); return j;
+}
+function logout(){TOKEN='';sessionStorage.removeItem('da_t');$('app').classList.add('hide');$('login').classList.remove('hide');}
+$('out').onclick=logout;
+$('go').onclick=async()=>{try{const j=await call('login',{password:$('pw').value});TOKEN=j.token;sessionStorage.setItem('da_t',TOKEN);start();}catch(e){alert(e.message==='wrong'?'Wrong password':e.message==='too_many'?'Too many attempts, wait 15 minutes':e.message);}};
+$('pw').addEventListener('keydown',e=>{if(e.key==='Enter')$('go').click();});
+async function start(){ $('login').classList.add('hide'); $('app').classList.remove('hide'); await refresh(); }
+async function refresh(){
+  ST=await call('state');
+  $('fl').innerHTML='<tr><th>Link</th><th>Name</th><th>Exhibitors</th><th></th></tr>'+ST.fairs.map(f=>'<tr><td><a href="../?fair='+esc(f.slug)+'" target="_blank">?fair='+esc(f.slug)+'</a></td><td>'+esc(f.name)+'</td><td>'+f.count+'</td><td><button class="l" data-e="'+esc(f.slug)+'">edit</button> · <button class="l" data-s="'+esc(f.slug)+'">sponsors</button></td></tr>').join('')||'<tr><td>No fairs yet.</td></tr>';
+  $('fl').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>editFair(b.dataset.e));
+  $('fl').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>sponsors(b.dataset.s));
+  const opts=Object.entries(ST.providers).map(([id,p])=>'<option value="'+id+'"'+(ST.provider===id?' selected':'')+'>'+esc(p.name)+'</option>').join('');
+  $('llm').innerHTML='<label>Active provider (global default)</label><select id="l_prov">'+opts+'</select>'+Object.entries(ST.providers).map(([id,p])=>
+    '<fieldset><legend><b>'+esc(p.name)+'</b> <small>'+(p.has_key?'· key stored':'· no key')+'</small></legend><div class="row"><div><label>Base URL</label><input id="b_'+id+'" value="'+esc(p.base)+'"></div><div><label>Model</label><input id="m_'+id+'" value="'+esc(p.model)+'"></div><div><label>API key (write-only)</label><input type="password" id="k_'+id+'" autocomplete="new-password" placeholder="'+(p.has_key?'•••• stored':'')+'"></div></div>'+(p.has_key?'<label style="display:inline"><input type="checkbox" id="d_'+id+'" style="width:auto"> delete stored key</label>':'')+'</fieldset>').join('')+
+    '<div class="row"><div><label>Max questions per visitor per hour</label><input id="l_rate" value="'+ST.rate_per_hour+'"></div><div><label>Max questions per day (all visitors)</label><input id="l_cap" value="'+ST.daily_cap+'"></div></div><button id="l_save">Save AI settings</button>';
+  $('l_save').onclick=async()=>{const providers={},keys={},delKeys=[];for(const id of Object.keys(ST.providers)){providers[id]={base:$('b_'+id).value,model:$('m_'+id).value};if($('k_'+id).value.trim())keys[id]=$('k_'+id).value.trim();if($('d_'+id)?.checked)delKeys.push(id);}
+    try{await call('saveLlm',{provider:$('l_prov').value,providers,keys,delKeys,rate_per_hour:$('l_rate').value,daily_cap:$('l_cap').value});say('AI settings saved.');refresh();}catch(e){say(e.message,1);}};
+}
+$('newf').onclick=()=>editFair('');
+async function editFair(slug){
+  let f={}; if(slug){f=(await call('getFair',{slug})).fair;} const isNew=!slug;
+  const provs='<option value="">(global default)</option>'+Object.entries(ST.providers).map(([id,p])=>'<option value="'+id+'"'+(f.provider===id?' selected':'')+'>'+esc(p.name)+'</option>').join('');
+  const ads=(f.ads||[]).map(a=>[a.text,a.url,a.cta].map(x=>x||'').join(' | ')).join('\n');
+  $('editor').classList.remove('hide'); $('editor').innerHTML='<h2>'+(isNew?'New fair':'Edit '+esc(slug))+'</h2><div class="row">'+
+   '<div><label>Slug (URL: ?fair=slug)</label><input id="e_slug" value="'+esc(slug)+'" '+(isNew?'':'readonly')+' placeholder="coiltech"></div><div><label>Fair name</label><input id="e_name" value="'+esc(f.name)+'"></div><div><label>Dates</label><input id="e_dates" value="'+esc(f.dates)+'"></div><div><label>Venue</label><input id="e_venue" value="'+esc(f.venue)+'"></div><div><label>Accent colour</label><input id="e_accent" value="'+esc(f.accent||'#0b5fa5')+'"></div><div><label>Organiser contact (shown when the bot does not know)</label><input id="e_contact" value="'+esc(f.organiser_contact)+'"></div><div><label>AI provider for this fair</label><select id="e_prov">'+provs+'</select></div></div>'+
+   '<label>Welcome message</label><textarea id="e_welcome">'+esc(f.welcome)+'</textarea><label>Suggested questions (one per line, 4 shown)</label><textarea id="e_q">'+esc((f.questions||[]).join('\n'))+'</textarea>'+
+   '<label>Banner ad (one per line: text | https://link | button text). The first is shown and labelled "Anzeige".</label><textarea id="e_ads">'+esc(ads)+'</textarea>'+
+   '<label>General information (dates, venue, tickets, opening hours, travel, programme, rules). The bot answers from this text only.</label><textarea id="e_info" style="min-height:200px">'+esc(f.info)+'</textarea>'+
+   '<label>Exhibitors CSV (UTF-8, header row; columns: name, stand, country, sector, description, products, keywords, website, sponsored) – currently '+(f.exhibitors||[]).length+' exhibitors</label><input type="file" id="e_csv" accept=".csv,.txt"><label><input type="radio" name="mode" value="replace" checked style="width:auto"> replace all &nbsp; <input type="radio" name="mode" value="append" style="width:auto"> append</label>'+
+   '<button id="e_save">Save fair</button> '+(isNew?'':'<button class="d" id="e_del">Delete fair</button>');
+  $('e_save').onclick=async()=>{
+    const slug2=($('e_slug').value||'').trim().toLowerCase(); const body={slug:slug2,name:$('e_name').value,dates:$('e_dates').value,venue:$('e_venue').value,accent:$('e_accent').value,organiser_contact:$('e_contact').value,provider:$('e_prov').value,welcome:$('e_welcome').value,
+      questions:$('e_q').value.split('\n'),ads:$('e_ads').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const[a,b,c]=l.split('|').map(x=>(x||'').trim());return{text:a,url:b,cta:c};}),info:$('e_info').value};
+    const file=$('e_csv').files[0]; if(file){const rows=parseCsv(await file.text()); if(!rows.length){say('CSV had no usable rows (needs a header row with a "name" column).',1);return;} body.exhibitors=rows; body.mode=document.querySelector('input[name=mode]:checked').value;}
+    try{const j=await call('saveFair',body);say('Saved. Exhibitors in this fair: '+j.count);$('editor').classList.add('hide');refresh();}catch(e){say(e.message,1);}};
+  if(!isNew)$('e_del').onclick=async()=>{if(confirm('Delete this fair?')){await call('deleteFair',{slug});$('editor').classList.add('hide');refresh();}};
+  $('editor').scrollIntoView();
+}
+async function sponsors(slug){
+  const f=(await call('getFair',{slug})).fair; $('editor').classList.remove('hide');
+  $('editor').innerHTML='<h2>Sponsored exhibitors – '+esc(f.name)+'</h2><p><small>Ticked companies appear in the "Empfohlene Aussteller" strip and are labelled "Anzeige". Tick only companies that actually booked this placement.</small></p><table>'+f.exhibitors.map((e,i)=>'<tr><td style="width:30px"><input type="checkbox" style="width:auto" value="'+i+'" '+(e.sponsored?'checked':'')+'></td><td>'+esc(e.name)+'</td><td>'+esc(e.stand)+'</td></tr>').join('')+'</table><button id="sp_save">Save</button>';
+  $('sp_save').onclick=async()=>{const indices=[...$('editor').querySelectorAll('input[type=checkbox]:checked')].map(c=>+c.value);try{await call('sponsors',{slug,indices});say('Sponsored flags saved.');$('editor').classList.add('hide');refresh();}catch(e){say(e.message,1);}};
+  $('editor').scrollIntoView();
+}
+function parseCsv(text){
+  text=text.replace(/^﻿/,''); const first=text.split('\n')[0]||''; const cnt=c=>first.split(c).length-1;
+  const d=cnt(';')>cnt(',')?';':(cnt('\t')>cnt(',')?'\t':','); const rows=[]; let cur=[],f='',q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}
+    else if(c==='"')q=true; else if(c===d){cur.push(f);f='';} else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;cur.push(f);f='';rows.push(cur);cur=[];} else f+=c;}
+  if(f!==''||cur.length){cur.push(f);rows.push(cur);} if(!rows.length)return[];
+  const al={firma:'name',company:'name',halle:'stand',hall:'stand',hall_stand:'stand',land:'country',bereich:'sector',category:'sector',beschreibung:'description',produkte:'products',url:'website',web:'website',anzeige:'sponsored',ad:'sponsored'};
+  const h=rows[0].map(x=>{x=x.trim().toLowerCase();return al[x]||x;}); const out=[];
+  for(const r of rows.slice(1)){if(!r.some(v=>v.trim()))continue;const o={};h.forEach((k,i)=>{if(k&&r[i]!==undefined)o[k]=r[i].trim();});if(!o.name)continue;o.sponsored=['1','yes','ja','true','x'].includes((o.sponsored||'').toLowerCase());out.push(o);}
+  return out;
+}
+if(TOKEN) start().catch(()=>logout());
+</script></body></html>
