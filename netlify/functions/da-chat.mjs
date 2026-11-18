@@ -1,4 +1,4 @@
-import { bump, clientIp, getFair, ipHash, json, llmChat, llmConf, retrieve, searchTerms, settings, slugOk, systemPrompt } from "../lib/da.mjs";
+import { bump, clientIp, getFair, ipHash, json, llmChat, llmConf, needsRetrieval, retrieve, searchTerms, settings, slugOk, systemPrompt } from "../lib/da.mjs";
 
 export default async (req, ctx) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
@@ -21,10 +21,11 @@ export default async (req, ctx) => {
     if ((await bump(`ip:${ipHash(clientIp(req, ctx))}:${hour}`, 3600)) > s.rate_per_hour) return json({ error: "rate" }, 429);
     if ((await bump(`day:${day}`, 86400)) > s.daily_cap) return json({ error: "rate" }, 429);
 
+    await bump(`stat:${slug}:${day}`, 31536000).catch(() => {});
     const conf = await llmConf(fair);
     const exh = fair.exhibitors || [];
     const last = clean.at(-1).content;
-    const context = exh.length > 40 ? retrieve(exh, await searchTerms(conf, last)) : exh;
+    const context = needsRetrieval(exh) ? retrieve(exh, await searchTerms(conf, last)) : exh;
     const reply = await llmChat(conf, [{ role: "system", content: systemPrompt(fair, context) }, ...clean], { temp: 0.1, max: 600 });
     return json({ reply });
   } catch (e) {
