@@ -10,21 +10,28 @@
 @media (prefers-color-scheme:dark){:root{--bg:#10151b;--card:#18202a;--tx:#e8edf2;--mut:#9aa8b6;--bd:#2a3541}}
 *{box-sizing:border-box}html,body{margin:0;height:100%}
 body{font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;min-height:100dvh}
-header{background:var(--ac);color:#fff;padding:14px 16px}
+header{background:var(--ac);color:#fff;padding:14px 16px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
 header h1{margin:0;font-size:1.15rem;line-height:1.25}
 header p{margin:2px 0 0;font-size:.85rem;opacity:.9}
+.tools{display:flex;gap:6px;flex:none;align-items:center}
+.tools select,.tools button{font:inherit;font-size:.82rem;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:4px 8px;cursor:pointer}
+.tools select option{color:#18212b}
 .demo{display:inline-block;background:rgba(255,255,255,.2);border-radius:6px;padding:1px 7px;font-size:.72rem;margin-left:6px;vertical-align:middle}
 main{flex:1;width:100%;max-width:760px;margin:0 auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
-.ad{border:1px dashed var(--bd);border-radius:10px;background:var(--card);padding:8px 12px;font-size:.88rem;display:flex;gap:8px;align-items:center}
+.ad{border:1px dashed var(--bd);border-radius:10px;background:var(--card);padding:8px 12px;font-size:.88rem;display:flex;gap:10px;align-items:center}
+.ad img{height:54px;max-width:120px;object-fit:contain;border-radius:6px;flex:none}
 .ad b.tag{font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);border:1px solid var(--bd);border-radius:4px;padding:0 5px;flex:none}
 .ad a{color:var(--ac);text-decoration:none;font-weight:600}
 .feat{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
-.feat .c{flex:none;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;font-size:.85rem;min-width:170px}
+.feat .c{flex:none;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;font-size:.85rem;width:210px;white-space:normal}
 .feat .c small{color:var(--mut);display:block}.feat .c .tag{font-size:.65rem;text-transform:uppercase;color:var(--mut)}
+.feat .c a{color:var(--ac);font-weight:600;text-decoration:none;font-size:.8rem}
+.feat .c button{font:inherit;font-size:.78rem;background:none;border:0;color:var(--ac);cursor:pointer;padding:0;font-weight:600}
 #chat{flex:1;display:flex;flex-direction:column;gap:10px;min-height:240px}
 .m{max-width:88%;padding:10px 13px;border-radius:14px;white-space:pre-wrap;word-wrap:break-word;border:1px solid var(--bd);background:var(--card)}
 .m.u{align-self:flex-end;background:var(--ac);color:#fff;border-color:var(--ac)}.m.a{align-self:flex-start}.m.err{color:#b3261e}
-.m a{color:var(--ac)}
+.m a{color:var(--ac)}.m.u a{color:#fff}
+.pin{display:inline-block;margin:6px 6px 0 0;font:inherit;font-size:.8rem;background:var(--bg);color:var(--ac);border:1px solid var(--bd);border-radius:999px;padding:2px 10px;cursor:pointer}
 .chips{display:flex;flex-wrap:wrap;gap:7px}
 .chips button{font:inherit;font-size:.86rem;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:6px 12px;cursor:pointer}
 .chips button:hover{border-color:var(--ac)}
@@ -36,34 +43,71 @@ footer{font-size:.74rem;color:var(--mut);text-align:center;padding:10px 14px 16p
 .dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mut);margin:0 2px;animation:b 1s infinite}
 .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
 @keyframes b{0%,80%,100%{opacity:.25}40%{opacity:1}}
+dialog{border:0;border-radius:14px;padding:0;width:min(720px,94vw);background:var(--card);color:var(--tx)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--bd)}
+.dh button{font:inherit;background:none;border:1px solid var(--bd);border-radius:8px;color:var(--tx);padding:3px 10px;cursor:pointer}
+#mapbox{padding:10px 14px 14px}#mapbox svg{width:100%;height:auto;display:block;background:var(--bg);border-radius:10px}
+.leg{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-size:.8rem;color:var(--mut)}
 </style>
 </head>
 <body>
-<header><h1 id="t">Besucher-Assistent</h1><p id="sub"></p></header>
+<header>
+  <div><h1 id="t">Besucher-Assistent</h1><p id="sub"></p></div>
+  <div class="tools"><button type="button" id="mapbtn" hidden></button><select id="lang" aria-label="Language"></select></div>
+</header>
 <main>
   <div id="adbox"></div><div id="feat" class="feat"></div>
   <div id="chat" aria-live="polite"></div><div id="chips" class="chips"></div>
-  <form id="f" autocomplete="off"><input type="text" id="q" maxlength="600" aria-label="Frage"><button class="send" id="b" type="submit">&#10148;</button></form>
+  <form id="f" autocomplete="off"><input type="text" id="q" maxlength="600" aria-label="?"><button class="send" id="b" type="submit">&#10148;</button></form>
 </main>
 <footer id="ft"></footer>
+<dialog id="dlg"><div class="dh"><b id="dt"></b><button type="button" id="dc"></button></div><div id="mapbox"></div></dialog>
 <script>
 const FAIR = (new URLSearchParams(location.search).get('fair') || 'coiltech').toLowerCase().replace(/[^a-z0-9-]/g,'');
 const API = '/.netlify/functions/';
+const EN_FOOT='Demo by K4-Engineering, Augsburg. Unofficial demonstration, not an offer by the organiser. Answers come only from the sample data provided. Your input is sent to an AI service to answer and is not stored.';
 const UI = {
-  de:{ph:'Frage zur Messe stellen …',ad:'Anzeige',busy:'Der Assistent ist gerade ausgelastet. Bitte in einer Minute erneut versuchen.',err:'Das hat leider nicht geklappt. Bitte erneut versuchen.',rate:'Zu viele Anfragen. Bitte später erneut versuchen.',nc:'Der Assistent ist noch nicht eingerichtet.',
-     foot:'Demo von K4-Engineering, Augsburg. Inoffizielle Demonstration, kein Angebot des Veranstalters. Antworten stammen nur aus den hinterlegten Beispieldaten. Eingaben werden zur Beantwortung an einen KI-Dienst übertragen und nicht gespeichert.',imp:'Impressum',dp:'Datenschutz',exb:'Beispiel-Aussteller',hint:'Sprechen Sie in Ihrer Sprache – der Assistent antwortet in derselben.'},
-  en:{ph:'Ask about the fair …',ad:'Ad',busy:'The assistant is busy right now. Please try again in a minute.',err:'Something went wrong. Please try again.',rate:'Too many requests. Please try again later.',nc:'The assistant is not set up yet.',
-     foot:'Demo by K4-Engineering, Augsburg. Unofficial demonstration, not an offer by the organiser. Answers come only from the sample data provided. Your input is sent to an AI service to answer and is not stored.',imp:'Legal notice',dp:'Privacy',exb:'Sample exhibitors',hint:'Write in your own language – the assistant answers in the same one.'}
+  de:{n:'Deutsch',ph:'Frage zur Messe stellen …',ad:'Anzeige',busy:'Der Assistent ist gerade ausgelastet. Bitte in einer Minute erneut versuchen.',err:'Das hat leider nicht geklappt. Bitte erneut versuchen.',rate:'Zu viele Anfragen. Bitte später erneut versuchen.',nc:'Der Assistent ist noch nicht eingerichtet.',map:'Hallenplan',close:'Schließen',stand:'Stand',more:'Website',
+     foot:'Demo von K4-Engineering, Augsburg. Inoffizielle Demonstration, kein Angebot des Veranstalters. Antworten stammen nur aus den hinterlegten Beispieldaten. Eingaben werden zur Beantwortung an einen KI-Dienst übertragen und nicht gespeichert.',imp:'Impressum',dp:'Datenschutz',exb:'Beispiel-Aussteller',hint:'Sprechen Sie in Ihrer Sprache – der Assistent antwortet in derselben.',
+     welcome:n=>'Willkommen! Ich bin der Demo-Assistent für '+n+'. Fragen Sie mich nach Ausstellern, Themen und Standorten – in jeder Sprache.',q:['Welche Firmen stellen aus?','Wo ist der Info-Stand?','Wann und wo findet die Messe statt?']},
+  en:{n:'English',ph:'Ask about the fair …',ad:'Ad',busy:'The assistant is busy right now. Please try again in a minute.',err:'Something went wrong. Please try again.',rate:'Too many requests. Please try again later.',nc:'The assistant is not set up yet.',map:'Hall plan',close:'Close',stand:'Stand',more:'Website',
+     foot:EN_FOOT,imp:'Legal notice',dp:'Privacy',exb:'Sample exhibitors',hint:'Write in your own language – the assistant answers in the same one.',
+     welcome:n=>'Welcome! I am the demo assistant for '+n+'. Ask me about exhibitors, topics and stand locations – in any language.',q:['Which companies are exhibiting?','Where is the help desk?','When and where is the fair?']},
+  ar:{n:'العربية',ph:'اسأل عن المعرض …',ad:'إعلان',busy:'المساعد مشغول الآن. حاول مرة أخرى بعد دقيقة.',err:'حدث خطأ ما. حاول مرة أخرى.',rate:'عدد الطلبات كبير. حاول لاحقاً.',nc:'المساعد غير مُعدّ بعد.',map:'خريطة القاعات',close:'إغلاق',stand:'الجناح',more:'الموقع',
+     hint:'اكتب بلغتك – سيجيب المساعد بنفس اللغة.',welcome:n=>'مرحباً! أنا المساعد التجريبي لمعرض '+n+'. اسألني عن العارضين والموضوعات ومواقع الأجنحة بأي لغة.',q:['ما الشركات المشاركة في المعرض؟','أين مكتب المساعدة؟','متى وأين يُقام المعرض؟']},
+  tr:{n:'Türkçe',ph:'Fuar hakkında soru sorun …',ad:'Reklam',busy:'Asistan şu an meşgul. Lütfen bir dakika sonra tekrar deneyin.',err:'Bir sorun oluştu. Lütfen tekrar deneyin.',rate:'Çok fazla istek. Lütfen daha sonra tekrar deneyin.',nc:'Asistan henüz ayarlanmadı.',map:'Salon planı',close:'Kapat',stand:'Stand',more:'Web sitesi',
+     hint:'Kendi dilinizde yazın – asistan aynı dilde yanıtlar.',welcome:n=>'Hoş geldiniz! '+n+' için demo asistanıyım. Katılımcılar, konular ve stand yerleri hakkında her dilde sorabilirsiniz.',q:['Fuarda hangi firmalar var?','Bilgi masası nerede?','Fuar ne zaman ve nerede?']},
+  fr:{n:'Français',ph:'Posez une question sur le salon …',ad:'Annonce',busy:"L'assistant est occupé. Réessayez dans une minute.",err:"Une erreur s'est produite. Veuillez réessayer.",rate:'Trop de demandes. Réessayez plus tard.',nc:"L'assistant n'est pas encore configuré.",map:'Plan des halls',close:'Fermer',stand:'Stand',more:'Site web',
+     hint:"Écrivez dans votre langue – l'assistant répond dans la même.",welcome:n=>"Bienvenue ! Je suis l'assistant de démonstration de "+n+". Posez-moi vos questions sur les exposants, les thèmes et les stands, dans n'importe quelle langue.",q:['Quelles entreprises exposent ?',"Où est l'accueil ?",'Quand et où a lieu le salon ?']},
+  it:{n:'Italiano',ph:'Fai una domanda sulla fiera …',ad:'Annuncio',busy:"L'assistente è occupato. Riprova tra un minuto.",err:'Qualcosa è andato storto. Riprova.',rate:'Troppe richieste. Riprova più tardi.',nc:"L'assistente non è ancora configurato.",map:'Mappa dei padiglioni',close:'Chiudi',stand:'Stand',more:'Sito web',
+     hint:"Scrivi nella tua lingua – l'assistente risponde nella stessa.",welcome:n=>"Benvenuto! Sono l'assistente demo di "+n+". Chiedimi di espositori, temi e stand, in qualsiasi lingua.",q:['Quali aziende espongono?',"Dov'è il banco informazioni?",'Quando e dove si svolge la fiera?']},
+  es:{n:'Español',ph:'Pregunta sobre la feria …',ad:'Anuncio',busy:'El asistente está ocupado. Inténtalo de nuevo en un minuto.',err:'Algo salió mal. Inténtalo de nuevo.',rate:'Demasiadas solicitudes. Inténtalo más tarde.',nc:'El asistente aún no está configurado.',map:'Plano de pabellones',close:'Cerrar',stand:'Stand',more:'Sitio web',
+     hint:'Escribe en tu idioma: el asistente responde en el mismo.',welcome:n=>'¡Bienvenido! Soy el asistente de demostración de '+n+'. Pregúntame por expositores, temas y stands en cualquier idioma.',q:['¿Qué empresas exponen?','¿Dónde está el punto de información?','¿Cuándo y dónde es la feria?']},
+  pl:{n:'Polski',ph:'Zadaj pytanie o targi …',ad:'Reklama',busy:'Asystent jest zajęty. Spróbuj za minutę.',err:'Coś poszło nie tak. Spróbuj ponownie.',rate:'Zbyt wiele zapytań. Spróbuj później.',nc:'Asystent nie jest jeszcze skonfigurowany.',map:'Plan hal',close:'Zamknij',stand:'Stoisko',more:'Strona',
+     hint:'Pisz w swoim języku – asystent odpowie w tym samym.',welcome:n=>'Witamy! Jestem demonstracyjnym asystentem '+n+'. Pytaj o wystawców, tematy i stoiska w dowolnym języku.',q:['Jakie firmy wystawiają się na targach?','Gdzie jest punkt informacyjny?','Kiedy i gdzie odbywają się targi?']},
+  ru:{n:'Русский',ph:'Задайте вопрос о выставке …',ad:'Реклама',busy:'Ассистент сейчас занят. Повторите через минуту.',err:'Что-то пошло не так. Попробуйте ещё раз.',rate:'Слишком много запросов. Повторите позже.',nc:'Ассистент ещё не настроен.',map:'План павильонов',close:'Закрыть',stand:'Стенд',more:'Сайт',
+     hint:'Пишите на своём языке – ассистент ответит на том же.',welcome:n=>'Добро пожаловать! Я демо-ассистент '+n+'. Спрашивайте об экспонентах, темах и стендах на любом языке.',q:['Какие компании участвуют в выставке?','Где информационная стойка?','Когда и где проходит выставка?']},
+  zh:{n:'中文',ph:'询问展会相关问题 …',ad:'广告',busy:'助手目前繁忙，请一分钟后再试。',err:'出错了，请重试。',rate:'请求过多，请稍后再试。',nc:'助手尚未配置。',map:'展厅平面图',close:'关闭',stand:'展位',more:'网站',
+     hint:'请用您的语言提问——助手会用同一种语言回答。',welcome:n=>'欢迎！我是'+n+'的演示助手。您可以用任何语言询问参展商、主题和展位位置。',q:['哪些公司参展？','服务台在哪里？','展会时间和地点？']}
 };
-const T = UI[(navigator.language||'de').toLowerCase().startsWith('de') ? 'de' : 'en'];
-const $ = id => document.getElementById(id), chat = $('chat'); let hist = [], busy = false;
-const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function fmt(s){ // escape first, then linkify http(s) and **bold**
-  return esc(s).replace(/(https?:\/\/[^\s<)]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
-}
-function add(role, text, cls){ const d=document.createElement('div'); d.className='m '+(role==='user'?'u':'a')+(cls?' '+cls:''); d.innerHTML=fmt(text); chat.appendChild(d); d.scrollIntoView({block:'end',behavior:'smooth'}); return d; }
+const ICON={wc:'🚻',food:'🍴',coffee:'☕',bar:'🍺',info:'ℹ️',doctor:'✚',cloak:'🧥',charge:'🔌',poster:'🖼️',conf:'🧲',lost:'🔎'};
+const ILAB={de:{wc:'Toiletten',food:'Essen',coffee:'Kaffee',bar:'Getränke',info:'Info / Help desk',doctor:'Arzt',cloak:'Garderobe',charge:'Ladestation',poster:'Posterbereich',conf:'Konferenz',lost:'Fundbüro'},
+            en:{wc:'Toilets',food:'Food',coffee:'Coffee',bar:'Drinks',info:'Info / help desk',doctor:'Doctor',cloak:'Cloakroom',charge:'Charging',poster:'Poster session',conf:'Conference',lost:'Lost & found'}};
+let L='en'; try{ const s=localStorage.getItem('da_lang'); L=(s&&UI[s])?s:((navigator.language||'en').slice(0,2).toLowerCase()); }catch(e){ L=(navigator.language||'en').slice(0,2).toLowerCase(); }
+if(!UI[L]) L='en';
+const T=Object.assign({},UI.en,UI[L]); if(!UI[L].foot) T.foot=EN_FOOT; if(!UI[L].imp){T.imp=UI.en.imp;T.dp=UI.en.dp;T.exb=UI.en.exb;}
+if(L==='ar') document.documentElement.dir='rtl'; document.documentElement.lang=L;
+const $=id=>document.getElementById(id), chat=$('chat'); let hist=[], busy=false, META=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
+function fmt(s){ return esc(s).replace(/(https?:\/\/[^\s<)]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>'); }
+const hallsIn=txt=>{ if(!META||!META.layout) return []; const ids=new Set((META.layout.halls||[]).map(h=>h.id)), out=[]; for(const m of String(txt).matchAll(/(?:^|[^0-9A-Za-z])([0-9])\s?[-‐‑–]\s?[A-Z]\d{1,3}\b/g)) if(ids.has(m[1])&&!out.includes(m[1])) out.push(m[1]); return out; };
+function add(role,text,cls){ const d=document.createElement('div'); d.className='m '+(role==='user'?'u':'a')+(cls?' '+cls:''); d.innerHTML=fmt(text);
+  if(role!=='user'&&!cls) hallsIn(text).forEach(id=>{const h=META.layout.halls.find(x=>x.id===id); const b=document.createElement('button'); b.type='button'; b.className='pin'; b.textContent='📍 '+(h.name||id); b.onclick=()=>showMap([id]); d.appendChild(document.createElement('br')); d.appendChild(b);});
+  chat.appendChild(d); d.scrollIntoView({block:'end',behavior:'smooth'}); return d; }
 async function ask(text){
-  if (busy || !text.trim()) return; busy=true; $('b').disabled=true; $('chips').style.display='none';
+  if(busy||!text.trim()) return; busy=true; $('b').disabled=true; $('chips').style.display='none';
   add('user',text); hist.push({role:'user',content:text});
   const w=document.createElement('div'); w.className='m a'; w.innerHTML='<span class="dots"><span></span><span></span><span></span></span>'; chat.appendChild(w); w.scrollIntoView({block:'end'});
   try{
@@ -74,22 +118,51 @@ async function ask(text){
   }catch(e){w.remove();hist.pop();add('assistant',T.err,'err');}
   busy=false; $('b').disabled=false; $('q').focus();
 }
+// ---- floor plan (SVG drawn from the fair's layout data) ----
+const NS='http://www.w3.org/2000/svg';
+function el(n,a,txt){ const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); if(txt!=null) e.textContent=txt; return e; }
+function icons(svg,list,x,y,w){ list.forEach((ic,i)=>{ const per=Math.max(1,Math.floor((w-2)/4.4)), r=Math.floor(i/per), c=i%per; svg.appendChild(el('text',{x:x+2.2+c*4.4,y:y+r*4.6,'font-size':3.6,'dominant-baseline':'hanging'},ICON[ic]||'')); }); }
+function showMap(hl){
+  const lay=META&&META.layout; if(!lay) return; hl=hl||[]; const svg=el('svg',{viewBox:'0 0 100 82',role:'img','aria-label':T.map}); const used=new Set();
+  (lay.links||[]).forEach(r=>svg.appendChild(el('rect',{x:r.x,y:r.y,width:r.w,height:r.h,fill:'#9aa3ad',opacity:.55})));
+  const dim=h=>hl.length&&!hl.includes(h.id);
+  (lay.halls||[]).forEach(h=>{ svg.appendChild(el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,rx:1.2,fill:h.color,opacity:dim(h)?.3:.95,stroke:hl.includes(h.id)?'#111':'none','stroke-width':hl.includes(h.id)?.9:0}));
+    svg.appendChild(el('text',{x:h.x+2.5,y:h.y+2.2,'font-size':9,'font-weight':700,fill:'#fff','dominant-baseline':'hanging',opacity:dim(h)?.5:1},h.id));
+    if(h.name) svg.appendChild(el('text',{x:h.x+h.w-2,y:h.y+2.6,'font-size':3.4,fill:'#fff','text-anchor':'end','dominant-baseline':'hanging'},h.name));
+    (h.icons||[]).forEach(i=>used.add(i)); icons(svg,h.icons||[],h.x,h.y+h.h-(Math.ceil((h.icons||[]).length/Math.max(1,Math.floor((h.w-2)/4.4)))*4.6)-1.2,h.w); });
+  if(lay.entrance){ const e=lay.entrance; svg.appendChild(el('rect',{x:e.x,y:e.y,width:e.w,height:e.h,rx:1.2,fill:'#3c434b'}));
+    svg.appendChild(el('text',{x:e.x+e.w/2,y:e.y+2,'font-size':3.3,'font-weight':700,fill:'#ff8a3d','text-anchor':'middle','dominant-baseline':'hanging'},'▼ '+(e.label||'Entrance')));
+    (e.icons||[]).forEach(i=>used.add(i)); icons(svg,e.icons||[],e.x,e.y+e.h-5.8,e.w); }
+  $('mapbox').innerHTML=''; $('mapbox').appendChild(svg);
+  const lg=document.createElement('div'); lg.className='leg'; const lab=ILAB[L==='de'?'de':'en']; [...used].forEach(i=>{const s=document.createElement('span'); s.textContent=(ICON[i]||'')+' '+(lab[i]||i); lg.appendChild(s);}); $('mapbox').appendChild(lg);
+  if(lay.note){ const n=document.createElement('div'); n.className='leg'; n.textContent=lay.note; $('mapbox').appendChild(n); }
+  $('dt').textContent=T.map+(hl.length?' · '+hl.map(id=>(lay.halls.find(h=>h.id===id)||{}).name||id).join(', '):''); const d=$('dlg'); if(!d.open) d.showModal();
+}
+$('dc').textContent=T.close; $('dc').onclick=()=>$('dlg').close(); $('dlg').addEventListener('click',e=>{ if(e.target===$('dlg')) $('dlg').close(); });
+// ---- language picker ----
+$('lang').innerHTML=Object.entries(UI).map(([k,v])=>'<option value="'+k+'"'+(k===L?' selected':'')+'>'+v.n+'</option>').join('');
+$('lang').onchange=e=>{ try{localStorage.setItem('da_lang',e.target.value);}catch(x){} location.reload(); };
 $('f').addEventListener('submit',e=>{e.preventDefault();const v=$('q').value;$('q').value='';ask(v);});
-$('q').placeholder=T.ph;
+$('q').placeholder=T.ph; $('q').setAttribute('aria-label',T.ph); $('mapbtn').textContent='🗺 '+T.map;
 fetch(API+'da-meta?fair='+encodeURIComponent(FAIR)).then(r=>r.ok?r.json():Promise.reject()).then(m=>{
-  document.title=m.name+' · Besucher-Assistent (Demo)';
+  META=m; document.title=m.name+' · '+(L==='de'?'Besucher-Assistent (Demo)':'Visitor assistant (demo)');
   if(/^#[0-9a-fA-F]{6}$/.test(m.accent)) document.documentElement.style.setProperty('--ac',m.accent);
-  $('t').innerHTML=esc(m.name)+'<span class="demo">DEMO</span>'; $('sub').textContent=[m.dates,m.venue].filter(Boolean).join(' · ');
-  (m.ads||[]).slice(0,1).forEach(a=>{const d=document.createElement('div');d.className='ad';
-    d.innerHTML='<b class="tag">'+T.ad+'</b><span>'+esc(a.text||'')+(/^https?:\/\//.test(a.url||'')?' <a href="'+esc(a.url)+'" target="_blank" rel="noopener sponsored">'+esc(a.cta||'→')+'</a>':'')+'</span>';$('adbox').appendChild(d);});
-  if((m.featured||[]).length) $('feat').innerHTML=m.featured.map(f=>'<div class="c"><span class="tag">'+T.ad+'</span><b>'+esc(f.name)+'</b><small>'+esc(f.stand?('Stand '+f.stand):'')+'</small><small>'+esc((f.sector||'').split('/')[0])+'</small></div>').join(''); else $('feat').style.display='none';
-  add('assistant',m.welcome||'');
-  $('chips').innerHTML=(m.questions||[]).slice(0,4).map(q=>'<button type="button">'+esc(q)+'</button>').join('');
+  $('t').innerHTML=esc(m.name)+'<span class="demo">DEMO</span>'; $('sub').innerHTML=[m.dates,m.venue].filter(Boolean).map(x=>'<bdi>'+esc(x)+'</bdi>').join(' · ');
+  if(m.layout&&(m.layout.halls||[]).length){ $('mapbtn').hidden=false; $('mapbtn').onclick=()=>showMap([]); }
+  (m.ads||[]).slice(0,1).forEach(a=>{const d=document.createElement('div');d.className='ad'; const u=safeUrl(a.url), img=/^https:\/\//i.test(a.image||'')?a.image:'';
+    d.innerHTML='<b class="tag">'+esc(T.ad)+'</b>'+(img?'<img src="'+esc(img)+'" alt="" loading="lazy">':'')+'<span>'+esc(a.text||'')+(u?' <a href="'+esc(u)+'" target="_blank" rel="noopener sponsored">'+esc(a.cta||'→')+'</a>':'')+'</span>';$('adbox').appendChild(d);});
+  if((m.featured||[]).length){ $('feat').innerHTML=m.featured.map((f,i)=>{ const u=safeUrl(f.website), h=hallsIn(f.stand)[0];
+      return '<div class="c"><span class="tag">'+esc(T.ad)+'</span><b>'+esc(f.name)+'</b>'+(f.stand?'<small>'+esc(T.stand+' '+f.stand)+'</small>':'')+(f.description?'<small>'+esc(f.description)+'</small>':'')+
+        (u?'<a href="'+esc(u)+'" target="_blank" rel="noopener sponsored">'+esc(T.more)+' →</a> ':'')+(h?'<button type="button" data-h="'+esc(h)+'">📍 '+esc(T.map)+'</button>':'')+'</div>'; }).join('');
+    $('feat').querySelectorAll('button[data-h]').forEach(b=>b.onclick=()=>showMap([b.dataset.h])); } else $('feat').style.display='none';
+  add('assistant',(L==='de'&&m.welcome)?m.welcome:T.welcome(m.name));
+  const qs=(L==='de'||L==='en')&&(m.questions||[]).length?m.questions.slice(0,4):T.q;
+  $('chips').innerHTML=qs.map(q=>'<button type="button">'+esc(q)+'</button>').join('');
   $('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent));
   const ex=Object.entries(m.sector_examples||{}).slice(0,6).map(([k,v])=>k+': '+v.join(', ')).join(' · ');
-  const h=document.createElement('div');h.className='ad';h.style.borderStyle='solid';h.innerHTML='<span><b>'+T.exb+' ('+m.count+')</b> – '+esc(ex)+'<br><small>'+T.hint+'</small></span>';$('adbox').appendChild(h);
+  const h=document.createElement('div');h.className='ad';h.style.borderStyle='solid';h.innerHTML='<span><b>'+esc(T.exb)+' ('+m.count+')</b> – '+esc(ex)+'<br><small>'+esc(T.hint)+'</small></span>';$('adbox').appendChild(h);
 }).catch(()=>{ $('t').textContent='Demo'; add('assistant',T.err,'err'); });
-$('ft').innerHTML=T.foot+'<br><a href="/impressum">'+T.imp+'</a> · <a href="/datenschutz">'+T.dp+'</a>';
+$('ft').innerHTML=esc(T.foot)+'<br><a href="/impressum">'+esc(T.imp)+'</a> · <a href="/datenschutz">'+esc(T.dp)+'</a>';
 </script>
 </body>
 </html>
