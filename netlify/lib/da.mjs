@@ -52,6 +52,7 @@ export async function getSetting(key, dflt = {}) {
 export async function setSetting(key, value) {
   await sb("da_settings", { method: "POST", prefer: "resolution=merge-duplicates,return=minimal", body: { key, value } });
 }
+export async function listStats() { return (await sb("da_rl?k=like.stat%3A*&select=k,n")) || []; }
 export async function bump(k, windowSeconds) {
   const n = await sb("rpc/da_bump", { method: "POST", body: { p_k: k, p_win: windowSeconds } });
   return Number(n) || 0;
