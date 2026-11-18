@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Besucher-Assistent (Demo) | K4-Engineering</title>
+<style>
+:root{--ac:#0b5fa5;--bg:#f4f6f9;--card:#fff;--tx:#18212b;--mut:#5d6b7a;--bd:#dde3ea}
+@media (prefers-color-scheme:dark){:root{--bg:#10151b;--card:#18202a;--tx:#e8edf2;--mut:#9aa8b6;--bd:#2a3541}}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;min-height:100dvh}
+header{background:var(--ac);color:#fff;padding:14px 16px}
+header h1{margin:0;font-size:1.15rem;line-height:1.25}
+header p{margin:2px 0 0;font-size:.85rem;opacity:.9}
+.demo{display:inline-block;background:rgba(255,255,255,.2);border-radius:6px;padding:1px 7px;font-size:.72rem;margin-left:6px;vertical-align:middle}
+main{flex:1;width:100%;max-width:760px;margin:0 auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.ad{border:1px dashed var(--bd);border-radius:10px;background:var(--card);padding:8px 12px;font-size:.88rem;display:flex;gap:8px;align-items:center}
+.ad b.tag{font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);border:1px solid var(--bd);border-radius:4px;padding:0 5px;flex:none}
+.ad a{color:var(--ac);text-decoration:none;font-weight:600}
+.feat{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.feat .c{flex:none;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;font-size:.85rem;min-width:170px}
+.feat .c small{color:var(--mut);display:block}.feat .c .tag{font-size:.65rem;text-transform:uppercase;color:var(--mut)}
+#chat{flex:1;display:flex;flex-direction:column;gap:10px;min-height:240px}
+.m{max-width:88%;padding:10px 13px;border-radius:14px;white-space:pre-wrap;word-wrap:break-word;border:1px solid var(--bd);background:var(--card)}
+.m.u{align-self:flex-end;background:var(--ac);color:#fff;border-color:var(--ac)}.m.a{align-self:flex-start}.m.err{color:#b3261e}
+.m a{color:var(--ac)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chips button{font:inherit;font-size:.86rem;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chips button:hover{border-color:var(--ac)}
+form{display:flex;gap:8px;position:sticky;bottom:0;background:var(--bg);padding:8px 0 4px}
+input[type=text]{flex:1;font:inherit;padding:11px 13px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);min-width:0}
+button.send{font:inherit;font-weight:600;border:0;border-radius:12px;padding:0 18px;background:var(--ac);color:#fff;cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}
+footer{font-size:.74rem;color:var(--mut);text-align:center;padding:10px 14px 16px}footer a{color:inherit}
+.dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mut);margin:0 2px;animation:b 1s infinite}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,80%,100%{opacity:.25}40%{opacity:1}}
+</style>
+</head>
+<body>
+<header><h1 id="t">Besucher-Assistent</h1><p id="sub"></p></header>
+<main>
+  <div id="adbox"></div><div id="feat" class="feat"></div>
+  <div id="chat" aria-live="polite"></div><div id="chips" class="chips"></div>
+  <form id="f" autocomplete="off"><input type="text" id="q" maxlength="600" aria-label="Frage"><button class="send" id="b" type="submit">&#10148;</button></form>
+</main>
+<footer id="ft"></footer>
+<script>
+const FAIR = (new URLSearchParams(location.search).get('fair') || 'coiltech').toLowerCase().replace(/[^a-z0-9-]/g,'');
+const API = '/.netlify/functions/';
+const UI = {
+  de:{ph:'Frage zur Messe stellen …',ad:'Anzeige',busy:'Der Assistent ist gerade ausgelastet. Bitte in einer Minute erneut versuchen.',err:'Das hat leider nicht geklappt. Bitte erneut versuchen.',rate:'Zu viele Anfragen. Bitte später erneut versuchen.',nc:'Der Assistent ist noch nicht eingerichtet.',
+     foot:'Demo von K4-Engineering, Augsburg. Inoffizielle Demonstration, kein Angebot des Veranstalters. Antworten stammen nur aus den hinterlegten Beispieldaten. Eingaben werden zur Beantwortung an einen KI-Dienst übertragen und nicht gespeichert.',imp:'Impressum',dp:'Datenschutz',exb:'Beispiel-Aussteller',hint:'Sprechen Sie in Ihrer Sprache – der Assistent antwortet in derselben.'},
+  en:{ph:'Ask about the fair …',ad:'Ad',busy:'The assistant is busy right now. Please try again in a minute.',err:'Something went wrong. Please try again.',rate:'Too many requests. Please try again later.',nc:'The assistant is not set up yet.',
+     foot:'Demo by K4-Engineering, Augsburg. Unofficial demonstration, not an offer by the organiser. Answers come only from the sample data provided. Your input is sent to an AI service to answer and is not stored.',imp:'Legal notice',dp:'Privacy',exb:'Sample exhibitors',hint:'Write in your own language – the assistant answers in the same one.'}
+};
+const T = UI[(navigator.language||'de').toLowerCase().startsWith('de') ? 'de' : 'en'];
+const $ = id => document.getElementById(id), chat = $('chat'); let hist = [], busy = false;
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function fmt(s){ // escape first, then linkify http(s) and **bold**
+  return esc(s).replace(/(https?:\/\/[^\s<)]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+}
+function add(role, text, cls){ const d=document.createElement('div'); d.className='m '+(role==='user'?'u':'a')+(cls?' '+cls:''); d.innerHTML=fmt(text); chat.appendChild(d); d.scrollIntoView({block:'end',behavior:'smooth'}); return d; }
+async function ask(text){
+  if (busy || !text.trim()) return; busy=true; $('b').disabled=true; $('chips').style.display='none';
+  add('user',text); hist.push({role:'user',content:text});
+  const w=document.createElement('div'); w.className='m a'; w.innerHTML='<span class="dots"><span></span><span></span><span></span></span>'; chat.appendChild(w); w.scrollIntoView({block:'end'});
+  try{
+    const r=await fetch(API+'da-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fair:FAIR,messages:hist})});
+    const j=await r.json().catch(()=>({})); w.remove();
+    if(r.ok&&j.reply){hist.push({role:'assistant',content:j.reply});add('assistant',j.reply);}
+    else{hist.pop();add('assistant',j.error==='rate'?T.rate:j.error==='busy'?T.busy:j.error==='not_configured'?T.nc:T.err,'err');}
+  }catch(e){w.remove();hist.pop();add('assistant',T.err,'err');}
+  busy=false; $('b').disabled=false; $('q').focus();
+}
+$('f').addEventListener('submit',e=>{e.preventDefault();const v=$('q').value;$('q').value='';ask(v);});
+$('q').placeholder=T.ph;
+fetch(API+'da-meta?fair='+encodeURIComponent(FAIR)).then(r=>r.ok?r.json():Promise.reject()).then(m=>{
+  document.title=m.name+' · Besucher-Assistent (Demo)';
+  if(/^#[0-9a-fA-F]{6}$/.test(m.accent)) document.documentElement.style.setProperty('--ac',m.accent);
+  $('t').innerHTML=esc(m.name)+'<span class="demo">DEMO</span>'; $('sub').textContent=[m.dates,m.venue].filter(Boolean).join(' · ');
+  (m.ads||[]).slice(0,1).forEach(a=>{const d=document.createElement('div');d.className='ad';
+    d.innerHTML='<b class="tag">'+T.ad+'</b><span>'+esc(a.text||'')+(/^https?:\/\//.test(a.url||'')?' <a href="'+esc(a.url)+'" target="_blank" rel="noopener sponsored">'+esc(a.cta||'→')+'</a>':'')+'</span>';$('adbox').appendChild(d);});
+  if((m.featured||[]).length) $('feat').innerHTML=m.featured.map(f=>'<div class="c"><span class="tag">'+T.ad+'</span><b>'+esc(f.name)+'</b><small>'+esc(f.stand?('Stand '+f.stand):'')+'</small><small>'+esc((f.sector||'').split('/')[0])+'</small></div>').join(''); else $('feat').style.display='none';
+  add('assistant',m.welcome||'');
+  $('chips').innerHTML=(m.questions||[]).slice(0,4).map(q=>'<button type="button">'+esc(q)+'</button>').join('');
+  $('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent));
+  const ex=Object.entries(m.sector_examples||{}).slice(0,6).map(([k,v])=>k+': '+v.join(', ')).join(' · ');
+  const h=document.createElement('div');h.className='ad';h.style.borderStyle='solid';h.innerHTML='<span><b>'+T.exb+' ('+m.count+')</b> – '+esc(ex)+'<br><small>'+T.hint+'</small></span>';$('adbox').appendChild(h);
+}).catch(()=>{ $('t').textContent='Demo'; add('assistant',T.err,'err'); });
+$('ft').innerHTML=T.foot+'<br><a href="/impressum">'+T.imp+'</a> · <a href="/datenschutz">'+T.dp+'</a>';
+</script>
+</body>
+</html>

@@ -4,3 +4,10 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Fair-Agent demo: never index, no framing
+[[headers]]
+  for = "/demo-ai-agent/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Referrer-Policy = "strict-origin-when-cross-origin"
