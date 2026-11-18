@@ -185,8 +185,10 @@ const exLine = (e) => {
 export function programText(fair) {
   const ev = fair?.program?.events;
   if (!Array.isArray(ev) || !ev.length) return "";
+  const WD = ["Sunday/Sonntag", "Monday/Montag", "Tuesday/Dienstag", "Wednesday/Mittwoch", "Thursday/Donnerstag", "Friday/Freitag", "Saturday/Samstag"];
+  const wd = (d) => WD[new Date(d + "T12:00:00Z").getUTCDay()] || "";
   const lines = ev.slice().sort((a, b) => `${a.date} ${a.start}`.localeCompare(`${b.date} ${b.start}`)).map((e) =>
-    [`${e.date} ${e.start}${e.end ? "-" + e.end : ""}`, e.type || "talk", e.title, e.room || "",
+    [`${e.date} (${wd(e.date)}) ${e.start}${e.end ? "-" + e.end : ""}`, e.type || "talk", e.title, e.room || "",
       (e.speakers || []).length ? "Speakers: " + e.speakers.map((x) => [x.name, x.role, x.company].filter(Boolean).join(", ")).join("; ") : "",
       String(e.desc || "").slice(0, 260)].filter(Boolean).join(" | "));
   return lines.join("\n").slice(0, 9000);
