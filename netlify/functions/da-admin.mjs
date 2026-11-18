@@ -5,6 +5,23 @@ const ICONS = new Set(["wc", "food", "coffee", "bar", "info", "doctor", "cloak",
 const num = (v) => Math.max(0, Math.min(100, Number(v) || 0));
 const rect = (r) => ({ x: num(r?.x), y: num(r?.y), w: num(r?.w), h: num(r?.h) });
 const arr = (v, n) => (Array.isArray(v) ? v.slice(0, n) : []);
+const EV_TYPES = ["talk", "workshop", "panel", "social", "poster", "opening"];
+const hhmm = (v) => { const m = /^\s*(\d{1,2}):(\d{2})\s*$/.exec(String(v || "")); return m && +m[1] < 24 && +m[2] < 60 ? `${m[1].padStart(2, "0")}:${m[2]}` : ""; };
+// Programme: {note, events:[{id,date,start,end,title,room,type,speakers[{name,role,company}],desc}]}; null/empty removes it.
+const cleanProgram = (p) => {
+  const evs = (Array.isArray(p?.events) ? p.events : []).slice(0, 300).map((e) => {
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(e?.date || "") ? e.date : "", start = hhmm(e?.start), title = str(e?.title, 160);
+    if (!date || !start || !title) return null;
+    const o = { date, start, title, type: EV_TYPES.includes(e.type) ? e.type : "talk" };
+    const end = hhmm(e.end); if (end) o.end = end;
+    if (e.room) o.room = str(e.room, 80);
+    const sp = (Array.isArray(e.speakers) ? e.speakers : []).slice(0, 6).map((x) => ({ name: str(x?.name, 80), role: str(x?.role, 80), company: str(x?.company, 80) })).filter((x) => x.name);
+    if (sp.length) o.speakers = sp.map((x) => Object.fromEntries(Object.entries(x).filter(([, v]) => v)));
+    if (e.desc) o.desc = str(e.desc, 700);
+    return o;
+  }).filter(Boolean).sort((a, b) => `${a.date} ${a.start}`.localeCompare(`${b.date} ${b.start}`)).map((e, i) => ({ id: "e" + (i + 1), ...e }));
+  return evs.length ? { note: str(p?.note, 200), events: evs } : null;
+};
 const cleanLayout = (l) => {
   if (!l || typeof l !== "object") return null;
   return {
@@ -49,6 +66,7 @@ export default async (req, ctx) => {
       if ("questions" in b) f.questions = (Array.isArray(b.questions) ? b.questions : []).map((q) => str(q, 200)).filter(Boolean).slice(0, 8);
       if ("ads" in b) f.ads = (Array.isArray(b.ads) ? b.ads : []).slice(0, 12).map((a) => ({ text: str(a.text, 300), url: /^https?:\/\//i.test(a.url || "") ? str(a.url, 500) : "", cta: str(a.cta, 40) || "→", image: /^https:\/\//i.test(a.image || "") ? str(a.image, 500) : "" }));
       if ("layout" in b) { if (b.layout === null || b.layout === "") delete f.layout; else f.layout = cleanLayout(b.layout); }
+      if ("program" in b) { const pr = cleanProgram(b.program); if (pr) f.program = pr; else delete f.program; }
       if ("ad_interval" in b) f.ad_interval = Math.max(8, Math.min(600, Number(b.ad_interval) || 30));
       if ("provider" in b) { if (PROVIDERS[b.provider]) f.provider = b.provider; else delete f.provider; }
       if (Array.isArray(b.exhibitors)) {
