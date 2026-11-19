@@ -26,10 +26,11 @@ export default async (req, ctx) => {
     const exh = fair.exhibitors || [];
     const last = clean.at(-1).content;
     const context = needsRetrieval(exh) ? retrieve(exh, await searchTerms(conf, last)) : exh;
-    const reply = await llmChat(conf, [{ role: "system", content: systemPrompt(fair, context) }, ...clean], { temp: 0.1, max: 600 });
+    const reply = await llmChat(conf, [{ role: "system", content: systemPrompt(fair, context) }, ...clean], { temp: 0.1, max: 800 });
     return json({ reply });
   } catch (e) {
     const m = String(e?.message || "");
+    console.error("da-chat", slug, m);
     if (m === "no_key") return json({ error: "not_configured" }, 503);
     if (m === "busy") return json({ error: "busy" }, 503);
     return json({ error: "upstream" }, 502);
