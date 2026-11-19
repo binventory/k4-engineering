@@ -78,22 +78,37 @@ export async function llmConf(fair) {
 // ---------- LLM (OpenAI-compatible) ----------
 export async function llmChat(conf, messages, { temp = 0, max = 700, jsonMode = false } = {}) {
   if (!conf.key || !conf.base) throw new Error("no_key");
-  const body = { model: conf.model, messages, temperature: temp, max_tokens: max };
-  if (jsonMode) body.response_format = { type: "json_object" };
-  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 25000);
-  let r;
-  try {
-    r = await fetch(conf.base + "/chat/completions", {
-      method: "POST", signal: ctl.signal,
-      headers: { "Content-Type": "application/json", Authorization: "Bearer " + conf.key },
-      body: JSON.stringify(body),
-    });
-  } catch { throw new Error("net"); } finally { clearTimeout(t); }
-  if (r.status === 429) throw new Error("busy");
-  const j = await r.json().catch(() => ({}));
-  const out = j?.choices?.[0]?.message?.content;
-  if (!r.ok || typeof out !== "string") throw new Error("api:" + r.status);
-  return out.trim();
+  const t0 = Date.now();
+  // gpt-oss (Groq) is a reasoning model: its thinking tokens count against max_tokens and could leave the answer empty.
+  const reasoning = conf.id === "groq" && /gpt-oss/i.test(conf.model || "");
+  let budget = max;
+  for (let attempt = 0; ; attempt++) {
+    const body = { model: conf.model, messages, temperature: temp, max_tokens: budget };
+    if (reasoning) body.reasoning_effort = "low";
+    if (jsonMode) body.response_format = { type: "json_object" };
+    const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 25000);
+    let r;
+    try {
+      r = await fetch(conf.base + "/chat/completions", {
+        method: "POST", signal: ctl.signal,
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + conf.key },
+        body: JSON.stringify(body),
+      });
+    } catch { console.error("da-llm", conf.id, "network"); throw new Error("net"); } finally { clearTimeout(t); }
+    if (r.status === 429) {
+      const wait = Number(r.headers.get("retry-after"));
+      if (attempt === 0 && wait > 0 && wait <= 3 && Date.now() - t0 < 4000) { await new Promise((res) => setTimeout(res, wait * 1000)); continue; }
+      console.error("da-llm", conf.id, 429, "retry-after", r.headers.get("retry-after"));
+      throw new Error("busy");
+    }
+    const j = await r.json().catch(() => ({}));
+    const out = j?.choices?.[0]?.message?.content;
+    if (r.ok && typeof out === "string" && out.trim()) return out.trim();
+    // empty answer (the thinking used the whole budget): one retry with a bigger budget, only if there is time left
+    if (r.ok && attempt === 0 && Date.now() - t0 < 5000) { budget = Math.min(max * 2, 1600); continue; }
+    console.error("da-llm", conf.id, conf.model, r.status, r.ok ? "empty:" + (j?.choices?.[0]?.finish_reason || "?") : String(j?.error?.message || "").replace(/org_\w+/g, "org").slice(0, 200));
+    throw new Error(r.ok ? "empty" : "api:" + r.status);
+  }
 }
 
 
@@ -218,7 +233,7 @@ export async function searchTerms(conf, q) {
     const r = await llmChat(conf, [
       { role: "system", content: 'Extract search keywords from a trade-fair visitor question for a German/English exhibitor database. Return JSON only: {"terms":["..."]} with 4 to 10 short keywords, in German AND English, singular, no stop words. Translate from any language.' },
       { role: "user", content: q },
-    ], { temp: 0, max: 120, jsonMode: true });
+    ], { temp: 0, max: 200, jsonMode: true });
     const j = JSON.parse(r);
     if (Array.isArray(j.terms)) return [...fallback, ...j.terms.map(String)];
   } catch { /* fall through */ }
