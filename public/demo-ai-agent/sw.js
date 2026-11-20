@@ -1,9 +1,9 @@
 // Service worker of the visitor assistant demo (scope: /demo-ai-agent/).
 // Caches the app shell and the public fair data so the hall plan and the notebook work offline.
 // Never touches the admin area, the chat API or any non-GET request.
-const V = "da-v3";
+const V = "da-v4";
 const SCOPE = "/demo-ai-agent/";
-const SHELL = [SCOPE, SCOPE + "nb.js", SCOPE + "cal.js", SCOPE + "ux.js", SCOPE + "icons/icon-192.png", SCOPE + "icons/icon-512.png"];
+const SHELL = [SCOPE, SCOPE + "nb.js", SCOPE + "cal.js", SCOPE + "ux.js", SCOPE + "card.js", SCOPE + "icons/icon-192.png", SCOPE + "icons/icon-512.png"];
 const DATA = ["da-meta", "da-list", "da-plan", "da-manifest"];
 
 self.addEventListener("install", (e) => {
@@ -41,7 +41,8 @@ self.addEventListener("fetch", (e) => {
     e.respondWith(networkFirst(req, SCOPE));                         // one cached shell for every ?fair=
     return;
   }
-  if (p === SCOPE + "nb.js" || p === SCOPE + "cal.js" || p === SCOPE + "ux.js") { e.respondWith(networkFirst(req)); return; }
+  if (p.startsWith(SCOPE + "ocr/")) { e.respondWith(caches.match(req).then((h) => h || fetch(req).then((r) => { if (r && r.ok) { const cp = r.clone(); caches.open(V).then((c) => c.put(req, cp)).catch(() => {}); } return r; }))); return; } // card scanner files: cache after first use
+  if (p === SCOPE + "nb.js" || p === SCOPE + "cal.js" || p === SCOPE + "ux.js" || p === SCOPE + "card.js") { e.respondWith(networkFirst(req)); return; }
   if (p.startsWith(SCOPE + "icons/")) {
     e.respondWith(caches.match(req).then((h) => h || fetch(req)));
   }

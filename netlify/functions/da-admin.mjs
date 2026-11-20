@@ -49,7 +49,7 @@ export default async (req, ctx) => {
       const wk = Date.now() - 7 * 864e5, tally = (sl) => { const o = st[sl] || {}; let t = 0, w = 0; for (const [d, n] of Object.entries(o)) { t += n; if (Date.parse(d) >= wk) w += n; } return { total: t, week: w }; };
       const fairs = (await listFairs()).map((r) => ({ slug: r.slug, name: r.data?.name || "", count: (r.data?.exhibitors || []).length, questions: tally(r.slug) }));
       return json({
-        fairs, provider: s.provider, rate_per_hour: s.rate_per_hour, daily_cap: s.daily_cap,
+        fairs, provider: s.provider, rate_per_hour: s.rate_per_hour, daily_cap: s.daily_cap, ocr: s.ocr || "device",
         providers: Object.fromEntries(Object.entries(PROVIDERS).map(([id, p]) => [id, {
           name: p.name, base: s.providers?.[id]?.base || p.base, model: s.providers?.[id]?.model || p.model, has_key: !!sec.keys?.[id],
         }])),
@@ -121,6 +121,7 @@ export default async (req, ctx) => {
       for (const id of b.delKeys || []) delete sec.keys[id];
       s.rate_per_hour = Math.max(5, Number(b.rate_per_hour) || 40);
       s.daily_cap = Math.max(50, Number(b.daily_cap) || 1500);
+      if ("ocr" in b) s.ocr = b.ocr === "mistral" ? "mistral" : "device";
       await setSetting("llm", s); await setSetting("secrets", sec);
       return json({ ok: true });
     }
