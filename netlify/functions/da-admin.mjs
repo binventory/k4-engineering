@@ -49,7 +49,7 @@ export default async (req, ctx) => {
       const wk = Date.now() - 7 * 864e5, tally = (sl) => { const o = st[sl] || {}; let t = 0, w = 0; for (const [d, n] of Object.entries(o)) { t += n; if (Date.parse(d) >= wk) w += n; } return { total: t, week: w }; };
       const fairs = (await listFairs()).map((r) => ({ slug: r.slug, name: r.data?.name || "", count: (r.data?.exhibitors || []).length, questions: tally(r.slug) }));
       return json({
-        fairs, provider: s.provider, rate_per_hour: s.rate_per_hour, daily_cap: s.daily_cap, ocr: s.ocr || "device",
+        fairs, provider: s.provider, rate_per_hour: s.rate_per_hour, daily_cap: s.daily_cap, ocr: s.ocr || "device", ocr_llama: { base: s.ocr_llama?.base || "https://api.cloud.llamaindex.ai", tier: s.ocr_llama?.tier || "cost_effective", has_key: !!sec.keys?.llamaparse },
         providers: Object.fromEntries(Object.entries(PROVIDERS).map(([id, p]) => [id, {
           name: p.name, base: s.providers?.[id]?.base || p.base, model: s.providers?.[id]?.model || p.model, has_key: !!sec.keys?.[id],
         }])),
@@ -121,7 +121,13 @@ export default async (req, ctx) => {
       for (const id of b.delKeys || []) delete sec.keys[id];
       s.rate_per_hour = Math.max(5, Number(b.rate_per_hour) || 40);
       s.daily_cap = Math.max(50, Number(b.daily_cap) || 1500);
-      if ("ocr" in b) s.ocr = b.ocr === "mistral" ? "mistral" : "device";
+      if ("ocr" in b) s.ocr = ["mistral", "llamaparse"].includes(b.ocr) ? b.ocr : "device";
+      if (b.ocr_llama && typeof b.ocr_llama === "object") {
+        const base = str(b.ocr_llama.base, 200).replace(/\/$/, "");
+        s.ocr_llama = { base: /^https:\/\/[a-z0-9.-]+\.llamaindex\.ai$/i.test(base) ? base : "https://api.cloud.llamaindex.ai", tier: ["fast", "cost_effective", "agentic", "agentic_plus"].includes(b.ocr_llama.tier) ? b.ocr_llama.tier : "cost_effective" };
+        if (str(b.ocr_llama.key, 300)) sec.keys.llamaparse = str(b.ocr_llama.key, 300);
+        if (b.ocr_llama.del) delete sec.keys.llamaparse;
+      }
       await setSetting("llm", s); await setSetting("secrets", sec);
       return json({ ok: true });
     }
