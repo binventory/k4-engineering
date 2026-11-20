@@ -80,7 +80,7 @@
     const d = e.date.replace(/-/g, ''), tm = (x) => x.replace(':', '') + '00', m = DA.meta(), now = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
     const sp = (e.speakers || []).map((s) => [s.name, s.role, s.company].filter(Boolean).join(', ')).join('; ');
     const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//K4-Engineering//Fair Assistant Demo//EN', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT', 'UID:' + e.id + '-' + DA.FAIR + '@k4-engineering.eu', 'DTSTAMP:' + now, 'DTSTART:' + d + 'T' + tm(e.start), 'DTEND:' + d + 'T' + tm(endOf(e)),
-      'SUMMARY:' + icsEsc(e.title), 'LOCATION:' + icsEsc([e.room, m.venue].filter(Boolean).join(', ')), 'DESCRIPTION:' + icsEsc([m.name, sp ? t('spk') + ': ' + sp : '', e.desc].filter(Boolean).join('\n')), 'END:VEVENT', 'END:VCALENDAR'];
+      'SUMMARY:' + icsEsc(e.title), 'LOCATION:' + icsEsc([e.room, m.venue].filter(Boolean).join(', ')), 'DESCRIPTION:' + icsEsc([m.name, sp ? t('spk') + ': ' + sp : '', e.desc].filter(Boolean).join('\n')), 'BEGIN:VALARM', 'TRIGGER:-PT15M', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEsc(e.title), 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'];
     return lines.map(fold).join('\r\n') + '\r\n';
   }
   function deliver(name, blob) {
@@ -132,5 +132,6 @@
     $('calbox').addEventListener('click', onClick);
     dlg.addEventListener('keydown', (e) => { if (VIEW === 'list' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { e.preventDefault(); goDay(CUR + ((e.key === 'ArrowRight') !== rtl() ? 1 : -1), true); } });
   }
-  window.CAL = { init, open };
+  function openEvent(id) { const e = EV.find((x) => x.id === id); if (!e) return open(); const d = $('cal'); VIEW = 'detail'; DETAIL = e; CUR = Math.max(0, DAYS.indexOf(e.date)); if (!d.open) d.showModal(); render(); d.scrollTop = 0; }
+  window.CAL = { init, open, openEvent };
 })();
