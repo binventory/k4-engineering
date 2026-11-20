@@ -37,17 +37,33 @@
     if (onp) onp(1);
     return String(data.text || '');
   }
-  async function cloud(file, fair) {
-    const c = await prep(file, 1600, false), image = c.toDataURL('image/jpeg', 0.85);
-    const r = await fetch('/.netlify/functions/da-ocr', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fair, image }) });
-    const j = await r.json().catch(() => ({}));
-    if (!r.ok || !j.text) throw new Error(j.error || 'ocr');
-    return String(j.text);
+  const post = async (body) => {
+    const r = await fetch('/.netlify/functions/da-ocr', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || 'ocr'); return j;
+  };
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  // server OCR (LlamaParse: start + poll; Mistral: one call). Returns {text, fields}
+  async function cloud(file, fair, progress) {
+    const c = await prep(file, 1800, false), image = c.toDataURL('image/jpeg', 0.88);
+    if (progress) progress(0.15);
+    let j = await post({ fair, action: 'start', image });
+    if (j.job) {
+      const job = j.job, t0 = Date.now(); let p = 0.2;
+      for (;;) {
+        if (Date.now() - t0 > 60000) throw new Error('timeout');
+        await sleep(1500); p = Math.min(0.92, p + 0.05); if (progress) progress(p);
+        j = await post({ fair, action: 'poll', job });
+        if (!j.pending) break;
+      }
+    }
+    if (!j || !j.text) throw new Error('ocr');
+    if (progress) progress(1);
+    return { text: String(j.text), fields: j.fields || null, via: 'cloud' };
   }
   async function ocr(file, o) {
     o = o || {};
-    if (o.mode === 'mistral') { try { if (o.progress) o.progress(0.3); const t = await cloud(file, o.fair); if (o.progress) o.progress(1); return t; } catch (e) { /* fall back to the phone */ } }
-    return device(file, o.progress);
+    if (o.mode === 'mistral' || o.mode === 'llamaparse') { try { return await cloud(file, o.fair, o.progress); } catch (e) { if (o.onFallback) o.onFallback(); } }
+    return { text: await device(file, o.progress), fields: null, via: 'device' };
   }
 
   // ---------- parsing ----------
