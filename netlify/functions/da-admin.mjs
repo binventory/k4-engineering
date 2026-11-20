@@ -55,7 +55,7 @@ export default async (req, ctx) => {
         }])),
       });
     }
-    if (b.action === "getFair") { const f = await getFair(str(b.slug, 41)); return f ? json({ fair: { ...f, exhibitors: (f.exhibitors || []).map((e) => ({ name: e.name, stand: e.stand || "", sponsored: !!e.sponsored, website: e.website || "", has_profile: !!e.profile })) } }) : json({ error: "unknown_fair" }, 404); }
+    if (b.action === "getFair") { const f = await getFair(str(b.slug, 41)); return f ? json({ fair: { ...f, exhibitors: (f.exhibitors || []).map((e) => ({ name: e.name, stand: e.stand || "", sponsored: !!e.sponsored, tier: e.tier || (e.sponsored ? 1 : 0), website: e.website || "", has_profile: !!e.profile })) } }) : json({ error: "unknown_fair" }, 404); }
 
     if (b.action === "saveFair") {
       const slug = str(b.slug, 41).toLowerCase();
@@ -64,7 +64,7 @@ export default async (req, ctx) => {
       for (const k of ["name", "dates", "venue", "organiser_contact", "welcome", "info"]) if (k in b) f[k] = str(b[k], k === "info" ? 40000 : 600);
       if ("accent" in b) f.accent = /^#[0-9a-fA-F]{6}$/.test(b.accent) ? b.accent : "#0b5fa5";
       if ("questions" in b) f.questions = (Array.isArray(b.questions) ? b.questions : []).map((q) => str(q, 200)).filter(Boolean).slice(0, 8);
-      if ("ads" in b) f.ads = (Array.isArray(b.ads) ? b.ads : []).slice(0, 12).map((a) => ({ text: str(a.text, 300), url: /^https?:\/\//i.test(a.url || "") ? str(a.url, 500) : "", cta: str(a.cta, 40) || "→", image: /^https:\/\//i.test(a.image || "") ? str(a.image, 500) : "" }));
+      if ("ads" in b) f.ads = (Array.isArray(b.ads) ? b.ads : []).slice(0, 12).map((a) => ({ text: str(a.text, 300), url: /^https?:\/\//i.test(a.url || "") ? str(a.url, 500) : "", cta: str(a.cta, 40) || "→", image: /^https:\/\//i.test(a.image || "") ? str(a.image, 500) : "", secs: Math.max(4, Math.min(120, Number(a.secs) || 0)) || undefined }));
       if ("layout" in b) { if (b.layout === null || b.layout === "") delete f.layout; else f.layout = cleanLayout(b.layout); }
       if ("program" in b) { const pr = cleanProgram(b.program); if (pr) f.program = pr; else delete f.program; }
       if ("ad_interval" in b) f.ad_interval = Math.max(8, Math.min(600, Number(b.ad_interval) || 30));
@@ -75,6 +75,7 @@ export default async (req, ctx) => {
           for (const k of ["stand", "country", "sector", "description", "products", "keywords", "website"]) if (e[k]) o[k] = str(e[k], 600);
           if (e.profile) o.profile = str(e.profile, 900);
           if (e.sponsored) o.sponsored = true;
+          if (e.sponsored && Number(e.tier) > 1) o.tier = Math.min(10, Math.round(Number(e.tier)));
           return o;
         }).filter((e) => e.name);
         if (b.mode !== "append") { const old = new Map((f.exhibitors || []).filter((e) => e.profile).map((e) => [e.name.toLowerCase(), e])); for (const e of clean) { const o = old.get(e.name.toLowerCase()); if (o && !e.profile) { e.profile = o.profile; if (o.profile_src) e.profile_src = o.profile_src; if (o.profile_at) e.profile_at = o.profile_at; } } }
@@ -102,8 +103,10 @@ export default async (req, ctx) => {
     if (b.action === "sponsors") {
       const slug = str(b.slug, 41), f = await getFair(slug);
       if (!f) return json({ error: "unknown_fair" }, 404);
-      const set = new Set((b.indices || []).map(Number));
-      f.exhibitors = (f.exhibitors || []).map((e, i) => { const { sponsored, ...rest } = e; return set.has(i) ? { ...rest, sponsored: true } : rest; });
+      const tiers = new Map();
+      if (b.tiers && typeof b.tiers === "object") for (const [k, v] of Object.entries(b.tiers)) { const n = Math.round(Number(v)); if (n >= 1) tiers.set(Number(k), Math.min(10, n)); }
+      for (const i of (b.indices || []).map(Number)) if (!tiers.has(i)) tiers.set(i, 1);
+      f.exhibitors = (f.exhibitors || []).map((e, i) => { const { sponsored, tier, ...rest } = e; const n = tiers.get(i); return n ? { ...rest, sponsored: true, ...(n > 1 ? { tier: n } : {}) } : rest; });
       await saveFair(slug, f);
       return json({ ok: true });
     }

@@ -88,14 +88,14 @@ function layEditor(){
 async function editFair(slug){
   let f={}; if(slug){f=(await call('getFair',{slug})).fair;} const isNew=!slug;
   const provs='<option value="">(global default)</option>'+Object.entries(ST.providers).map(([id,p])=>'<option value="'+id+'"'+(f.provider===id?' selected':'')+'>'+esc(p.name)+'</option>').join('');
-  const ads=(f.ads||[]).map(a=>[a.text,a.url,a.cta,a.image].map(x=>x||'').join(' | ')).join('\n');
+  const ads=(f.ads||[]).map(a=>[a.text,a.url,a.cta,a.image,a.secs].map(x=>x||'').join(' | ')).join('\n');
   const nb=x=>String(x||'').replace(/\|/g,'/');
   const prog=((f.program&&f.program.events)||[]).map(e=>[e.date,e.start+(e.end?'-'+e.end:''),nb(e.title),nb(e.room),(e.speakers||[]).map(s=>[s.name,s.role||'',s.company||''].join(', ').replace(/(, )+$/,'')).join('; '),e.type||'talk',nb(e.desc)].join(' | ')).join('\n');
   $('editor').classList.remove('hide'); $('editor').innerHTML='<h2>'+(isNew?'New fair':'Edit '+esc(slug))+'</h2><div class="row">'+
    '<div><label>Slug (URL: ?fair=slug)</label><input id="e_slug" value="'+esc(slug)+'" '+(isNew?'':'readonly')+' placeholder="coiltech"></div><div><label>Fair name</label><input id="e_name" value="'+esc(f.name)+'"></div><div><label>Dates</label><input id="e_dates" value="'+esc(f.dates)+'"></div><div><label>Venue</label><input id="e_venue" value="'+esc(f.venue)+'"></div><div><label>Accent colour</label><input id="e_accent" value="'+esc(f.accent||'#0b5fa5')+'"></div><div><label>Organiser contact (shown when the bot does not know)</label><input id="e_contact" value="'+esc(f.organiser_contact)+'"></div><div><label>AI provider for this fair</label><select id="e_prov">'+provs+'</select></div></div>'+
    '<label>Welcome message</label><textarea id="e_welcome">'+esc(f.welcome)+'</textarea><label>Suggested questions (one per line, 4 shown)</label><textarea id="e_q">'+esc((f.questions||[]).join('\n'))+'</textarea>'+
-   '<label>Banner ad (one per line: text | https://link | button text | https://image-url optional). The first is shown and labelled "Anzeige".</label><textarea id="e_ads">'+esc(ads)+'</textarea>'+
-   '<label>Ad rotation: seconds each ad is shown (banner ads above rotate through all lines; sponsor cards rotate too)</label><input id="e_adiv" type="number" min="8" max="600" value="'+(f.ad_interval||30)+'" style="max-width:140px">'+
+   '<label>Banner ads (one per line: text | https://link | button text | https://image-url optional | seconds on screen optional). They rotate in the sponsor carousel together with the sponsored exhibitors and are labelled "Anzeige". Seconds = paid display time per turn (e.g. Basic 8, Gold 20).</label><textarea id="e_ads">'+esc(ads)+'</textarea>'+
+   '<label>Base display time in seconds (banner ads without own seconds; sponsored exhibitors get base × package factor, set under "Sponsors")</label><input id="e_adiv" type="number" min="8" max="600" value="'+(f.ad_interval||30)+'" style="max-width:140px">'+
    '<label>Floor plan (visitors open it with the "Hallenplan" button; hall numbers in answers like 1-F14 get a pin)</label><div id="lay"></div>'+
    '<label>Programme / events (one per line: YYYY-MM-DD | 10:00-10:45 | Title | Room (e.g. Forum Halle 3) | Speaker name, role, company; second speaker … | type | description). Types: talk, workshop, panel, social, poster, opening. Visitors open it with the "Programm" button and can swipe between days; the assistant answers questions about it.</label><textarea id="e_prog" style="min-height:160px" placeholder="2027-03-17 | 10:00-10:45 | Hairpin-Technologie | Forum Halle 3 | Dr. Anna Beispiel, Leiterin Entwicklung, Beispiel GmbH | talk | Kurzbeschreibung">'+esc(prog)+'</textarea><label>Programme note (shown under the programme, e.g. "Beispielprogramm (Demo)")</label><input id="e_prognote" value="'+esc((f.program&&f.program.note)||'')+'">'+
    '<label>General information (dates, venue, tickets, opening hours, travel, programme, rules). The bot answers from this text only.</label><textarea id="e_info" style="min-height:200px">'+esc(f.info)+'</textarea>'+
@@ -111,7 +111,7 @@ async function editFair(slug){
     L('Done: '+ok+' of '+todo.length+' profiles saved.'); };
   $('e_save').onclick=async()=>{
     const slug2=($('e_slug').value||'').trim().toLowerCase(); const body={slug:slug2,name:$('e_name').value,dates:$('e_dates').value,venue:$('e_venue').value,accent:$('e_accent').value,organiser_contact:$('e_contact').value,provider:$('e_prov').value,welcome:$('e_welcome').value,
-      questions:$('e_q').value.split('\n'),ads:$('e_ads').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const[a,b,c,d]=l.split('|').map(x=>(x||'').trim());return{text:a,url:b,cta:c,image:d};}),info:$('e_info').value};
+      questions:$('e_q').value.split('\n'),ads:$('e_ads').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const[a,b,c,d,e]=l.split('|').map(x=>(x||'').trim());return{text:a,url:b,cta:c,image:d,secs:+e||0};}),info:$('e_info').value};
     const pl=$('e_prog').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const q=l.split('|').map(x=>x.trim()),tm=(q[1]||'').split('-'); return {date:q[0],start:tm[0],end:tm[1]||'',title:q[2],room:q[3],speakers:(q[4]||'').split(';').map(x=>x.trim()).filter(Boolean).map(x=>{const[a,b,c]=x.split(',').map(y=>y.trim()); return {name:a,role:b,company:c};}),type:q[5]||'talk',desc:q.slice(6).join(' | ')};});
     body.program=pl.length?{note:$('e_prognote').value,events:pl}:null;
     body.ad_interval=$('e_adiv').value; body.layout=(LAY&&(LAY.halls||[]).length)?LAY:null;
@@ -122,8 +122,11 @@ async function editFair(slug){
 }
 async function sponsors(slug){
   const f=(await call('getFair',{slug})).fair; $('editor').classList.remove('hide');
-  $('editor').innerHTML='<h2>Sponsored exhibitors – '+esc(f.name)+'</h2><p><small>Ticked companies appear in the "Empfohlene Aussteller" strip and are labelled "Anzeige". Tick only companies that actually booked this placement.</small></p><table>'+f.exhibitors.map((e,i)=>'<tr><td style="width:30px"><input type="checkbox" style="width:auto" value="'+i+'" '+(e.sponsored?'checked':'')+'></td><td>'+esc(e.name)+'</td><td>'+esc(e.stand)+'</td></tr>').join('')+'</table><button id="sp_save">Save</button>';
-  $('sp_save').onclick=async()=>{const indices=[...$('editor').querySelectorAll('input[type=checkbox]:checked')].map(c=>+c.value);try{await call('sponsors',{slug,indices});say('Sponsored flags saved.');$('editor').classList.add('hide');refresh();}catch(e){say(e.message,1);}};
+  const P=[[0,'—'],[1,'Basic ×1'],[2,'Silver ×2'],[3,'Gold ×3'],[5,'Premium ×5']];
+  const base=f.ad_interval||12, sel=(i,v)=>'<select data-i="'+i+'" style="width:auto">'+P.map(([n,l])=>'<option value="'+n+'"'+((+v||0)===n?' selected':'')+'>'+l+'</option>').join('')+'</select>';
+  $('editor').innerHTML='<h2>Sponsored exhibitors – '+esc(f.name)+'</h2><p><small>Choose a package for companies that booked a placement. Sponsored companies rotate in the sponsor carousel (labelled "Anzeige") and are marked as ads in chat answers. Display time per turn = base time ('+base+' s) × package factor, e.g. Gold = '+(base*3)+' s. Only set packages that were actually paid.</small></p><input type="text" id="sp_f" placeholder="Filter …" style="margin:6px 0"><table>'+f.exhibitors.map((e,i)=>'<tr data-n="'+esc((e.name+' '+e.stand).toLowerCase())+'"><td style="width:130px">'+sel(i,e.sponsored?(e.tier||1):0)+'</td><td>'+esc(e.name)+'</td><td>'+esc(e.stand)+'</td></tr>').join('')+'</table><button id="sp_save">Save</button>';
+  $('sp_f').oninput=e=>{const q=e.target.value.toLowerCase();$('editor').querySelectorAll('tr[data-n]').forEach(r=>{r.style.display=r.dataset.n.includes(q)?'':'none';});};
+  $('sp_save').onclick=async()=>{const tiers={};$('editor').querySelectorAll('select[data-i]').forEach(s=>{if(+s.value>0)tiers[s.dataset.i]=+s.value;});try{await call('sponsors',{slug,tiers});say('Sponsor packages saved.');$('editor').classList.add('hide');refresh();}catch(e){say(e.message,1);}};
   $('editor').scrollIntoView();
 }
 function parseCsv(text){
