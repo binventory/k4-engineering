@@ -22,6 +22,9 @@ function findText(o) {
   walk(o, "");
   return best;
 }
+// short upstream reason for the page/admin (never contains our key)
+const reason = (j) => String(j?.detail?.[0]?.msg || j?.detail || j?.message || j?.error?.message || j?.error || j?.job?.error_message || "").replace(/llx-[A-Za-z0-9_-]+/g, "llx-…").slice(0, 240);
+const fail = (where, status, j) => { const d = reason(j); console.error("da-ocr", where, status, d); return json({ error: "upstream", where, status, detail: d }, 502); };
 const cleanText = (t) => String(t || "").replace(/!\[[^\]]*\]\([^)]*\)/g, "").replace(/[#*_`>|]/g, " ").replace(/[ \t]{2,}/g, " ").replace(/\n{3,}/g, "\n\n").trim().slice(0, 4000);
 
 async function finish(fair, text) {
@@ -61,22 +64,34 @@ export default async (req, ctx) => {
         } finally { clearTimeout(t); }
         const j = await r.json().catch(() => ({}));
         const text = cleanText((Array.isArray(j.pages) ? j.pages : []).map((p) => p.markdown || "").join("\n"));
-        if (!r.ok || !text) { console.error("da-ocr mistral", r.status, String(j?.message || j?.error?.message || "").slice(0, 160)); return json({ error: "upstream" }, 502); }
+        if (!r.ok || !text) return fail("mistral", r.status, j);
         return finish(fair, text);
       }
 
       // llamaparse: upload and return the job id
       const key = keys.llamaparse; if (!key) return json({ error: "no_key" }, 503);
       const lp = s.ocr_llama || {}, base = String(lp.base || LP_BASE).replace(/\/$/, ""), tier = TIERS.includes(lp.tier) ? lp.tier : "cost_effective";
-      const ext = m[1] === "jpeg" ? "jpg" : m[1];
-      const form = new FormData();
-      form.append("file", new Blob([Buffer.from(m[2], "base64")], { type: "image/" + m[1] }), "business-card." + ext);
-      form.append("configuration", JSON.stringify({ tier, version: "latest" }));
-      const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 8000);
-      let r; try { r = await fetch(base + "/api/v2/parse/upload", { method: "POST", signal: ctl.signal, headers: { Authorization: "Bearer " + key }, body: form }); } finally { clearTimeout(t); }
-      const j = await r.json().catch(() => ({}));
-      const id = j.id || j.job?.id;
-      if (!r.ok || !id) { console.error("da-ocr llamaparse upload", r.status, JSON.stringify(j).slice(0, 200)); return json({ error: "upstream" }, 502); }
+      const ext = m[1] === "jpeg" ? "jpg" : m[1], auth = { Authorization: "Bearer " + key }, until = Date.now() + 9000;
+      const timed = async (url, opt) => { const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), Math.max(1000, until - Date.now())); try { return await fetch(url, { ...opt, signal: ctl.signal }); } finally { clearTimeout(t); } };
+      const blob = () => new Blob([Buffer.from(m[2], "base64")], { type: "image/" + m[1] });
+      // documented flow: 1) upload the file (purpose "parse"), 2) start a parse job for that file
+      const fd = new FormData(); fd.append("file", blob(), "business-card." + ext); fd.append("purpose", "parse");
+      let r = await timed(base + "/api/v1/beta/files", { method: "POST", headers: auth, body: fd });
+      let j = await r.json().catch(() => ({}));
+      let id;
+      if (r.ok && j.id) {
+        r = await timed(base + "/api/v2/parse", { method: "POST", headers: { ...auth, "Content-Type": "application/json" }, body: JSON.stringify({ file_id: j.id, tier, version: "latest" }) });
+        j = await r.json().catch(() => ({}));
+        id = j.id || j.job?.id;
+        if (!r.ok || !id) return fail("llamaparse-parse", r.status, j);
+      } else if (r.status === 404 || r.status === 405) {
+        // older single-call upload
+        const form = new FormData(); form.append("file", blob(), "business-card." + ext); form.append("configuration", JSON.stringify({ tier, version: "latest" }));
+        r = await timed(base + "/api/v2/parse/upload", { method: "POST", headers: auth, body: form });
+        j = await r.json().catch(() => ({}));
+        id = j.id || j.job?.id;
+        if (!r.ok || !id) return fail("llamaparse-upload", r.status, j);
+      } else return fail("llamaparse-file", r.status, j);
       return json({ job: String(id) });
     }
 
@@ -88,17 +103,16 @@ export default async (req, ctx) => {
     const key = keys.llamaparse; if (!key) return json({ error: "no_key" }, 503);
     const base = String((s.ocr_llama || {}).base || LP_BASE).replace(/\/$/, "");
     const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 8000);
-    let r; try { r = await fetch(base + "/api/v2/parse/" + encodeURIComponent(id) + "?expand=text_full,markdown_full", { signal: ctl.signal, headers: { Authorization: "Bearer " + key } }); } finally { clearTimeout(t); }
+    let r; try { r = await fetch(base + "/api/v2/parse/" + encodeURIComponent(id) + "?expand=markdown", { signal: ctl.signal, headers: { Authorization: "Bearer " + key } }); } finally { clearTimeout(t); }
     const j = await r.json().catch(() => ({}));
-    if (!r.ok) { console.error("da-ocr llamaparse poll", r.status, JSON.stringify(j).slice(0, 200)); return json({ error: "upstream" }, 502); }
+    if (!r.ok) return fail("llamaparse-poll", r.status, j);
     const st = String(j.job?.status || j.status || "").toUpperCase();
-    if (st === "FAILED" || st === "CANCELLED" || st === "ERROR") { console.error("da-ocr llamaparse job", st, String(j.job?.error_message || "").slice(0, 200)); return json({ error: "failed" }, 502); }
+    if (st === "FAILED" || st === "CANCELLED" || st === "ERROR") return fail("llamaparse-job-" + st.toLowerCase(), 200, j);
     if (st && st !== "COMPLETED" && st !== "SUCCESS") return json({ pending: true });
     const text = cleanText(findText({ ...j, job: undefined }));
-    if (!text) { console.error("da-ocr llamaparse empty", Object.keys(j).join(",")); return json({ error: "empty" }, 502); }
+    if (!text) return fail("llamaparse-empty", 200, { message: "keys: " + Object.keys(j).join(",") });
     return finish(fair, text);
   } catch (e) {
-    console.error("da-ocr", String(e?.message || e));
-    return json({ error: "upstream" }, 502);
+    return fail("exception", 0, { message: String(e?.name === "AbortError" ? "timeout" : e?.message || e) });
   }
 };

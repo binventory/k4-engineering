@@ -86,7 +86,7 @@
     const used = new Set();
     for (const l of lines) {
       if (/fax/i.test(l) && !/mobil|mobile|tel/i.test(l)) continue;
-      const nums = l.match(/(?:\+|00)?\d[\d\s()/.-]{6,}\d/g) || [];
+      const nums = l.match(/\(?(?:\+|00)?\d[\d\s()/.-]{6,}\d/g) || [];
       for (const n of nums) {
         const digits = n.replace(/\D/g, ''); if (digits.length < 7 || digits.length > 16) continue;
         if (/^\d{5}$/.test(n.trim())) continue;
