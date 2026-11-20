@@ -13,7 +13,7 @@ export default async (req) => {
     name: fair.name || "", dates: fair.dates || "", venue: fair.venue || "", accent: fair.accent || "#0b5fa5",
     welcome: fair.welcome || "", questions: fair.questions || [], ads: fair.ads || [], featured, layout: fair.layout ? { ...fair.layout, image: undefined, has_image: !!fair.layout.image } : null, ad_interval: Math.max(8, Math.min(600, Number(fair.ad_interval) || 30)),
     sector_examples: Object.fromEntries(Object.entries(sectors).map(([k, v]) => [k, v.slice(0, 3)])), count: exh.length,
-    ocr: (await settings().catch(() => ({}))).ocr === "mistral" ? "mistral" : "device",
+    ocr: ["mistral", "llamaparse"].includes((await settings().catch(() => ({}))).ocr) ? (await settings()).ocr : "device",
     sectors: Object.entries(full).sort((a, b) => b[1] - a[1]).map(([name, n]) => ({ name, n })),
     program: Array.isArray(fair.program?.events) && fair.program.events.length ? { note: fair.program.note || "", events: fair.program.events } : null,
   });
