@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#0b5fa5">
 <link rel="manifest" href="/.netlify/functions/da-manifest?fair=coiltech">
-<link rel="icon" type="image/png" href="/demo-ai-agent/icons/icon-192.png">
+<link rel="icon" type="image/svg+xml" href="/demo-ai-agent/logo.svg"><link rel="icon" type="image/png" href="/demo-ai-agent/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/demo-ai-agent/icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Messe-Assistent"><meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -116,19 +116,21 @@ header>div:first-child{flex:1 1 auto;min-width:0}
 .pins{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;white-space:normal}.pins .pin{margin:0}
 .m .acts{white-space:normal}
 </style>
+<link rel="stylesheet" href="/demo-ai-agent/skin.css">
 </head>
 <body>
 <header>
-  <div><h1 id="t">Besucher-Assistent</h1><p id="sub"></p></div>
+  <div class="brand"><img class="lg" src="/demo-ai-agent/logo.svg" alt="" width="42" height="42"><div style="min-width:0"><h1 id="t">Besucher-Assistent</h1><p id="sub"></p></div></div>
   <div class="tools"><button type="button" id="mapbtn" hidden></button><select id="lang" aria-label="Language"></select></div>
 </header>
 <main>
-  <div id="spots" class="spots" hidden></div><div id="adbox"></div>
+  <div id="hero" hidden></div><div id="spots" class="spots" hidden></div><div id="adbox"></div>
   <div id="chat" aria-live="polite"></div><div id="secbox" class="secbox" hidden></div><div id="chips" class="chips"></div>
   <form id="f" autocomplete="off"><input type="text" id="q" maxlength="600" aria-label="?" enterkeyhint="send" autocapitalize="sentences"><button class="send" id="b" type="submit">&#10148;</button></form>
 </main>
 <footer id="ft"></footer>
 <dialog id="dlg"><div class="dh"><b id="dt"></b><button type="button" id="dc"></button></div><div id="mapbox"></div></dialog>
+<script src="/demo-ai-agent/rich.js"></script>
 <script src="/demo-ai-agent/card.js"></script>
 <script src="/demo-ai-agent/nb.js"></script>
 <script src="/demo-ai-agent/cal.js"></script>
@@ -169,25 +171,28 @@ let L='en'; try{ const s=localStorage.getItem('da_lang'); L=(s&&UI[s])?s:((navig
 if(!UI[L]) L='en';
 const T=Object.assign({},UI.en,UI[L]); if(!UI[L].foot) T.foot=EN_FOOT; if(!UI[L].imp){T.imp=UI.en.imp;T.dp=UI.en.dp;T.exb=UI.en.exb;}
 if(L==='ar') document.documentElement.dir='rtl'; document.documentElement.lang=L;
+const TH={de:'Suche in den Messedaten …',en:'Searching the fair data …',ar:'أبحث في بيانات المعرض …',tr:'Fuar verileri aranıyor …',fr:'Recherche dans les données du salon …',it:'Cerco nei dati della fiera …',es:'Buscando en los datos de la feria …',pl:'Szukam w danych targów …',ru:'Ищу в данных выставки …',zh:'正在搜索展会数据 …'};
 const $=id=>document.getElementById(id), chat=$('chat'); let hist=[], busy=false, META=null;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
 function fmt(s){ return esc(s).replace(/^\s*[-*•]\s+/gm,'• ').replace(/^#{1,4}\s*/gm,'').replace(/(https?:\/\/[^\s<)]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>'); }
 const hallsIn=txt=>{ if(!META||!META.layout) return []; const ids=new Set((META.layout.halls||[]).map(h=>h.id)), out=[]; for(const m of String(txt).matchAll(/(?:^|[^0-9A-Za-z])([0-9])\s?[-‐‑–]\s?[A-Z]\d{1,3}\b/g)) if(ids.has(m[1])&&!out.includes(m[1])) out.push(m[1]); return out; };
-function add(role,text,cls){ const d=document.createElement('div'); d.className='m '+(role==='user'?'u':'a')+(cls?' '+cls:''); d.innerHTML=fmt(text);
+function add(role,text,cls){ const row=document.createElement('div'); row.className='row '+(role==='user'?'u':'a'); const d=document.createElement('div'); d.className='m '+(role==='user'?'u':'a')+(cls?' '+cls:'');
+  if(role==='user'||!window.RICH) d.innerHTML=fmt(text); else d.innerHTML=RICH.md(text);
+  if(role!=='user') row.innerHTML='<img class="av" src="/demo-ai-agent/logo.svg" alt="">'; row.appendChild(d);
   if(role!=='user'&&!cls){ const hs=hallsIn(text); if(hs.length){ const row=document.createElement('div'); row.className='pins'; hs.forEach(id=>{const h=META.layout.halls.find(x=>x.id===id); const b=document.createElement('button'); b.type='button'; b.className='pin'; b.textContent='📍 '+(h.name||id); b.onclick=()=>showMap([id]); row.appendChild(b);}); d.appendChild(row); } }
-  chat.appendChild(d); d.scrollIntoView({block:'end',behavior:'smooth'}); return d; }
+  chat.appendChild(row); row.scrollIntoView({block:'end',behavior:'smooth'}); return d; }
 async function ask(text,retry){
   if(busy||!text.trim()) return; busy=true; $('b').disabled=true; $('chips').style.display='none'; $('secbox').hidden=true;
   if(!retry){ add('user',text); hist.push({role:'user',content:text}); } let net=false;
-  const w=document.createElement('div'); w.className='m a'; w.innerHTML='<span class="dots"><span></span><span></span><span></span></span>'; chat.appendChild(w); w.scrollIntoView({block:'end'});
+  const w=document.createElement('div'); w.className='row a'; w.innerHTML='<img class="av" src="/demo-ai-agent/logo.svg" alt=""><div class="m a typing"><span class="dots"><span></span><span></span><span></span></span><span class="shim">'+esc(TH[L]||TH.en)+'</span></div>'; chat.appendChild(w); w.scrollIntoView({block:'end'});
   try{
     const r=await fetch(API+'da-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fair:FAIR,lang:L,messages:hist})}).catch(e=>{net=true;throw e;});
     const j=await r.json().catch(()=>({})); w.remove();
-    if(r.ok&&j.reply){hist.push({role:'assistant',content:j.reply});const d=add('assistant',j.reply); if(window.NB) NB.actions(d,j.reply,text); if(window.UX) UX.eventChips(d,j.reply);}
+    if(r.ok&&j.reply){hist.push({role:'assistant',content:j.reply});const d=add('assistant',j.reply); if(window.NB) NB.actions(d,j.reply,text); if(window.UX) UX.eventChips(d,j.reply); if(window.RICH) RICH.cards(d,j.cards,{L,T,meta:()=>META,hallsIn,safeUrl,showMap});}
     else if(j.error==='busy'&&!retry&&window.UX){
       let n=Math.min(30,Math.max(5,+j.retry||20)); const m=add('assistant',UX.t('wait').replace('{s}',n),'wait');
-      busy=false; const iv=setInterval(()=>{ n--; if(n>0){ m.textContent=UX.t('wait').replace('{s}',n); return; } clearInterval(iv); m.remove(); ask(text,true); },1000); return;
+      busy=false; const iv=setInterval(()=>{ n--; if(n>0){ m.innerHTML=RICH.md(UX.t('wait')).replace('{s}',n); return; } clearInterval(iv); m.remove(); ask(text,true); },1000); return;
     }
     else{hist.pop();add('assistant',j.error==='rate'?T.rate:j.error==='busy'?T.busy:j.error==='not_configured'?T.nc:T.err,'err');}
   }catch(e){w.remove();hist.pop();add('assistant',((net||navigator.onLine===false)&&window.NB)?NB.t('off'):T.err,'err');}
@@ -225,17 +230,17 @@ $('q').placeholder=T.ph; $('q').setAttribute('aria-label',T.ph); $('mapbtn').inn
 fetch(API+'da-meta?fair='+encodeURIComponent(FAIR)).then(r=>r.ok?r.json():Promise.reject()).then(m=>{
   META=m; document.title=m.name+' · '+(L==='de'?'Besucher-Assistent (Demo)':'Visitor assistant (demo)');
   if(/^#[0-9a-fA-F]{6}$/.test(m.accent)){ document.documentElement.style.setProperty('--ac',m.accent); document.querySelector('meta[name=theme-color]').content=m.accent; }
-  $('t').innerHTML=esc(m.name)+'<span class="demo">DEMO</span>'; $('sub').innerHTML=[m.dates,m.venue].filter(Boolean).map(x=>'<bdi>'+esc(x)+'</bdi>').join(' · ');
+  $('t').innerHTML=esc(m.name)+' <span class="demo">DEMO</span>'; $('sub').innerHTML=[m.dates,m.venue].filter(Boolean).map(x=>'<bdi>'+esc(x)+'</bdi>').join(' · ');
   if(m.layout&&(m.layout.halls||[]).length){ $('mapbtn').hidden=false; $('mapbtn').onclick=()=>showMap([]); }
   if(window.CAL&&m.program) CAL.init({FAIR,L,T,esc,meta:()=>META,showMap,ask:q=>ask(q)});
   if(window.UX){ UX.spots($('spots'),m); UX.sectors($('secbox'),m); }
-  add('assistant',(L==='de'&&m.welcome)?m.welcome:T.welcome(m.name));
+  if(window.RICH) RICH.hero($('hero'),m,L,(L==='de'&&m.welcome)?m.welcome:''); else add('assistant',(L==='de'&&m.welcome)?m.welcome:T.welcome(m.name));
   const qs=(L==='de'||L==='en')&&(m.questions||[]).length?m.questions.slice(0,4):T.q;
   $('chips').innerHTML=qs.map(q=>'<button type="button">'+esc(q)+'</button>').join('');
   $('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent));
   if(window.UX) setTimeout(()=>UX.intro(false),400);
 }).catch(()=>{ $('t').textContent='Demo'; add('assistant',T.err,'err'); });
-$('ft').innerHTML=esc(T.foot)+'<br><a href="/impressum">'+esc(T.imp)+'</a> · <a href="/datenschutz">'+esc(T.dp)+'</a>';
+$('ft').innerHTML='<span class="ai-label">✦ '+esc(L==='de'?'KI-Assistent – Antworten können Fehler enthalten':L==='ar'?'مساعد ذكاء اصطناعي – قد تحتوي الإجابات على أخطاء':'AI assistant – answers may contain errors')+'</span><br>'+esc(T.foot)+'<br><a href="/impressum">'+esc(T.imp)+'</a> · <a href="/datenschutz">'+esc(T.dp)+'</a>';
 // ---- visitor notebook + installable app (PWA) ----
 if(window.NB) NB.init({FAIR,L,T,esc,safeUrl,meta:()=>META,showMap});
 if(window.UX) UX.init({FAIR,L,T,esc,safeUrl,hallsIn,meta:()=>META,showMap,ask:q=>ask(q)});
