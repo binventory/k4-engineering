@@ -199,6 +199,22 @@ async function ask(text,retry){
   busy=false; $('b').disabled=false; $('chips').style.display=''; if(matchMedia('(hover:hover)').matches) $('q').focus();
 }
 // ---- floor plan (SVG drawn from the fair's layout data) ----
+const HT={de:{tap:'Tippen Sie auf eine Halle, um ihre Aussteller zu sehen.',mine:'Ihre gemerkten Firmen',all:'Alle Aussteller',none:'Noch keine gemerkten Firmen in dieser Halle – tippen Sie im Chat auf ☆.'},
+  en:{tap:'Tap a hall to see its exhibitors.',mine:'Your saved companies',all:'All exhibitors',none:'No saved companies in this hall yet – tap ☆ in the chat.'},
+  ar:{tap:'اضغط على قاعة لعرض العارضين فيها.',mine:'الشركات المحفوظة لديك',all:'كل العارضين',none:'لا توجد شركات محفوظة في هذه القاعة بعد – اضغط ☆ في المحادثة.'},
+  tr:{tap:'Katılımcıları görmek için bir salona dokunun.',mine:'Kaydettiğiniz firmalar',all:'Tüm katılımcılar',none:'Bu salonda henüz kayıtlı firma yok – sohbette ☆ simgesine dokunun.'},
+  fr:{tap:'Touchez un hall pour voir ses exposants.',mine:'Vos entreprises enregistrées',all:'Tous les exposants',none:'Aucune entreprise enregistrée dans ce hall – touchez ☆ dans le chat.'},
+  it:{tap:'Tocca un padiglione per vedere gli espositori.',mine:'Le tue aziende salvate',all:'Tutti gli espositori',none:'Nessuna azienda salvata in questo padiglione – tocca ☆ nella chat.'},
+  es:{tap:'Toca un pabellón para ver sus expositores.',mine:'Tus empresas guardadas',all:'Todos los expositores',none:'Aún no hay empresas guardadas en este pabellón – toca ☆ en el chat.'},
+  pl:{tap:'Dotknij hali, aby zobaczyć wystawców.',mine:'Twoje zapisane firmy',all:'Wszyscy wystawcy',none:'Brak zapisanych firm w tej hali – dotknij ☆ w czacie.'},
+  ru:{tap:'Нажмите на павильон, чтобы увидеть экспонентов.',mine:'Ваши сохранённые компании',all:'Все экспоненты',none:'В этом павильоне пока нет сохранённых компаний – нажмите ☆ в чате.'},
+  zh:{tap:'点击展厅查看参展商。',mine:'您收藏的公司',all:'全部参展商',none:'该展厅还没有收藏的公司——在对话中点 ☆。'}};
+function hallList(h){ const box=$('hlist'); if(!box) return; const ht=HT[L]||HT.en, inH=s=>String(s||'').replace(/\s/g,'').startsWith(h.id+'-');
+  const sv=((window.NB&&NB.saved)?NB.saved():[]).filter(c=>inH(c.stand)), all=((window.NB&&NB.all)?NB.all():[]).filter(e=>inH(e.s)).sort((a,b)=>String(a.s).localeCompare(String(b.s)));
+  const svk=new Set(sv.map(c=>String(c.name).toLowerCase()));
+  box.innerHTML='<b class="hlh" style="--hc:'+esc(h.color||'var(--ac)')+'">'+esc(h.name||h.id)+'</b><div class="hls">★ '+esc(ht.mine)+'</div>'+(sv.length?sv.map(c=>'<div class="hli on"><span class="std">'+esc(c.stand)+'</span>'+esc(c.name)+'</div>').join(''):'<div class="hle">'+esc(ht.none)+'</div>')+
+    (all.length?'<div class="hls">'+esc(ht.all)+' ('+all.length+')</div>'+all.map(e=>'<div class="hli'+(svk.has(String(e.n).toLowerCase())?' on':'')+'"><span class="std">'+esc(e.s)+'</span>'+esc(e.n)+'</div>').join(''):'');
+  box.scrollIntoView({block:'nearest',behavior:'smooth'}); }
 const NS='http://www.w3.org/2000/svg';
 function el(n,a,txt){ const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); if(txt!=null) e.textContent=txt; return e; }
 function icons(svg,list,x,y,w){ list.forEach((ic,i)=>{ const per=Math.max(1,Math.floor((w-2)/4.4)), r=Math.floor(i/per), c=i%per; svg.appendChild(el('text',{x:x+2.2+c*4.4,y:y+r*4.6,'font-size':3.6,'dominant-baseline':'hanging'},ICON[ic]||'')); }); }
@@ -206,8 +222,10 @@ function showMap(hl,tab){
   const lay=META&&META.layout; if(!lay) return; hl=hl||[]; const svg=el('svg',{viewBox:'0 0 100 82',role:'img','aria-label':T.map}); const used=new Set();
   (lay.links||[]).forEach(r=>svg.appendChild(el('rect',{x:r.x,y:r.y,width:r.w,height:r.h,fill:'#9aa3ad',opacity:.55})));
   const dim=h=>hl.length&&!hl.includes(h.id);
-  (lay.halls||[]).forEach(h=>{ svg.appendChild(el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,rx:1.2,fill:h.color,opacity:dim(h)?.3:.95,stroke:hl.includes(h.id)?'#111':'none','stroke-width':hl.includes(h.id)?.9:0}));
-    svg.appendChild(el('text',{x:h.x+2.5,y:h.y+2.2,'font-size':9,'font-weight':700,fill:'#fff','dominant-baseline':'hanging',opacity:dim(h)?.5:1},h.id));
+  const SV=(window.NB&&NB.saved)?NB.saved():[], svIn=id=>SV.filter(c=>String(c.stand||'').replace(/\s/g,'').startsWith(id+'-'));
+  (lay.halls||[]).forEach(h=>{ const hr=el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,rx:1.2,fill:h.color,opacity:dim(h)?.3:.95,stroke:hl.includes(h.id)?'#111':'none','stroke-width':hl.includes(h.id)?.9:0,style:'cursor:pointer'}); hr.addEventListener('click',()=>hallList(h)); svg.appendChild(hr);
+    const ns=svIn(h.id).length; if(ns){ svg.appendChild(el('circle',{cx:h.x+h.w-3.2,cy:h.y+h.h-3.4,r:2.9,fill:'#ffd36e',stroke:'#fff','stroke-width':.5,style:'pointer-events:none'})); svg.appendChild(el('text',{x:h.x+h.w-3.2,y:h.y+h.h-3.3,'font-size':2.7,'font-weight':700,'text-anchor':'middle','dominant-baseline':'middle',fill:'#3a2a00',style:'pointer-events:none'},'★'+ns)); }
+    svg.appendChild(el('text',{style:'pointer-events:none',x:h.x+2.5,y:h.y+2.2,'font-size':9,'font-weight':700,fill:'#fff','dominant-baseline':'hanging',opacity:dim(h)?.5:1},h.id));
     if(h.name) svg.appendChild(el('text',{x:h.x+h.w-2,y:h.y+2.6,'font-size':3.4,fill:'#fff','text-anchor':'end','dominant-baseline':'hanging'},h.name));
     (h.icons||[]).forEach(i=>used.add(i)); icons(svg,h.icons||[],h.x,h.y+h.h-(Math.ceil((h.icons||[]).length/Math.max(1,Math.floor((h.w-2)/4.4)))*4.6)-1.2,h.w); });
   if(lay.entrance){ const e=lay.entrance; svg.appendChild(el('rect',{x:e.x,y:e.y,width:e.w,height:e.h,rx:1.2,fill:'#3c434b'}));
@@ -216,7 +234,7 @@ function showMap(hl,tab){
   $('mapbox').innerHTML='';
   if(lay.has_image){ const tb=document.createElement('div'); tb.className='tabs'; [['svg',T.map],['img',T.orig]].forEach(([k,lb])=>{const b=document.createElement('button'); b.type='button'; b.textContent=lb; if((tab||'svg')===k) b.className='on'; b.onclick=()=>showMap(hl,k); tb.appendChild(b);}); $('mapbox').appendChild(tb); }
   if(tab==='img'&&lay.has_image){ const im=document.createElement('img'); im.src=API+'da-plan?fair='+encodeURIComponent(FAIR); im.alt=T.map; im.style.cssText='width:100%;border-radius:10px'; $('mapbox').appendChild(im); $('dt').textContent=T.orig; const d=$('dlg'); if(!d.open) d.showModal(); return; }
-  $('mapbox').appendChild(svg);
+  $('mapbox').appendChild(svg); const hl0=document.createElement('div'); hl0.id='hlist'; hl0.className='hlist'; hl0.textContent=HT[L]?HT[L].tap:HT.en.tap; $('mapbox').appendChild(hl0); if(hl.length===1){ const h=(lay.halls||[]).find(x=>x.id===hl[0]); if(h) setTimeout(()=>hallList(h),0); }
   const lg=document.createElement('div'); lg.className='leg'; const lab=ILAB[L==='de'?'de':'en']; [...used].forEach(i=>{const s=document.createElement('span'); s.textContent=(ICON[i]||'')+' '+(lab[i]||i); lg.appendChild(s);}); $('mapbox').appendChild(lg);
   if(lay.note){ const n=document.createElement('div'); n.className='leg'; n.textContent=lay.note; $('mapbox').appendChild(n); }
   $('dt').textContent=T.map+(hl.length?' · '+hl.map(id=>(lay.halls.find(h=>h.id===id)||{}).name||id).join(', '):''); const d=$('dlg'); if(!d.open) d.showModal();
@@ -227,15 +245,15 @@ $('lang').innerHTML=Object.entries(UI).map(([k,v])=>'<option value="'+k+'"'+(k==
 $('lang').onchange=e=>{ try{localStorage.setItem('da_lang',e.target.value);}catch(x){} location.reload(); };
 $('f').addEventListener('submit',e=>{e.preventDefault();const v=$('q').value;$('q').value='';ask(v);});
 $('q').placeholder=T.ph; $('q').setAttribute('aria-label',T.ph); $('mapbtn').innerHTML='🗺<span class="lab"> '+esc(T.map)+'</span>'; $('mapbtn').title=T.map;
-fetch(API+'da-meta?fair='+encodeURIComponent(FAIR)).then(r=>r.ok?r.json():Promise.reject()).then(m=>{
+fetch(API+'da-meta?fair='+encodeURIComponent(FAIR)+'&lang='+L).then(r=>r.ok?r.json():Promise.reject()).then(m=>{
   META=m; document.title=m.name+' · '+(L==='de'?'Besucher-Assistent (Demo)':'Visitor assistant (demo)');
   if(/^#[0-9a-fA-F]{6}$/.test(m.accent)){ document.documentElement.style.setProperty('--ac',m.accent); document.querySelector('meta[name=theme-color]').content=m.accent; }
   $('t').innerHTML=esc(m.name)+' <span class="demo">DEMO</span>'; $('sub').innerHTML=[m.dates,m.venue].filter(Boolean).map(x=>'<bdi>'+esc(x)+'</bdi>').join(' · ');
   if(m.layout&&(m.layout.halls||[]).length){ $('mapbtn').hidden=false; $('mapbtn').onclick=()=>showMap([]); }
   if(window.CAL&&m.program) CAL.init({FAIR,L,T,esc,meta:()=>META,showMap,ask:q=>ask(q)});
   if(window.UX){ UX.spots($('spots'),m); UX.sectors($('secbox'),m); }
-  if(window.RICH) RICH.hero($('hero'),m,L,(L==='de'&&m.welcome)?m.welcome:''); else add('assistant',(L==='de'&&m.welcome)?m.welcome:T.welcome(m.name));
-  const qs=(L==='de'||L==='en')&&(m.questions||[]).length?m.questions.slice(0,4):T.q;
+  if(window.RICH) RICH.hero($('hero'),m,L,((L==='de'||m.lang===L)&&m.welcome)?m.welcome:''); else add('assistant',(L==='de'&&m.welcome)?m.welcome:T.welcome(m.name));
+  const qs=(L==='de'||m.lang===L)&&(m.questions||[]).length?m.questions.slice(0,4):T.q;
   $('chips').innerHTML=qs.map(q=>'<button type="button">'+esc(q)+'</button>').join('');
   $('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent));
   if(window.UX) setTimeout(()=>UX.intro(false),400);
