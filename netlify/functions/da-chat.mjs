@@ -1,4 +1,4 @@
-import { bump, clientIp, getFair, ipHash, json, llmChat, llmConf, needsRetrieval, retrieve, settings, slugOk, systemPrompt, understand, LANGS } from "../lib/da.mjs";
+import { bump, mentioned, clientIp, getFair, ipHash, json, llmChat, llmConf, needsRetrieval, retrieve, settings, slugOk, systemPrompt, understand, LANGS } from "../lib/da.mjs";
 
 export default async (req, ctx) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
@@ -30,7 +30,9 @@ export default async (req, ctx) => {
     const msgs = [{ role: "system", content: systemPrompt(fair, context, q) }, ...clean.slice(-6),
       { role: "system", content: `Answer the latest visitor message now, in ${LANGS[q.lang]}.` }];
     const reply = await llmChat(conf, msgs, { temp: 0.2, max: 900 });
-    return json({ reply, lang: q.lang });
+    const pool = context.length < exh.length ? [...context, ...exh] : exh;
+    let cards = []; try { cards = mentioned(reply, pool); } catch { /* cards are optional */ }
+    return json({ reply, lang: q.lang, cards });
   } catch (e) {
     const m = String(e?.message || "");
     console.error("da-chat", slug, m);
