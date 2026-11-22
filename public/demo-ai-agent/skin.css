@@ -146,3 +146,12 @@ footer{opacity:.85}
 @media (prefers-color-scheme:dark){.rx .std{color:#7fe3f0;background:rgba(18,181,201,.14)}.m .act,.m .pin{color:#7fd0ff}}
 #chat{padding-bottom:6px}
 .xc .ft a,.xc .ft button{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.xc .ft [data-a=save]{flex:0 0 38px}
+/* hall plan: exhibitor list per hall */
+.hlist{margin-top:10px;font-size:.86rem;color:var(--mut)}
+.hlist .hlh{display:block;font-family:SG,Inter,sans-serif;font-size:1rem;color:var(--tx);padding-inline-start:10px;border-inline-start:4px solid var(--hc);margin-bottom:6px}
+.hlist .hls{font-weight:700;font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;margin:10px 0 4px;color:var(--mut)}
+.hlist .hli{display:flex;gap:8px;align-items:center;padding:6px 9px;border:1px solid var(--bd);border-radius:10px;margin-bottom:4px;background:var(--card);color:var(--tx)}
+.hlist .hli.on{border-color:#ffd36e;background:color-mix(in srgb,#ffd36e 18%,var(--card))}
+.hlist .hli.on:before{content:"★";color:#d4a017}
+.hlist .std{font-size:.72rem;font-weight:700;color:var(--ac);background:color-mix(in srgb,var(--ac) 10%,transparent);border-radius:6px;padding:0 6px;white-space:nowrap}
+.hlist .hle{font-size:.82rem;padding:6px 0}

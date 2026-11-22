@@ -360,5 +360,5 @@
     loadList(); loadPhotos().then(badge);
   }
 
-  window.NB = { init, t, scan: () => { open(); scanPick(); }, addNote: (x, s) => addNote(x, s), addCompany: (e) => { if (!DA) return null; const c = addCompany(e); badge(); return c; }, actions, open };
+  window.NB = { init, t, saved: () => NB.co.slice(), all: () => LIST.slice(), onChange: null, scan: () => { open(); scanPick(); }, addNote: (x, s) => addNote(x, s), addCompany: (e) => { if (!DA) return null; const c = addCompany(e); badge(); return c; }, actions, open };
 })();
