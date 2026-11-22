@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KI-Messeassistent per QR-Code – Demo | K4-Engineering</title>
+<meta name="description" content="Ein KI-Assistent für Ihre Messe: Besucher scannen einen QR-Code und fragen in ihrer Sprache nach Ausstellern, Hallen und Programm. Ohne Login, ohne App. Jetzt Demo ausprobieren.">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#08225c">
+<link rel="icon" href="/demo-ai-agent/icons/icon-192.png">
+<style>
+@font-face{font-family:Inter;font-weight:400;font-display:swap;src:url(/fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:500;font-display:swap;src:url(/fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:600;font-display:swap;src:url(/fonts/inter-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:700;font-display:swap;src:url(/fonts/inter-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:SG;font-weight:600;font-display:swap;src:url(/fonts/space-grotesk-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:SG;font-weight:700;font-display:swap;src:url(/fonts/space-grotesk-latin-700-normal.woff2) format('woff2')}
+:root{--navy:#08225c;--blue:#0b5fa5;--teal:#12b5c9;--warm:#ff8a3d;--bg:#f3f6fb;--tx:#122033;--mut:#56667b;--bd:#dfe6ee;
+ --grad:linear-gradient(135deg,#08225c 0%,#0b5fa5 55%,#0e96aa 100%)}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--tx);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:SG,Inter,sans-serif;letter-spacing:-.02em;line-height:1.1}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+/* header */
+header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 2px 14px rgba(0,0,0,.25)}
+header .wrap{display:flex;align-items:center;gap:14px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;font-family:SG;font-weight:700;font-size:18px;text-decoration:none}
+.brand img{width:34px;height:34px;border-radius:9px}
+.sp{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 17px/1 Inter,sans-serif;text-decoration:none;border-radius:999px;padding:16px 26px;border:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px)}
+.go{background:linear-gradient(135deg,#ff8a3d,#ff5e3a);color:#fff;box-shadow:0 8px 26px rgba(255,110,58,.45)}
+.go:hover{box-shadow:0 12px 34px rgba(255,110,58,.6)}
+.go.sm{padding:11px 18px;font-size:15px;box-shadow:none}
+.ghost{background:rgba(255,255,255,.14);color:#fff;border:1.5px solid rgba(255,255,255,.55)}
+.ghost:hover{background:rgba(255,255,255,.24)}
+/* hero */
+.hero{background:var(--grad);color:#fff;padding:64px 0 76px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-160px;top:-160px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(18,181,201,.55),transparent 65%)}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;position:relative}
+.tag{display:inline-block;font:600 13px/1 Inter;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.15);padding:8px 14px;border-radius:999px;margin-bottom:18px}
+.hero h1{font-size:clamp(34px,5vw,58px);margin-bottom:18px}
+.hero p.lead{font-size:clamp(17px,2vw,21px);color:rgba(255,255,255,.92);max-width:560px;margin-bottom:28px}
+.cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.cta .go{font-size:20px;padding:20px 32px;animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 8px 26px rgba(255,110,58,.45),0 0 0 0 rgba(255,138,61,.55)}70%{box-shadow:0 8px 26px rgba(255,110,58,.45),0 0 0 18px rgba(255,138,61,0)}100%{box-shadow:0 8px 26px rgba(255,110,58,.45),0 0 0 0 rgba(255,138,61,0)}}
+.note{margin-top:16px;font-size:14px;color:rgba(255,255,255,.75)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.chips span{background:rgba(255,255,255,.14);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600}
+/* qr card */
+.qrcard{background:#fff;color:var(--tx);border-radius:26px;padding:26px;box-shadow:0 24px 60px rgba(0,0,0,.35);text-align:center;max-width:340px;margin-left:auto}
+.qrcard img{width:100%;max-width:240px;display:block;margin:0 auto 12px;border-radius:12px}
+.qrcard b{font:700 18px SG}
+.qrcard small{display:block;color:var(--mut);margin-top:6px;font-size:14px}
+/* sections */
+section{padding:68px 0}
+h2{font-size:clamp(28px,3.6vw,42px);margin-bottom:12px;color:var(--navy)}
+.sub{color:var(--mut);font-size:18px;max-width:680px;margin-bottom:36px}
+.video{background:#0a1630;border-radius:24px;overflow:hidden;box-shadow:0 22px 60px rgba(8,34,92,.35);max-width:960px;margin:0 auto}
+.video video{display:block;width:100%;height:auto;background:#000}
+.center{text-align:center}
+.center .sub{margin-left:auto;margin-right:auto}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:20px;padding:26px;box-shadow:0 1px 2px rgba(16,32,56,.05),0 8px 24px rgba(16,32,56,.06)}
+.card .ic{width:50px;height:50px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:24px;margin-bottom:16px}
+.card h3{font-size:21px;margin-bottom:8px;color:var(--navy)}
+.card p{color:var(--mut);font-size:16px}
+.card.eu{background:var(--grad);color:#fff;border:0}
+.card.eu h3,.card.eu p{color:#fff}
+.card.eu .ic{background:rgba(255,255,255,.2)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:s}
+.step{background:#fff;border-radius:20px;padding:26px 26px 26px 26px;border:1px solid var(--bd);position:relative}
+.step:before{counter-increment:s;content:counter(s);position:absolute;top:-18px;left:24px;width:40px;height:40px;border-radius:50%;background:var(--warm);color:#fff;font:700 20px/40px SG;text-align:center;box-shadow:0 6px 16px rgba(255,138,61,.5)}
+.step h3{font-size:20px;margin:8px 0;color:var(--navy)}
+.step p{color:var(--mut)}
+.alt{background:#fff}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}
+.list{list-style:none;padding:0;display:grid;gap:12px}
+.list li{display:flex;gap:12px;font-size:17px}
+.list li:before{content:"✓";flex:none;width:26px;height:26px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;font-weight:700;font-size:15px;margin-top:1px}
+.band{background:var(--grad);color:#fff;text-align:center;padding:72px 0}
+.band h2{color:#fff}
+.band p{color:rgba(255,255,255,.9);font-size:19px;margin:0 auto 28px;max-width:640px}
+.band .cta{justify-content:center}
+.contact{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-top:30px;font-size:16px}
+.contact a{color:#fff;font-weight:600}
+footer{background:var(--navy);color:rgba(255,255,255,.78);padding:30px 0;font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
+footer a{color:rgba(255,255,255,.9)}
+.sticky{display:none}
+@media(max-width:860px){
+ .hero{padding:44px 0 56px}
+ .hero .wrap{grid-template-columns:1fr}
+ .qrcard{display:none}
+ .grid,.steps,.split{grid-template-columns:1fr}
+ .steps{gap:34px}
+ section{padding:52px 0}
+ header .go.sm{display:none}
+ .sticky{display:block;position:fixed;left:12px;right:12px;bottom:12px;z-index:30}
+ .sticky .btn{width:100%;font-size:18px;padding:17px}
+ body{padding-bottom:84px}
+ .cta .go{width:100%}
+}
+@media(prefers-reduced-motion:reduce){.cta .go{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+ <div class="wrap">
+  <a class="brand" href="#top"><img src="/demo-ai-agent/icons/icon-192.png" alt="" width="34" height="34"><span>K4-Engineering</span></a>
+  <span class="sp"></span>
+  <a class="btn go sm demo-link" href="/demo-ai-agent/?fair=demo">▶ Demo öffnen</a>
+ </div>
+</header>
+
+<main id="top">
+<div class="hero">
+ <div class="wrap">
+  <div>
+   <span class="tag">KI-Messeassistent</span>
+   <h1>Ihre Messe antwortet – per QR-Code, in jeder Sprache.</h1>
+   <p class="lead">Besucher scannen, fragen und finden: Aussteller, Hallen, Stände und Programm. Ohne Login, ohne App. Dazu ein persönlicher Messebericht und Werbeplätze für Ihre Aussteller.</p>
+   <div class="cta">
+    <a class="btn go demo-link" href="/demo-ai-agent/?fair=demo">▶ Demo jetzt ausprobieren</a>
+    <a class="btn ghost" href="#video">Video ansehen · 2 Min.</a>
+   </div>
+   <p class="note">Läuft direkt im Browser – am besten am Smartphone. Beispielmesse mit erfundenen Daten.</p>
+   <div class="chips"><span>Kein Login</span><span>Jede Sprache</span><span>Messebericht (PDF)</span><span>Weniger Druckwerk</span></div>
+  </div>
+  <div class="qrcard">
+   <img src="qr.svg" alt="QR-Code zur Demo">
+   <b>Am Rechner? Mit dem Handy scannen.</b>
+   <small>So kommen Ihre Besucher in die Messe-App – ohne etwas zu installieren.</small>
+  </div>
+ </div>
+</div>
+
+<section id="video" class="center">
+ <div class="wrap">
+  <h2>In 2 Minuten erklärt</h2>
+  <p class="sub">So erleben Besucher die Demo-Messe: vom QR-Code bis zum persönlichen Messebericht.</p>
+  <div class="video">
+   <video controls playsinline preload="metadata" poster="poster.jpg">
+    <source src="demo.mp4" type="video/mp4">
+    Ihr Browser kann das Video nicht abspielen. <a href="demo.mp4">Video herunterladen</a>
+   </video>
+  </div>
+  <p style="margin-top:28px"><a class="btn go demo-link" href="/demo-ai-agent/?fair=demo">▶ Selbst ausprobieren</a></p>
+ </div>
+</section>
+
+<section class="alt">
+ <div class="wrap">
+  <h2>Was Ihre Besucher bekommen</h2>
+  <p class="sub">Alles, was sie auf einer Messe suchen – in einer Antwort statt in 200 Seiten Katalog.</p>
+  <div class="grid">
+   <div class="card"><div class="ic">💬</div><h3>Fragen statt Suchen</h3><p>„Wer bietet Cobots für kleine Firmen an?“ Der Assistent nennt passende Aussteller mit Halle und Stand.</p></div>
+   <div class="card"><div class="ic">🌍</div><h3>Jede Sprache</h3><p>Oberfläche, Antworten, Programm und Werbung wechseln mit der Sprache des Besuchers mit.</p></div>
+   <div class="card"><div class="ic">📍</div><h3>Hallenplan mit Merkliste</h3><p>Firmen merken, in der Halle antippen, alle Aussteller der Halle sehen. Interaktiv statt Papierplan.</p></div>
+   <div class="card"><div class="ic">📅</div><h3>Programm im Kalender</h3><p>Jeder Vortrag mit Ort und Sprecher – mit einem Tipp im Kalender, inklusive Erinnerung.</p></div>
+   <div class="card"><div class="ic">📇</div><h3>Visitenkarten &amp; Notizen</h3><p>Karte fotografieren, Kontakt wird erkannt und dem Stand zugeordnet. Notizen bleiben auf dem Gerät.</p></div>
+   <div class="card"><div class="ic">📄</div><h3>Persönlicher Messebericht</h3><p>Am Ende ein PDF mit allen gemerkten Firmen, Kontakten, Notizen und Terminen.</p></div>
+  </div>
+ </div>
+</section>
+
+<section>
+ <div class="wrap">
+  <h2>So einfach geht es los</h2>
+  <p class="sub">Keine Registrierung, keine Installation.</p>
+  <div class="steps">
+   <div class="step"><h3>QR-Code scannen</h3><p>Am Eingang, im Katalog oder auf der Eintrittskarte. Die Messe öffnet sich im Browser.</p></div>
+   <div class="step"><h3>Fragen &amp; merken</h3><p>Der Assistent antwortet in der gewählten Sprache. Interessante Firmen und Vorträge werden gemerkt.</p></div>
+   <div class="step"><h3>Messebericht mitnehmen</h3><p>Alles auf einen Blick als PDF. Nach Messeende werden die Daten gelöscht.</p></div>
+  </div>
+ </div>
+</section>
+
+<section class="alt">
+ <div class="wrap split">
+  <div>
+   <h2>Für Veranstalter: weniger Papier, neue Einnahmen</h2>
+   <p class="sub" style="margin-bottom:22px">Der Assistent ist günstig, schnell eingerichtet und bringt Ihrer Messe einen Vorsprung.</p>
+   <ul class="list">
+    <li><span><b>Werbeplätze für Aussteller:</b> Anzeigen im Assistenten, ähnlich wie im Printkatalog – als zusätzliche Einnahme für Sie.</span></li>
+    <li><span><b>Weniger Druckwerk:</b> Hallenpläne, Ausstellerlisten und Programm digital und immer aktuell.</span></li>
+    <li><span><b>Mehrsprachig ohne Mehraufwand:</b> Auch internationale Besucher finden sich zurecht.</span></li>
+    <li><span><b>Zu den Ersten gehören:</b> Ein KI-Assistent ist auf Messen noch selten – ein Pluspunkt für Ihr Image.</span></li>
+   </ul>
+  </div>
+  <div class="card eu">
+   <div class="ic">🇪🇺</div>
+   <h3>Ihre Version: europäische KI</h3>
+   <p>In Ihrer Version läuft die KI auf europäischen Servern in Deutschland. Es ist kein Login nötig, und alle Daten werden nach Messeende gelöscht. Der Preis richtet sich nach Größe und Besucherzahl Ihrer Messe – gern besprechen wir ihn im Gespräch.</p>
+  </div>
+ </div>
+</section>
+
+<div class="band">
+ <div class="wrap">
+  <h2>Probieren Sie es selbst aus.</h2>
+  <p>Zwei Minuten am Smartphone – und Sie wissen, wie Ihre Besucher die Messe erleben würden.</p>
+  <div class="cta">
+   <a class="btn go demo-link" href="/demo-ai-agent/?fair=demo">▶ Demo jetzt öffnen</a>
+   <a class="btn ghost" href="mailto:kareem@k4-engineering.eu?subject=15%20Minuten%20zum%20KI-Messeassistenten&amp;body=Guten%20Tag%20Herr%20Abdelwahab%2C%0A%0Agern%20spreche%20ich%20mit%20Ihnen%2015%20Minuten%20%C3%BCber%20den%20KI-Messeassistenten.%0A">15 Minuten sprechen</a>
+  </div>
+  <div class="contact">
+   <span>Kareem Abdelwahab · K4-Engineering, Augsburg</span>
+   <a href="mailto:kareem@k4-engineering.eu">kareem@k4-engineering.eu</a>
+  </div>
+ </div>
+</div>
+</main>
+
+<footer>
+ <div class="wrap">
+  <span>© K4-Engineering · Augsburg · Die Demo-Messe ist erfunden, alle Aussteller und Daten sind Beispiele.</span>
+  <span><a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></span>
+ </div>
+</footer>
+
+<div class="sticky"><a class="btn go demo-link" href="/demo-ai-agent/?fair=demo">▶ Demo jetzt ausprobieren</a></div>
+
+<script>
+// Pass the ?ref=… value of the email link on to the demo (shows which organiser opened it; no tracking pixel, no cookies).
+try{
+  var ref=new URLSearchParams(location.search).get('ref');
+  if(ref){ref=ref.replace(/[^A-Za-z0-9_.-]/g,'').slice(0,40);
+    document.querySelectorAll('a.demo-link').forEach(function(a){a.href=a.getAttribute('href')+'&ref='+encodeURIComponent(ref)});}
+}catch(e){}
+</script>
+</body>
+</html>
