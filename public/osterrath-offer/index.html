@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<!--
+  ─────────────────────────────────────────────────────────────────────
+  Messe-Ideen für OSTERRATH · Für Judith Scholl (Marketing)
+  K4-Engineering, Augsburg
+  Single file: all CSS and JS inline. No external libraries, no trackers.
+  Language: DE default, EN toggle (top right) — texts live in data-de/data-en.
+
+  MEDIEN ERSETZEN / REPLACING THE PLACEHOLDERS  (alle Bilder: PNG!)
+  Put the files in the SAME folder as this index.html
+  (repo: public/osterrath-offer/ → k4-engineering.eu/osterrath-offer/).
+  Missing files automatically keep their styled placeholder.
+
+    img-01.png     Überblick über die drei Ideen / overview of the three ideas
+    img-02.png     Screenshot LinkedIn-Beitrag electronica / LinkedIn post
+    img-03.png     Screenshot Website-Produkte / website products
+    img-04.png     Idee 1: Produkt im Rahmen + Handy mit AR / idea 1 photo
+    img-05.png     Screenshot LinkedIn-Post Rohrformung / idea 2 post
+    img-06.png     Idee 2: Stufenmodell des Formprozesses / stage model
+    img-07.png     Screenshot LinkedIn-Beitrag Batterie (RMA) / idea 3 post
+    img-08.png     Idee 3: Batterie-Modell mit Zellverbindern / battery model
+    img-09.png     Smart Tree, Deutsche Baumpflegetage 2026
+    video-01.mp4   Idee 1: AR-Demo — startet automatisch, stumm, Loop
+
+  LINKS (gesetzt / already set)
+    Recherche (electronica-Post):
+      https://www.linkedin.com/posts/electronica2026-osterrath-prototypenbau-share-7526950526526160897-GSKZ/
+    Idee 2:     https://lnkd.in/p/e2vxjxqB
+    Idee 3:     https://lnkd.in/p/ebHZFeBR
+    Artikel RMA: https://lnkd.in/gwvvkP2A
+    Website:    https://www.osterrath.de/produkte
+
+  KOSTEN-KARTEN / COST CARDS
+    Idee 1: 800 € + 400 € je weiterem Modell mit AR · Design optional +200 €/Modell
+    Idee 2: 1.000 € (2–3 Stufen) + 400 € Hardware/Screens/Licht
+    Idee 3: [Preis nach Ihrem Input] — Platzhalter, bis OSTERRATH Infos liefert.
+  ─────────────────────────────────────────────────────────────────────
+-->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0f1b2d">
+<meta name="theme-color" content="#f6f1e7" media="(prefers-color-scheme: light)">
+<title>Messe-Ideen für OSTERRATH</title>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+/* ───────── palette ───────── */
+:root{
+  --bg:#0f1b2d; --ink:#f2ede3; --muted:#a3aebd;
+  --line:rgba(242,237,227,.14); --line2:rgba(242,237,227,.28);
+  --panel:rgba(255,255,255,.03);
+  --cu:#b87333; --cu-ink:#d99a5b; --cu-soft:rgba(184,115,51,.16);
+  --topbar:rgba(15,27,45,.86); --btn-ink:#0e1626;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#f6f1e7; --ink:#182338; --muted:#5c6774;
+    --line:rgba(24,35,56,.15); --line2:rgba(24,35,56,.32);
+    --panel:rgba(24,35,56,.035);
+    --cu:#b87333; --cu-ink:#8f5a20; --cu-soft:rgba(184,115,51,.12);
+    --topbar:rgba(246,241,231,.88); --btn-ink:#10192b;
+    color-scheme:light;
+  }
+}
+/* ───────── base ───────── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow:hidden}
+p{line-height:1.7;overflow-wrap:break-word}
+a{color:var(--cu-ink)}
+:focus-visible{outline:2px solid var(--cu);outline-offset:2px}
+::selection{background:var(--cu-soft)}
+/* ───────── fixed chrome ───────── */
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:50;pointer-events:none}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cu),#e0a468);transition:width .15s linear}
+.top{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;gap:12px;padding:calc(8px + env(safe-area-inset-top)) 16px 8px;background:var(--topbar);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.brand{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.brand b{color:var(--cu-ink)}
+.top .sp{flex:1}
+.navc{display:flex;align-items:center;gap:6px}
+.iconbtn{width:32px;height:32px;border-radius:9px;border:1px solid var(--line2);background:transparent;color:var(--ink);font-size:15px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:border-color .2s,color .2s}
+.iconbtn:hover{border-color:var(--cu);color:var(--cu-ink)}
+.iconbtn:disabled{opacity:.35;cursor:default}
+.count{font-size:.78rem;color:var(--muted);min-width:44px;text-align:center;font-variant-numeric:tabular-nums}
+.lang{display:flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden}
+.lang button{border:0;background:transparent;color:var(--muted);font-size:.72rem;font-weight:700;letter-spacing:.08em;padding:8px 11px;cursor:pointer}
+.lang button.on{background:var(--cu);color:var(--btn-ink)}
+@media (max-width:620px){.brand{display:none}}
+/* ───────── deck & slides ───────── */
+#deck{position:relative;height:100vh;height:100dvh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:y proximity;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+.slide{min-height:100vh;min-height:100dvh;scroll-snap-align:start;display:flex;flex-direction:column;padding-top:60px}
+.slide.hero{background:radial-gradient(900px 480px at 82% -8%,var(--cu-soft),transparent 65%)}
+.wrap{width:100%;max-width:1080px;margin:0 auto;flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:40px 32px 28px}
+h1{font-size:clamp(2.1rem,5.4vw,3.4rem);line-height:1.08;letter-spacing:-.015em;font-weight:700}
+h2{font-size:clamp(1.5rem,3.6vw,2.3rem);line-height:1.15;letter-spacing:-.01em;font-weight:700}
+h2::before{content:"";display:block;width:46px;height:2px;background:var(--cu);border-radius:2px;margin-bottom:16px}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cu-ink)}
+.lead{font-size:clamp(1.05rem,1.6vw,1.22rem);max-width:64ch}
+.sub{font-size:clamp(1.05rem,2vw,1.3rem);color:var(--muted);max-width:60ch;line-height:1.55}
+.byline{font-size:.9rem;color:var(--muted);letter-spacing:.05em}
+.hint{font-size:.76rem;color:var(--muted);letter-spacing:.1em;text-align:center}
+.cols{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.cols>*{min-width:0}
+.htext{display:flex;flex-direction:column;gap:18px}
+.cols .lead{max-width:none}
+@media (max-width:900px){.cols{grid-template-columns:1fr;gap:24px}}
+/* ───────── bullet lines ───────── */
+.points{list-style:none;display:flex;flex-direction:column;gap:10px;max-width:68ch}
+.points li{position:relative;padding-left:22px;line-height:1.6;font-size:clamp(1rem,1.4vw,1.12rem)}
+.points li::before{content:"";position:absolute;left:0;top:.62em;width:12px;height:2px;background:var(--cu);border-radius:2px}
+.points li b{color:var(--cu-ink)}
+/* ───────── fair date chips ───────── */
+.fairs{display:flex;flex-wrap:wrap;gap:8px}
+.fairchip{border:1px solid var(--line2);border-radius:999px;padding:6px 12px;font-size:.76rem;color:var(--muted);letter-spacing:.02em}
+.fairchip b{color:var(--ink);font-weight:600}
+/* ───────── image & video placeholders ───────── */
+figure.ph{margin:0}
+.frame{position:relative;border:1px dashed var(--line2);border-radius:16px;background:var(--panel);overflow:hidden}
+.r169{aspect-ratio:16/9}
+.r43{aspect-ratio:4/3}
+.frame .lbl{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:16px;color:var(--muted)}
+.lbl svg{width:30px;height:30px;fill:none;stroke:var(--cu-ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.lbl .fn{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;letter-spacing:.06em;color:var(--cu-ink)}
+.lbl .fa{font-size:.8rem;line-height:1.45;max-width:34ch}
+.frame img,.frame video{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover;display:block}
+.ext{position:absolute;top:10px;right:10px;z-index:2;font-size:.68rem;font-weight:700;letter-spacing:.06em;color:var(--cu-ink);background:var(--topbar);border:1px solid var(--cu);border-radius:999px;padding:4px 10px}
+.phlink{display:block;color:inherit;text-decoration:none}
+.phlink:hover .frame{border-color:var(--cu)}
+figcaption{margin-top:10px;font-size:.8rem;color:var(--muted);text-align:center}
+.src{margin-top:8px;font-size:.8rem;text-align:center}
+.src a{color:var(--cu-ink);text-decoration:none;border-bottom:1px solid var(--cu-soft)}
+.src a:hover{border-bottom-color:var(--cu)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:900px}
+@media (max-width:700px){.duo{grid-template-columns:1fr}}
+/* ───────── content pieces ───────── */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid var(--cu);background:var(--cu-soft);color:var(--cu-ink);border-radius:999px;padding:8px 18px;font-size:.9rem;font-weight:600;letter-spacing:.02em}
+.note{border-left:2px solid var(--cu);padding:6px 0 6px 16px;color:var(--muted);font-size:.95rem;max-width:60ch}
+.quote{border-left:2px solid var(--cu);padding:8px 0 8px 18px;max-width:68ch}
+.quote p{font-size:clamp(1.05rem,1.6vw,1.2rem);font-style:italic;line-height:1.6}
+.quote cite{display:block;margin-top:8px;font-style:normal;font-size:.8rem;color:var(--muted);letter-spacing:.04em}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.step{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--panel)}
+.step .n{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--cu);color:var(--cu-ink);font-weight:700;font-size:.95rem;margin-bottom:12px}
+.step p{font-size:.95rem;line-height:1.55}
+.material{border:1px solid var(--line);border-radius:14px;padding:14px 18px;background:var(--panel);font-size:.95rem;color:var(--muted)}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.steps{grid-template-columns:1fr}}
+/* ───────── cost cards ───────── */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:900px){.cards3{grid-template-columns:1fr}}
+.pcard{border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--panel);display:flex;flex-direction:column;gap:12px}
+.pcard .kick{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cu-ink)}
+.pcard h3{font-size:1.1rem;line-height:1.3;font-weight:700}
+.cprice{font-size:1.5rem;font-weight:700;color:var(--cu-ink);line-height:1.2}
+.cprice small{display:block;font-size:.76rem;font-weight:400;color:var(--muted);margin-top:6px;line-height:1.5}
+.todo{border:1px dashed var(--line2);border-radius:10px;padding:10px 12px;font-size:.85rem;color:var(--muted);font-style:italic;line-height:1.5}
+.cprice.todo{font-size:1rem;font-weight:600}
+.plist{list-style:none;display:flex;flex-direction:column;gap:8px}
+.plist li{position:relative;padding-left:16px;font-size:.85rem;line-height:1.55;color:var(--muted)}
+.plist li::before{content:"";position:absolute;left:0;top:.55em;width:8px;height:2px;background:var(--cu);border-radius:2px}
+.plist li b{color:var(--cu-ink)}
+.cnote{font-size:.85rem;line-height:1.55;color:var(--muted)}
+.cnote b{color:var(--cu-ink)}
+.clink{font-size:.82rem;font-weight:600;color:var(--cu-ink);text-decoration:none;border-bottom:1px solid var(--cu-soft);align-self:flex-start}
+.clink:hover{border-bottom-color:var(--cu)}
+/* ───────── buttons & contact ───────── */
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;padding:14px 24px;font-size:1rem;font-weight:700;text-decoration:none;border:1px solid transparent;transition:transform .15s ease,filter .2s,border-color .2s,color .2s}
+.btn.primary{background:var(--cu);color:var(--btn-ink)}
+.btn.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn.ghost{border-color:var(--line2);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--cu);color:var(--cu-ink)}
+.contact{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:.95rem}
+.contact a{color:var(--cu-ink);text-decoration:none;border-bottom:1px solid var(--cu-soft)}
+.contact a:hover{border-bottom-color:var(--cu)}
+/* ───────── legal footer ───────── */
+.legal{width:100%;max-width:1080px;margin:0 auto;padding:12px 32px 16px;font-size:.72rem;line-height:1.6;color:var(--muted);border-top:1px solid var(--line);overflow-wrap:break-word}
+.legal a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.legal a:hover{color:var(--cu-ink)}
+@media (max-width:640px){.wrap{padding:28px 16px 20px;gap:18px}.legal{padding:10px 16px 14px;font-size:.68rem}}
+/* ───────── subtle reveal ───────── */
+.js .a{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease;transition-delay:var(--d,0s)}
+.js .slide.in .a{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  #deck{scroll-behavior:auto}
+  .js .a{opacity:1;transform:none;transition:none}
+  .progress i{transition:none}
+  .btn,.iconbtn{transition:none}
+  .btn.primary:hover{transform:none}
+}
+/* ───────── print ───────── */
+@media print{
+  :root{--bg:#fff;--ink:#141d2c;--muted:#49525f;--line:rgba(0,0,0,.2);--line2:rgba(0,0,0,.35);--panel:rgba(0,0,0,.03);--cu:#8f5a20;--cu-ink:#8f5a20;--cu-soft:rgba(184,115,51,.1)}
+  body{overflow:visible;background:#fff}
+  #deck{height:auto;overflow:visible}
+  .slide{min-height:auto;padding-top:24px;page-break-after:always}
+  .top,.progress,.hint{display:none}
+  .frame video{display:none}
+  .js .a{opacity:1;transform:none}
+  .frame{border-style:solid}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-ph" viewBox="0 0 24 24">
+    <rect x="3" y="5" width="18" height="14" rx="2.5"/>
+    <circle cx="8.6" cy="10.2" r="1.6"/>
+    <path d="M21 15.5l-4.8-4.8-6.2 6.2-2-2L3 19"/>
+  </symbol>
+  <symbol id="i-play" viewBox="0 0 24 24">
+    <rect x="3" y="5" width="18" height="14" rx="2.5"/>
+    <path d="M10 9.2l5.2 2.8-5.2 2.8z"/>
+  </symbol>
+</svg>
+
+<div class="progress" aria-hidden="true"><i id="bar"></i></div>
+
+<header class="top">
+  <span class="brand"><b>K4</b>-Engineering</span>
+  <span class="sp"></span>
+  <div class="navc">
+    <button type="button" class="iconbtn" id="prev" aria-label="Vorherige Folie"
+      data-aria-de="Vorherige Folie" data-aria-en="Previous slide">←</button>
+    <span class="count" id="count" aria-live="polite">1 / 9</span>
+    <button type="button" class="iconbtn" id="next" aria-label="Nächste Folie"
+      data-aria-de="Nächste Folie" data-aria-en="Next slide">→</button>
+  </div>
+  <div class="lang" role="group" aria-label="Sprache / Language">
+    <button type="button" data-lang="de" class="on" aria-pressed="true">DE</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<main id="deck">
+
+  <!-- ══════════ 1 · TITEL ══════════ -->
+  <section class="slide hero">
+    <div class="wrap">
+      <div class="cols">
+        <div class="htext">
+          <p class="eyebrow a" data-de="Für Judith Scholl · Marketing, OSTERRATH" data-en="For Judith Scholl · Marketing, OSTERRATH">Für Judith Scholl · Marketing, OSTERRATH</p>
+          <h1 class="a" style="--d:.05s" data-de="Ideen für Ihren Messestand" data-en="Ideas for your trade fair stand">Ideen für Ihren Messestand</h1>
+          <p class="sub a" style="--d:.1s"
+            data-de="Interaktive 3D-Modelle für OSTERRATH · Xponential Europe, Coiltech und PCIM 2027"
+            data-en="Interactive 3D models for OSTERRATH · Xponential Europe, Coiltech and PCIM 2027">Interaktive 3D-Modelle für OSTERRATH · Xponential Europe, Coiltech und PCIM 2027</p>
+          <div class="fairs a" style="--d:.16s">
+            <span class="fairchip" data-de="<b>Xponential Europe</b> · 16.–18.03.2027" data-en="<b>Xponential Europe</b> · 16–18 Mar 2027"><b>Xponential Europe</b> · 16.–18.03.2027</span>
+            <span class="fairchip" data-de="<b>Coiltech</b> · 17.–18.03.2027" data-en="<b>Coiltech</b> · 17–18 Mar 2027"><b>Coiltech</b> · 17.–18.03.2027</span>
+            <span class="fairchip" data-de="<b>PCIM</b> · 11.–13.05.2027" data-en="<b>PCIM</b> · 11–13 May 2027"><b>PCIM</b> · 11.–13.05.2027</span>
+          </div>
+          <p class="byline a" style="--d:.2s">K4-Engineering, Augsburg</p>
+        </div>
+        <figure class="ph a" style="--d:.24s">
+          <div class="frame r169">
+            <div class="lbl">
+              <svg aria-hidden="true"><use href="#i-ph"/></svg>
+              <span class="fn" data-de="BILD: img-01.png" data-en="IMAGE: img-01.png">BILD: img-01.png</span>
+              <span class="fa" data-de="Überblick über die drei Ideen" data-en="Overview of the three ideas">Überblick über die drei Ideen</span>
+            </div>
+            <img src="img-01.png" alt="Überblick über die drei Ideen"
+              data-alt-de="Überblick über die drei Ideen" data-alt-en="Overview of the three ideas"
+              loading="lazy" decoding="async" onerror="this.remove()">
+          </div>
+        </figure>
+      </div>
+      <p class="hint a" style="--d:.3s" data-de="Scrollen · Pfeiltasten ← →" data-en="Scroll · arrow keys ← →">Scrollen · Pfeiltasten ← →</p>
+    </div>
+    <footer class="legal">K4-Engineering · Kareem Abdelwahab · Ebereschenstraße 13, 86179 Augsburg · <span data-de="Impressum:" data-en="Legal notice:">Impressum:</span> <a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">k4-engineering.eu/impressum</a> · <span data-de="Datenschutz:" data-en="Privacy:">Datenschutz:</span> <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">k4-engineering.eu/datenschutz</a></footer>
+  </section>
+
+  <!-- ══════════ 2 · AUSGANGSPUNKT (Ihre Frage) ══════════ -->
+  <section class="slide">
+    <div class="wrap">
+      <h2 class="a" data-de="Ausgangspunkt" data-en="Starting point">Ausgangspunkt</h2>
+      <blockquote class="quote a" style="--d:.06s">
+        <p data-de="„Welche unserer Produkte würden sich Ihrer Meinung nach für eine solche Darstellung eignen? Und wie könnte man diese durch Licht oder Sensorik für Messebesucher interessant und anschaulich präsentieren?“"
+          data-en="“Which of our products would, in your opinion, be suitable for such a presentation? And how could light or sensors present them to trade fair visitors in an interesting and vivid way?”">„Welche unserer Produkte würden sich Ihrer Meinung nach für eine solche Darstellung eignen? Und wie könnte man diese durch Licht oder Sensorik für Messebesucher interessant und anschaulich präsentieren?“</p>
+        <cite data-de="Judith Scholl · Marketing, OSTERRATH — aus Ihrer E-Mail an uns"
+          data-en="Judith Scholl · Marketing, OSTERRATH — from your email to us">Judith Scholl · Marketing, OSTERRATH — aus Ihrer E-Mail an uns</cite>
+      </blockquote>
+      <p class="lead a" style="--d:.12s"
+        data-de="Ihre Produkte sind klein und filigran: Stanzteile von <b>0,1 bis 1,5 mm</b> Materialstärke, Rohrformteile von <b>0,8 bis 42 mm</b> Durchmesser."
+        data-en="Your products are small and intricate: stamped parts from <b>0.1 to 1.5 mm</b> material thickness, formed tubes from <b>0.8 to 42 mm</b> in diameter.">Ihre Produkte sind klein und filigran: Stanzteile von <b>0,1 bis 1,5 mm</b> Materialstärke, Rohrformteile von <b>0,8 bis 42 mm</b> Durchmesser.</p>
+      <ul class="points a" style="--d:.18s">
+        <li data-de="Besucher sehen am Stand oft nicht, was dahintersteckt."
+          data-en="Visitors at the stand often do not see what is behind them.">Besucher sehen am Stand oft nicht, was dahintersteckt.</li>
+        <li data-de="<b>Unsere Idee:</b> größer, anfassbar und interaktiv zeigen."
+          data-en="<b>Our idea:</b> show them larger, tangible and interactive."><b>Unsere Idee:</b> größer, anfassbar und interaktiv zeigen.</li>
+      </ul>
+      <div class="chips a" style="--d:.24s">
+        <span class="chip" data-de="Anfassen" data-en="Touch">Anfassen</span>
+        <span class="chip" data-de="Verstehen" data-en="Understand">Verstehen</span>
+        <span class="chip" data-de="Erinnern" data-en="Remember">Erinnern</span>
+      </div>
+    </div>
+    <footer class="legal">K4-Engineering · Kareem Abdelwahab · Ebereschenstraße 13, 86179 Augsburg · <span data-de="Impressum:" data-en="Legal notice:">Impressum:</span> <a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">k4-engineering.eu/impressum</a> · <span data-de="Datenschutz:" data-en="Privacy:">Datenschutz:</span> <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">k4-engineering.eu/datenschutz</a></footer>
+  </section>
+
+  <!-- ══════════ 3 · WIR HABEN HINGESCHAUT ══════════ -->
+  <section class="slide">
+    <div class="wrap">
+      <h2 class="a" data-de="Wir haben hingeschaut" data-en="We did our homework">Wir haben hingeschaut</h2>
+      <ul class="points a" style="--d:.08s">
+        <li data-de="Bevor wir Ihnen Ideen vorschlagen, haben wir Ihre Website und Ihren LinkedIn-Auftritt angeschaut."
+          data-en="Before suggesting ideas, we looked at your website and your LinkedIn presence.">Bevor wir Ihnen Ideen vorschlagen, haben wir Ihre Website und Ihren LinkedIn-Auftritt angeschaut.</li>
+        <li data-de="Unser Eindruck: Ihre Produkte stecken voller Präzision – aber sie sind so klein, dass man ihre Stärke am Stand leicht übersieht."
+          data-en="Our impression: your products are full of precision – but they are so small that their strength is easily overlooked at the stand.">Unser Eindruck: Ihre Produkte stecken voller Präzision – aber sie sind so klein, dass man ihre Stärke am Stand leicht übersieht.</li>
+        <li data-de="Deshalb stammt jede der drei Ideen aus dem, was Sie selbst zeigen und sagen."
+          data-en="That is why each of the three ideas comes from what you yourselves show and say.">Deshalb stammt jede der drei Ideen aus dem, was Sie selbst zeigen und sagen.</li>
+      </ul>
+      <div class="duo a" style="--d:.16s">
+        <figure class="ph">
+          <a class="phlink" href="https://www.linkedin.com/posts/electronica2026-osterrath-prototypenbau-share-7526950526526160897-GSKZ/?utm_source=share&amp;utm_medium=member_desktop&amp;rcm=ACoAABxeCMABlPZG3XqdUa6ZrFugOtj3uptI1sM" target="_blank" rel="noopener noreferrer">
+            <div class="frame r43">
+              <div class="lbl">
+                <svg aria-hidden="true"><use href="#i-ph"/></svg>
+                <span class="fn" data-de="BILD: img-02.png" data-en="IMAGE: img-02.png">BILD: img-02.png</span>
+                <span class="fa" data-de="Screenshot Ihres LinkedIn-Beitrags zur electronica 2026" data-en="Screenshot of your LinkedIn post on electronica 2026">Screenshot Ihres LinkedIn-Beitrags zur electronica 2026</span>
+              </div>
+              <img src="img-02.png" alt="Screenshot des OSTERRATH-LinkedIn-Beitrags zur electronica 2026"
+                data-alt-de="Screenshot des OSTERRATH-LinkedIn-Beitrags zur electronica 2026" data-alt-en="Screenshot of the OSTERRATH LinkedIn post on electronica 2026"
+                loading="lazy" decoding="async" onerror="this.remove()">
+              <span class="ext">LinkedIn ↗</span>
+            </div>
+          </a>
+          <figcaption data-de="Ihr LinkedIn-Beitrag zur electronica in München – Halle B2, Stand 500."
+            data-en="Your LinkedIn post about electronica in Munich – hall B2, booth 500.">Ihr LinkedIn-Beitrag zur electronica in München – Halle B2, Stand 500.</figcaption>
+        </figure>
+        <figure class="ph">
+          <a class="phlink" href="https://www.osterrath.de/produkte" target="_blank" rel="noopener noreferrer">
+            <div class="frame r43">
+              <div class="lbl">
+                <svg aria-hidden="true"><use href="#i-ph"/></svg>
+                <span class="fn" data-de="BILD: img-03.png" data-en="IMAGE: img-03.png">BILD: img-03.png</span>
+                <span class="fa" data-de="Screenshot Ihrer Website: die Produkte" data-en="Screenshot of your website: the products">Screenshot Ihrer Website: die Produkte</span>
+              </div>
+              <img src="img-03.png" alt="Screenshot der Produktseite von osterrath.de"
+                data-alt-de="Screenshot der Produktseite von osterrath.de" data-alt-en="Screenshot of the product page on osterrath.de"
+                loading="lazy" decoding="async" onerror="this.remove()">
+              <span class="ext">Website ↗</span>
+            </div>
+          </a>
+          <figcaption data-de="Ihre Website: präzise Stanz- und Rohrformteile – Qualität, die man erst auf den zweiten Blick sieht."
+            data-en="Your website: precise stamped and formed tube parts – quality that only shows at second glance.">Ihre Website: präzise Stanz- und Rohrformteile – Qualität, die man erst auf den zweiten Blick sieht.</figcaption>
+        </figure>
+      </div>
+    </div>
+    <footer class="legal">K4-Engineering · Kareem Abdelwahab · Ebereschenstraße 13, 86179 Augsburg · <span data-de="Impressum:" data-en="Legal notice:">Impressum:</span> <a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">k4-engineering.eu/impressum</a> · <span data-de="Datenschutz:" data-en="Privacy:">Datenschutz:</span> <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">k4-engineering.eu/datenschutz</a></footer>
+  </section>
+
+  <!-- ══════════ 4 · IDEE 1 (Bild + Auto-Video) ══════════ -->
+  <section class="slide">
+    <div class="wrap">
+      <h2 class="a" data-de="Idee 1: Ihre Produkte zum Anfassen" data-en="Idea 1: Products you can touch">Idee 1: Ihre Produkte zum Anfassen</h2>
+      <p class="lead a" style="--d:.08s"
+        data-de="Ihre kleinsten Teile werden zum Erlebnis: vergrößert zum Anfassen – und per QR-Code auf dem eigenen Smartphone in Originalgröße, drehbar, direkt im Browser."
+        data-en="Your smallest parts become an experience: enlarged and tangible – and via QR code on the visitor's own smartphone at original size, rotatable, right in the browser.">Ihre kleinsten Teile werden zum Erlebnis: vergrößert zum Anfassen – und per QR-Code auf dem eigenen Smartphone in Originalgröße, drehbar, direkt im Browser.</p>
+      <ul class="points a" style="--d:.14s">
+        <li data-de="Kein Download, kein Login – gehostet auf <b>Servern in der EU</b>."
+          data-en="No download, no login – hosted on <b>servers in the EU</b>.">Kein Download, kein Login – gehostet auf <b>Servern in der EU</b>.</li>
+        <li data-de="Besucher beschäftigen sich mit Ihrem Produkt – und nehmen das Erlebnis mit nach Hause."
+          data-en="Visitors engage with your product – and take the experience home.">Besucher beschäftigen sich mit Ihrem Produkt – und nehmen das Erlebnis mit nach Hause.</li>
+      </ul>
+      <div class="chips a" style="--d:.2s">
+        <span class="chip" data-de="Keine App" data-en="No app">Keine App</span>
+        <span class="chip" data-de="Kein Login" data-en="No login">Kein Login</span>
+        <span class="chip" data-de="Server in der EU" data-en="EU servers">Server in der EU</span>
+      </div>
+      <div class="duo a" style="--d:.26s">
+        <figure class="ph">
+          <div class="frame r169">
+            <div class="lbl">
+              <svg aria-hidden="true"><use href="#i-ph"/></svg>
+              <span class="fn" data-de="BILD: img-04.png" data-en="IMAGE: img-04.png">BILD: img-04.png</span>
+              <span class="fa" data-de="Produkt im Rahmen und Handy mit AR-Ansicht" data-en="Product in a frame and phone showing the AR view">Produkt im Rahmen und Handy mit AR-Ansicht</span>
+            </div>
+            <img src="img-04.png" alt="Vergrößertes Produkt im Rahmen und Smartphone mit AR-Ansicht"
+              data-alt-de="Vergrößertes Produkt im Rahmen und Smartphone mit AR-Ansicht" data-alt-en="Enlarged product in a frame and smartphone showing the AR view"
+              loading="lazy" decoding="async" onerror="this.remove()">
+          </div>
+        </figure>
+        <figure class="ph">
+          <div class="frame r169">
+            <div class="lbl">
+              <svg aria-hidden="true"><use href="#i-play"/></svg>
+              <span class="fn">VIDEO: video-01.mp4</span>
+              <span class="fa" data-de="Demo: Produkt in Augmented Reality" data-en="Demo: product in augmented reality">Demo: Produkt in Augmented Reality</span>
+            </div>
+            <video muted autoplay loop playsinline preload="auto" aria-hidden="true">
+              <source src="video-01.mp4" type="video/mp4" onerror="this.parentNode.remove()">
+            </video>
+          </div>
+          <figcaption data-de="Beispielvideo: AR-Ansicht auf dem Smartphone – startet automatisch, ohne Ton."
+            data-en="Example video: AR view on the smartphone – starts automatically, muted.">Beispielvideo: AR-Ansicht auf dem Smartphone – startet automatisch, ohne Ton.</figcaption>
+        </figure>
+      </div>
+      <p class="note a" style="--d:.32s"
+        data-de="Welche Produkte, wählen wir gemeinsam mit Ihnen."
+        data-en="We choose the products together with you.">Welche Produkte, wählen wir gemeinsam mit Ihnen.</p>
+    </div>
+    <footer class="legal">K4-Engineering · Kareem Abdelwahab · Ebereschenstraße 13, 86179 Augsburg · <span data-de="Impressum:" data-en="Legal notice:">Impressum:</span> <a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">k4-engineering.eu/impressum</a> · <span data-de="Datenschutz:" data-en="Privacy:">Datenschutz:</span> <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">k4-engineering.eu/datenschutz</a></footer>
+  </section>
+
+  <!-- ══════════ 5 · IDEE 2 (Formung zeigen) ══════════ -->
+  <section class="slide">
+    <div class="wrap">
+      <h2 class="a" data-de="Idee 2: Der Rohrformprozess in Stufen" data-en="Idea 2: The tube forming process in stages">Idee 2: Der Rohrformprozess in Stufen</h2>
+      <p class="lead a" style="--d:.08s"
+        data-de="Ihr LinkedIn-Beitrag hat uns auf eine Idee gebracht: Die <b>Formung</b> ist das Herz Ihrer Produkte – aber am Stand sieht man nur das Ergebnis."
+        data-en="Your LinkedIn post gave us an idea: <b>forming</b> is the heart of your products – but at the stand, visitors only see the result.">Ihr LinkedIn-Beitrag hat uns auf eine Idee gebracht: Die <b>Formung</b> ist das Herz Ihrer Produkte – aber am Stand sieht man nur das Ergebnis.</p>
+      <ul class="points a" style="--d:.14s">
+        <li data-de="Wir zeigen den Weg: von der flachen Ronde über jede Stufe bis zum fertigen Rohrformteil – groß, zum Anfassen, mit echtem Größenvergleich."
+          data-en="We show the journey: from the flat blank through every stage to the finished formed tube part – large, tangible, with a real size comparison.">Wir zeigen den Weg: von der flachen Ronde über jede Stufe bis zum fertigen Rohrformteil – groß, zum Anfassen, mit echtem Größenvergleich.</li>
+        <li data-de="Besucher verstehen Ihre Fertigungstiefe in Sekunden – ganz ohne Datenblatt."
+          data-en="Visitors understand your manufacturing depth in seconds – no data sheet needed.">Besucher verstehen Ihre Fertigungstiefe in Sekunden – ganz ohne Datenblatt.</li>
+      </ul>
+      <div class="duo a" style="--d:.2s">
+        <figure class="ph">
+          <a class="phlink" href="https://lnkd.in/p/e2vxjxqB" target="_blank" rel="noopener noreferrer">
+            <div class="frame r43">
+              <div class="lbl">
+                <svg aria-hidden="true"><use href="#i-ph"/></svg>
+                <span class="fn" data-de="BILD: img-05.png" data-en="IMAGE: img-05.png">BILD: img-05.png</span>
+                <span class="fa" data-de="Screenshot Ihres LinkedIn-Beitrags zur Rohrformung" data-en="Screenshot of your LinkedIn post on tube forming">Screenshot Ihres LinkedIn-Beitrags zur Rohrformung</span>
+              </div>
+              <img src="img-05.png" alt="Screenshot des OSTERRATH-LinkedIn-Beitrags über die Rohrformung"
+                data-alt-de="Screenshot des OSTERRATH-LinkedIn-Beitrags über die Rohrformung" data-alt-en="Screenshot of the OSTERRATH LinkedIn post about tube forming"
+                loading="lazy" decoding="async" onerror="this.remove()">
+              <span class="ext">LinkedIn ↗</span>
+            </div>
+          </a>
+          <figcaption data-de="Ihr LinkedIn-Beitrag – der Anlass für diese Idee."
+            data-en="Your LinkedIn post – the starting point for this idea.">Ihr LinkedIn-Beitrag – der Anlass für diese Idee.</figcaption>
+        </figure>
+        <figure class="ph">
+          <div class="frame r43">
+            <div class="lbl">
+              <svg aria-hidden="true"><use href="#i-ph"/></svg>
+              <span class="fn" data-de="BILD: img-06.png" data-en="IMAGE: img-06.png">BILD: img-06.png</span>
+              <span class="fa" data-de="Stufenmodell: von der Ronde bis zum fertigen Teil" data-en="Stage model: from blank to finished part">Stufenmodell: von der Ronde bis zum fertigen Teil</span>
+            </div>
+            <img src="img-06.png" alt="Stufenmodell des Rohrformprozesses, jede Stufe groß zum Anfassen"
+              data-alt-de="Stufenmodell des Rohrformprozesses, jede Stufe groß zum Anfassen" data-alt-en="Stage model of the tube forming process, every stage large and tangible"
+              loading="lazy" decoding="async" onerror="this.remove()">
+          </div>
+          <figcaption data-de="Idee 2: Jede Fertigungsstufe groß zum Anfassen."
+            data-en="Idea 2: every production stage, large and tangible.">Idee 2: Jede Fertigungsstufe groß zum Anfassen.</figcaption>
+        </figure>
+      </div>
+    </div>
+    <footer class="legal">K4-Engineering · Kareem Abdelwahab · Ebereschenstraße 13, 86179 Augsburg · <span data-de="Impressum:" data-en="Legal notice:">Impressum:</span> <a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">k4-engineering.eu/impressum</a> · <span data-de="Datenschutz:" data-en="Privacy:">Datenschutz:</span> <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">k4-engineering.eu/datenschutz</a></footer>
+  </section>
+
+  <!-- ══════════ 6 · IDEE 3 (Batterie-Modell) ══════════ -->
+  <section class="slide">
+    <div class="wrap">
+      <h2 class="a" data-de="Idee 3: Das Batterie-Modell" data-en="Idea 3: The battery model">Idee 3: Das Batterie-Modell</h2>
+      <blockquote class="quote a" style="--d:.06s">
+        <p data-de="„Skalierbare Batteriefertigung funktioniert nur, wenn Präzision, Prozessstabilität und Qualität Hand in Hand mit zukunftsorientierten Produktionskonzepten gehen.“"
+          data-en="“Scalable battery production can only succeed when precision, process stability, and quality go hand in hand with future-ready manufacturing concepts.”">„Skalierbare Batteriefertigung funktioniert nur, wenn Präzision, Prozessstabilität und Qualität Hand in Hand mit zukunftsorientierten Produktionskonzepten gehen.“</p>
+        <cite data-de="OSTERRATH auf LinkedIn · Beitrag mit RMA" data-en="OSTERRATH on LinkedIn · post with RMA">OSTERRATH auf LinkedIn · Beitrag mit RMA</cite>
+      </blockquote>
+      <p class="lead a" style="--d:.12s"
+        data-de="Unsere Idee dazu: ein <b>Batteriemodell</b>, in dem Ihre Zellverbinder die Hauptrolle spielen."
+        data-en="Our idea for this: a <b>battery model</b> in which your cell connectors take the leading role.">Unsere Idee dazu: ein <b>Batteriemodell</b>, in dem Ihre Zellverbinder die Hauptrolle spielen.</p>
+      <ul class="points a" style="--d:.18s">
+        <li data-de="Eine Lichtlinie zeigt den Weg des Stroms von Zelle zu Zelle – mitten durch Ihre Verbindungstechnik."
+          data-en="A line of light shows the current's path from cell to cell – right through your connection technology.">Eine Lichtlinie zeigt den Weg des Stroms von Zelle zu Zelle – mitten durch Ihre Verbindungstechnik.</li>
+        <li data-de="Besucher sehen sofort, welche Rolle Ihre Präzision in jedem Akku spielt."
+          data-en="Visitors instantly see the role your precision plays inside every battery.">Besucher sehen sofort, welche Rolle Ihre Präzision in jedem Akku spielt.</li>
+      </ul>
+      <div class="duo a" style="--d:.24s">
+        <figure class="ph">
+          <a class="phlink" href="https://lnkd.in/p/ebHZFeBR" target="_blank" rel="noopener noreferrer">
+            <div class="frame r43">
+              <div class="lbl">
+                <svg aria-hidden="true"><use href="#i-ph"/></svg>
+                <span class="fn" data-de="BILD: img-07.png" data-en="IMAGE: img-07.png">BILD: img-07.png</span>
+                <span class="fa" data-de="Screenshot des LinkedIn-Beitrags mit RMA" data-en="Screenshot of the LinkedIn post with RMA">Screenshot des LinkedIn-Beitrags mit RMA</span>
+              </div>
+              <img src="img-07.png" alt="Screenshot des LinkedIn-Beitrags von OSTERRATH und RMA zur Batteriefertigung"
+                data-alt-de="Screenshot des LinkedIn-Beitrags von OSTERRATH und RMA zur Batteriefertigung" data-alt-en="Screenshot of the OSTERRATH and RMA LinkedIn post on battery production"
+                loading="lazy" decoding="async" onerror="this.remove()">
+              <span class="ext">LinkedIn ↗</span>
+            </div>
+          </a>
+          <figcaption data-de="Ihr LinkedIn-Beitrag mit RMA über skalierbare Batteriefertigung."
+            data-en="Your LinkedIn post with RMA on scalable battery production.">Ihr LinkedIn-Beitrag mit RMA über skalierbare Batteriefertigung.</figcaption>
+          <p class="src"><a href="https://lnkd.in/gwvvkP2A" target="_blank" rel="noopener noreferrer"
+            data-de="Gemeinsamen Artikel mit RMA lesen →" data-en="Read the joint article with RMA →">Gemeinsamen Artikel mit RMA lesen →</a></p>
+        </figure>
+        <figure class="ph">
+          <div class="frame r43">
+            <div class="lbl">
+              <svg aria-hidden="true"><use href="#i-ph"/></svg>
+              <span class="fn" data-de="BILD: img-08.png" data-en="IMAGE: img-08.png">BILD: img-08.png</span>
+              <span class="fa" data-de="Batterie-Modell mit Zellverbindern und Lichtlinie" data-en="Battery model with cell connectors and light path">Batterie-Modell mit Zellverbindern und Lichtlinie</span>
+            </div>
+            <img src="img-08.png" alt="Batterie-Modell mit OSTERRATH-Zellverbindern, der Stromweg als Lichtlinie"
+              data-alt-de="Batterie-Modell mit OSTERRATH-Zellverbindern, der Stromweg als Lichtlinie" data-alt-en="Battery model with OSTERRATH cell connectors, the current path as a line of light"
+              loading="lazy" decoding="async" onerror="this.remove()">
+          </div>
+          <figcaption data-de="Idee 3: Ihre Verbindungstechnik als Herzstück des Batterie-Modells."
+            data-en="Idea 3: your connection technology at the heart of the battery model.">Idee 3: Ihre Verbindungstechnik als Herzstück des Batterie-Modells.</figcaption>
+        </figure>
+      </div>
+    </div>
+    <footer class="legal">K4-Engineering · Kareem Abdelwahab · Ebereschenstraße 13, 86179 Augsburg · <span data-de="Impressum:" data-en="Legal notice:">Impressum:</span> <a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">k4-engineering.eu/impressum</a> · <span data-de="Datenschutz:" data-en="Privacy:">Datenschutz:</span> <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">k4-engineering.eu/datenschutz</a></footer>
+  </section>
+
+  <!-- ══════════ 7 · SO ARBEITEN WIR ══════════ -->
+  <section class="slide">
+    <div class="wrap">
+      <h2 class="a" data-de="So arbeiten wir" data-en="How we work">So arbeiten wir</h2>
+      <div class="steps a" style="--d:.08s">
+        <div class="step">
+          <span class="n">1</span>
+          <p data-de="Sie wählen ein bis zwei Produkte." data-en="You choose one or two products.">Sie wählen ein bis zwei Produkte.</p>
+        </div>
+        <div class="step">
+          <span class="n">2</span>
+          <p data-de="Sie senden uns Zeichnung, CAD-Datei (STEP) oder Fotos." data-en="You send us a drawing, CAD file (STEP) or photos.">Sie senden uns Zeichnung, CAD-Datei (STEP) oder Fotos.</p>
+        </div>
+        <div class="step">
+          <span class="n">3</span>
+          <p data-de="Wir schicken eine Skizze mit Preis und Zeitplan." data-en="We send you a sketch with price and timeline.">Wir schicken eine Skizze mit Preis und Zeitplan.</p>
+        </div>
+        <div class="step">
+          <span class="n">4</span>
+          <p data-de="Wir bauen das Modell und liefern es zum Messetermin." data-en="We build the model and deliver it in time for the fair.">Wir bauen das Modell und liefern es zum Messetermin.</p>
+        </div>
+      </div>
+      <p class="material a" style="--d:.16s"
+        data-de="Technik, Material und Aufbau übernehmen wir – Sie erhalten ein fertiges Exponat, bereit für Ihren Stand."
+        data-en="We handle technology, materials and assembly – you receive a finished exhibit, ready for your stand.">Technik, Material und Aufbau übernehmen wir – Sie erhalten ein fertiges Exponat, bereit für Ihren Stand.</p>
+    </div>
+    <footer class="legal">K4-Engineering · Kareem Abdelwahab · Ebereschenstraße 13, 86179 Augsburg · <span data-de="Impressum:" data-en="Legal notice:">Impressum:</span> <a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">k4-engineering.eu/impressum</a> · <span data-de="Datenschutz:" data-en="Privacy:">Datenschutz:</span> <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">k4-engineering.eu/datenschutz</a></footer>
+  </section>
+
+  <!-- ══════════ 8 · KOSTEN (3 Karten) ══════════ -->
+  <section class="slide">
+    <div class="wrap">
+      <h2 class="a" data-de="Kosten" data-en="Costs">Kosten</h2>
+      <ul class="points a" style="--d:.08s">
+        <li data-de="Alle drei Ideen stammen aus unserer Recherche zu Ihren Produkten und Ihrer Kommunikation – <b>die Preise sind erste Schätzungen</b>."
+          data-en="All three ideas come from our research into your products and your communication – <b>the prices are initial estimates</b>.">Alle drei Ideen stammen aus unserer Recherche zu Ihren Produkten und Ihrer Kommunikation – <b>die Preise sind erste Schätzungen</b>.</li>
+        <li data-de="Welche Idee sich für Ihren Stand am besten eignet und wie wir sie anwenden, klären wir <b>gemeinsam mit Ihnen</b>."
+          data-en="Which idea suits your stand best and how we apply it, we will clarify <b>together with you</b>.">Welche Idee sich für Ihren Stand am besten eignet und wie wir sie anwenden, klären wir <b>gemeinsam mit Ihnen</b>.</li>
+        <li data-de="Danach definieren wir die Stückliste (Bill of Materials) – und nennen Ihnen einen <b>konkreten Preis und Zeitplan</b>."
+          data-en="We then define the bill of materials – and give you a <b>concrete price and timeline</b>.">Danach definieren wir die Stückliste (Bill of Materials) – und nennen Ihnen einen <b>konkreten Preis und Zeitplan</b>.</li>
+      </ul>
+      <div class="cards3 a" style="--d:.16s">
+        <div class="pcard">
+          <span class="kick" data-de="Idee 1" data-en="Idea 1">Idee 1</span>
+          <h3 data-de="Produkte zum Anfassen" data-en="Products you can touch">Produkte zum Anfassen</h3>
+          <p class="cprice"><span data-de="800 €" data-en="€800">800 €</span>
+            <small data-de="+ 400 € für jedes weitere Modell mit AR" data-en="+ €400 for each additional model with AR">+ 400 € für jedes weitere Modell mit AR</small></p>
+          <ul class="plist">
+            <li data-de="Sie haben das 3D-Modell? Schicken Sie es uns – oder wir designen es: <b>+ 200 € pro Modell</b>."
+              data-en="You have the 3D model? Share it with us – or we design it: <b>+ €200 per model</b>.">Sie haben das 3D-Modell? Schicken Sie es uns – oder wir designen es: <b>+ 200 € pro Modell</b>.</li>
+            <li data-de="AR mit Abschnitten: zeigt die <b>Bedeutung jedes Teils</b>."
+              data-en="AR with sections: shows the <b>importance of each part</b>.">AR mit Abschnitten: zeigt die <b>Bedeutung jedes Teils</b>.</li>
+            <li data-de="Wie lange die AR <b>online gehostet</b> bleiben soll, besprechen wir gemeinsam."
+              data-en="Let's discuss how long you want the AR <b>hosted and live</b> on the web.">Wie lange die AR <b>online gehostet</b> bleiben soll, besprechen wir gemeinsam.</li>
+          </ul>
+        </div>
+        <div class="pcard">
+          <span class="kick" data-de="Idee 2" data-en="Idea 2">Idee 2</span>
+          <h3 data-de="Rohrformprozess in Stufen" data-en="Tube forming in stages">Rohrformprozess in Stufen</h3>
+          <p class="cprice"><span data-de="1.000 €" data-en="€1,000">1.000 €</span>
+            <small data-de="für einen Prozess mit 2–3 Stufen" data-en="for a process with 2–3 stages">für einen Prozess mit 2–3 Stufen</small></p>
+          <ul class="plist">
+            <li data-de="<b>+ 400 €</b> für Hardware, Screens und Licht – die Stufen leuchten per Knopfdruck auf."
+              data-en="<b>+ €400</b> for hardware, screens and lights – the stages light up at the push of a button."><b>+ 400 €</b> für Hardware, Screens und Licht – die Stufen leuchten per Knopfdruck auf.</li>
+          </ul>
+        </div>
+        <div class="pcard">
+          <span class="kick" data-de="Idee 3" data-en="Idea 3">Idee 3</span>
+          <h3 data-de="Das Batterie-Modell" data-en="The battery model">Das Batterie-Modell</h3>
+          <p class="cprice todo" data-de="[Preis nach Ihrem Input]" data-en="[Price after your input]">[Preis nach Ihrem Input]</p>
+          <p class="cnote"
+            data-de="Wir haben öffentlich keine Bilder gefunden, die zeigen, was Ihre Teile <b>in der Batterie selbst</b> tun. Dazu brauchen wir mehr Infos von Ihnen – dann folgen Skizze und Preis."
+            data-en="We could not find public pictures showing what your parts do <b>inside the battery itself</b>. We need more info from you – then sketch and price will follow.">Wir haben öffentlich keine Bilder gefunden, die zeigen, was Ihre Teile <b>in der Batterie selbst</b> tun. Dazu brauchen wir mehr Infos von Ihnen – dann folgen Skizze und Preis.</p>
+          <a class="clink" href="mailto:kareem@k4-engineering.eu?subject=Batterie-Modell%3A%20Infos"
+            data-de="Infos senden →" data-en="Send info →">Infos senden →</a>
+        </div>
+      </div>
+    </div>
+    <footer class="legal">K4-Engineering · Kareem Abdelwahab · Ebereschenstraße 13, 86179 Augsburg · <span data-de="Impressum:" data-en="Legal notice:">Impressum:</span> <a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">k4-engineering.eu/impressum</a> · <span data-de="Datenschutz:" data-en="Privacy:">Datenschutz:</span> <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">k4-engineering.eu/datenschutz</a></footer>
+  </section>
+
+  <!-- ══════════ 9 · NÄCHSTER SCHRITT ══════════ -->
+  <section class="slide">
+    <div class="wrap">
+      <div class="cols">
+        <div class="htext">
+          <h2 class="a" data-de="Nächster Schritt" data-en="Next step">Nächster Schritt</h2>
+          <p class="lead a" style="--d:.08s"
+            data-de="Schicken Sie uns zwei oder drei Produkte oder ein Foto – wir senden Ihnen eine Skizze mit konkretem Preis und Zeitplan. Oder sprechen wir 20 Minuten."
+            data-en="Send us two or three products or a photo – we will send you a sketch with a concrete price and timeline. Or let us talk for 20 minutes.">Schicken Sie uns zwei oder drei Produkte oder ein Foto – wir senden Ihnen eine Skizze mit konkretem Preis und Zeitplan. Oder sprechen wir 20 Minuten.</p>
+          <p class="note a" style="--d:.12s"
+            data-de="Wir freuen uns auf Ihre Rückmeldung, Frau Scholl."
+            data-en="We look forward to your feedback, Ms. Scholl.">Wir freuen uns auf Ihre Rückmeldung, Frau Scholl.</p>
+          <div class="cta a" style="--d:.16s">
+            <a class="btn primary" href="https://calendly.com/k-g-abdelwahab/kostenloser-call-ihr-messe-modell-2027" target="_blank" rel="noopener noreferrer">
+              <span data-de="Gespräch buchen" data-en="Book a call">Gespräch buchen</span>
+            </a>
+            <a class="btn ghost" href="mailto:kareem@k4-engineering.eu">
+              <span data-de="E-Mail schreiben" data-en="Write an email">E-Mail schreiben</span>
+            </a>
+          </div>
+          <div class="contact a" style="--d:.22s">
+            <a href="tel:+4915510316332">+49 155 10316332</a>
+            <a href="https://k4-engineering.eu" target="_blank" rel="noopener noreferrer">k4-engineering.eu</a>
+          </div>
+        </div>
+        <figure class="ph a" style="--d:.26s">
+          <div class="frame r169">
+            <div class="lbl">
+              <svg aria-hidden="true"><use href="#i-ph"/></svg>
+              <span class="fn" data-de="BILD: img-09.png" data-en="IMAGE: img-09.png">BILD: img-09.png</span>
+              <span class="fa" data-de="Smart Tree auf den Deutschen Baumpflegetagen 2026" data-en="Smart Tree at Deutsche Baumpflegetage 2026">Smart Tree auf den Deutschen Baumpflegetagen 2026</span>
+            </div>
+            <img src="img-09.png" alt="Smart Tree auf den Deutschen Baumpflegetagen 2026"
+              data-alt-de="Smart Tree auf den Deutschen Baumpflegetagen 2026" data-alt-en="Smart Tree at Deutsche Baumpflegetage 2026"
+              loading="lazy" decoding="async" onerror="this.remove()">
+          </div>
+          <figcaption data-de="Beispiel: Smart Tree, Deutsche Baumpflegetage 2026" data-en="Example: Smart Tree, Deutsche Baumpflegetage 2026">Beispiel: Smart Tree, Deutsche Baumpflegetage 2026</figcaption>
+        </figure>
+      </div>
+    </div>
+    <footer class="legal">K4-Engineering · Kareem Abdelwahab · Ebereschenstraße 13, 86179 Augsburg · <span data-de="Impressum:" data-en="Legal notice:">Impressum:</span> <a href="https://k4-engineering.eu/impressum" target="_blank" rel="noopener noreferrer">k4-engineering.eu/impressum</a> · <span data-de="Datenschutz:" data-en="Privacy:">Datenschutz:</span> <a href="https://k4-engineering.eu/datenschutz" target="_blank" rel="noopener noreferrer">k4-engineering.eu/datenschutz</a></footer>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var d = document, root = d.documentElement;
+
+  /* ── deck: counter, progress bar, keyboard ── */
+  var deck = d.getElementById('deck');
+  var slides = [].slice.call(d.querySelectorAll('.slide'));
+  var count = d.getElementById('count'), bar = d.getElementById('bar');
+  var prev = d.getElementById('prev'), next = d.getElementById('next');
+  var cur = 0, tick = false;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
+
+  function go(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    slides[i].scrollIntoView({ behavior: (reduce && reduce.matches) ? 'auto' : 'smooth', block: 'start' });
+  }
+  function update() {
+    tick = false;
+    var mid = deck.scrollTop + deck.clientHeight * 0.5, idx = 0;
+    for (var i = 0; i < slides.length; i++) { if (slides[i].offsetTop <= mid) idx = i; }
+    cur = idx;
+    count.textContent = (idx + 1) + ' / ' + slides.length;
+    prev.disabled = idx === 0;
+    next.disabled = idx === slides.length - 1;
+    var max = deck.scrollHeight - deck.clientHeight;
+    bar.style.width = (max > 0 ? Math.min(100, deck.scrollTop / max * 100) : 0) + '%';
+  }
+  deck.addEventListener('scroll', function () {
+    if (!tick) { tick = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  window.addEventListener('resize', update);
+  prev.addEventListener('click', function () { go(cur - 1); });
+  next.addEventListener('click', function () { go(cur + 1); });
+  window.addEventListener('keydown', function (e) {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+  });
+
+  /* ── video: plays automatically when its slide is visible, pauses off-screen ── */
+  function vids(scope, on) {
+    [].forEach.call(scope.querySelectorAll('video'), function (v) {
+      v.muted = true;
+      if (on && !(reduce && reduce.matches)) {
+        var p = v.play(); if (p && p.catch) p.catch(function () {});
+      } else { v.pause(); }
+    });
+  }
+  if (reduce && reduce.matches) {
+    [].forEach.call(d.querySelectorAll('video'), function (v) { v.removeAttribute('autoplay'); v.pause(); });
+  }
+
+  /* ── language: DE default, EN toggle ── */
+  var LANG = 'de';
+  try { var st = localStorage.getItem('k4-osterrath-lang'); if (st === 'en' || st === 'de') LANG = st; } catch (e) {}
+  var langBtns = [].slice.call(d.querySelectorAll('.lang button'));
+  function setLang(l) {
+    LANG = l; root.lang = l;
+    try { localStorage.setItem('k4-osterrath-lang', l); } catch (e) {}
+    [].forEach.call(d.querySelectorAll('[data-de]'), function (el) {
+      var v = el.getAttribute(l === 'en' ? 'data-en' : 'data-de');
+      if (v != null) el.innerHTML = v;
+    });
+    [].forEach.call(d.querySelectorAll('[data-alt-de]'), function (el) {
+      el.setAttribute('alt', el.getAttribute(l === 'en' ? 'data-alt-en' : 'data-alt-de') || '');
+    });
+    [].forEach.call(d.querySelectorAll('[data-aria-de]'), function (el) {
+      el.setAttribute('aria-label', el.getAttribute(l === 'en' ? 'data-aria-en' : 'data-aria-de') || '');
+    });
+    langBtns.forEach(function (b) {
+      var on = b.getAttribute('data-lang') === l;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    update();
+  }
+  langBtns.forEach(function (b) {
+    b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); });
+  });
+
+  /* ── subtle reveal + video control on scroll ── */
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); vids(en.target, true); }
+        else { vids(en.target, false); }
+      });
+    }, { root: deck, threshold: 0.18 });
+    slides.forEach(function (s) { io.observe(s); });
+  } else {
+    slides.forEach(function (s) { s.classList.add('in'); });
+  }
+
+  setLang(LANG);
+  update();
+})();
+</script>
+</body>
+</html>
