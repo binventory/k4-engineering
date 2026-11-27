@@ -1,9 +1,9 @@
 // Service worker of the visitor assistant demo (scope: /demo-ai-agent/).
 // Caches the app shell and the public fair data so the hall plan and the notebook work offline.
 // Never touches the admin area, the chat API or any non-GET request.
-const V = "da-v7";
+const V = "da-v8";
 const SCOPE = "/demo-ai-agent/";
-const SHELL = [SCOPE, SCOPE + "nb.js", SCOPE + "cal.js", SCOPE + "ux.js", SCOPE + "card.js", SCOPE + "rich.js", SCOPE + "skin.css", SCOPE + "logo.svg", SCOPE + "icons/icon-192.png", SCOPE + "icons/icon-512.png"];
+const SHELL = [SCOPE, SCOPE + "nb.js", SCOPE + "cal.js", SCOPE + "ux.js", SCOPE + "card.js", SCOPE + "rich.js", SCOPE + "skin.css", SCOPE + "logo.png", SCOPE + "icons/icon-192.png", SCOPE + "icons/icon-512.png"];
 const DATA = ["da-meta", "da-list", "da-plan", "da-manifest"];
 
 self.addEventListener("install", (e) => {

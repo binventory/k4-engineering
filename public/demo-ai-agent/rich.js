@@ -81,7 +81,7 @@
     const h = HERO[L] || HERO.en, n = (m.program && m.program.events || []).length, s = (m.sectors || []).length;
     const stat = (v, l) => '<div class="stat"><b>' + v + '</b><span>' + esc(l) + '</span></div>';
     box.className = 'hero';
-    box.innerHTML = '<div class="hl"><img src="/demo-ai-agent/logo.svg" alt=""><div><h2>' + esc(h[0]) + '</h2><p>' + esc(welcome || h[1]) + '</p></div></div>' +
+    box.innerHTML = '<div class="hl"><img src="/demo-ai-agent/logo.png" alt=""><div><h2>' + esc(h[0]) + '</h2><p>' + esc(welcome || h[1]) + '</p></div></div>' +
       '<div class="stats">' + (m.count ? stat(m.count, h[2]) : '') + (s ? stat(s, h[3]) : '') + (n ? stat(n, h[4]) : '') + stat('20+', h[5]) + '</div>';
     box.hidden = false;
   }
