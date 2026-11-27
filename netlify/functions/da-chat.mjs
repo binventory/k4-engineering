@@ -1,4 +1,4 @@
-import { bump, mentioned, clientIp, getFair, ipHash, json, llmChat, llmConf, needsRetrieval, retrieve, settings, slugOk, systemPrompt, understand, LANGS } from "../lib/da.mjs";
+import { bump, mentioned, clientIp, getFair, ipHash, json, llmChat, llmConf, needsRetrieval, retrieve, settings, slugOk, systemPrompt, understand, LANGS, langName } from "../lib/da.mjs";
 
 export default async (req, ctx) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
@@ -28,7 +28,7 @@ export default async (req, ctx) => {
     const q = await understand(conf, clean, ui, exh);
     const context = needsRetrieval(exh) ? retrieve(exh, q.terms, 18, q.sectors) : exh;
     const msgs = [{ role: "system", content: systemPrompt(fair, context, q) }, ...clean.slice(-6),
-      { role: "system", content: `Answer the latest visitor message now, in ${LANGS[q.lang]}.` }];
+      { role: "system", content: `Answer the latest visitor message now, in ${langName(q.lang) || "the language of the latest visitor message"}.` }];
     const reply = await llmChat(conf, msgs, { temp: 0.2, max: 900 });
     const pool = context.length < exh.length ? [...context, ...exh] : exh;
     let cards = []; try { cards = mentioned(reply, pool); } catch { /* cards are optional */ }

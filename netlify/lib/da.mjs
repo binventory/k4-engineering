@@ -234,6 +234,13 @@ export function overviewText(exh) {
   return sectorList(exh).map(([s, list]) => `- ${s}: ${list.length} exhibitors, e.g. ` + list.slice().sort((a, b) => (b.sponsored ? 1 : 0) - (a.sponsored ? 1 : 0)).slice(0, 3).map((e) => `${e.name} (${e.stand || "?"})`).join(", ")).join("\n");
 }
 export const LANGS = { de: "German", en: "English", ar: "Arabic", tr: "Turkish", fr: "French", it: "Italian", es: "Spanish", pl: "Polish", ru: "Russian", zh: "Chinese", nl: "Dutch", pt: "Portuguese", uk: "Ukrainian", ja: "Japanese", ko: "Korean", cs: "Czech", hu: "Hungarian", ro: "Romanian", el: "Greek", fa: "Persian", hi: "Hindi" };
+// Name of any ISO 639-1 language (also those outside LANGS), so every visitor language works.
+export function langName(code) {
+  const c = String(code || "").toLowerCase();
+  if (LANGS[c]) return LANGS[c];
+  try { const n = new Intl.DisplayNames(["en"], { type: "language" }).of(c); if (n && n.toLowerCase() !== c) return n; } catch {}
+  return "";
+}
 // script-based guess, used when the model call fails
 export function guessLang(text, uiLang = "en") {
   const t = String(text || "");
@@ -243,6 +250,12 @@ export function guessLang(text, uiLang = "en") {
   if (/[가-힯]/.test(t)) return "ko";
   if (/[一-鿿]/.test(t)) return "zh";
   if (/[Ͱ-Ͽ]/.test(t)) return "el";
+  if (/[֐-׿]/.test(t)) return "he";
+  if (/[ऀ-ॿ]/.test(t)) return "hi";
+  if (/[฀-๿]/.test(t)) return "th";
+  if (/[ঀ-৿]/.test(t)) return "bn";
+  if (/[Ⴀ-ჿ]/.test(t)) return "ka";
+  if (/[԰-֏]/.test(t)) return "hy";
   if (/[äöüß]/i.test(t) || /\b(ich|und|wo|ist|der|die|das|welche|gibt|firmen|halle)\b/i.test(t)) return "de";
   if (/\b(the|what|where|which|who|is|are|companies|how|i am|any)\b/i.test(t)) return "en";
   if (/[ğışİ]/.test(t)) return "tr";
@@ -268,7 +281,7 @@ ${secs.map((s) => "* " + s).join("\n")}
     const j = JSON.parse(r);
     const lang = String(j.lang || "").toLowerCase().slice(0, 2);
     return {
-      lang: LANGS[lang] ? lang : fb.lang,
+      lang: langName(lang) ? lang : fb.lang,
       topic: ["exhibitors", "events", "location", "general", "app", "other"].includes(j.topic) ? j.topic : "exhibitors",
       terms: [...fb.terms, ...(Array.isArray(j.terms) ? j.terms.map(String).slice(0, 16) : [])],
       sectors: (Array.isArray(j.sectors) ? j.sectors.map(String) : []).filter((s) => secs.includes(s)),
@@ -291,7 +304,7 @@ export async function searchTerms(conf, q) { return (await understand(conf, [{ r
 export function systemPrompt(fair, exh, opts = {}) {
   const all = fair.exhibitors || [];
   const name = fair.name || "the fair", contact = fair.organiser_contact || "the organiser";
-  const lang = LANGS[opts.lang] || "the language of the visitor's latest message";
+  const lang = langName(opts.lang) || "the language of the visitor's latest message";
   const topic = opts.topic || "exhibitors";
   const prog = programText(fair, ["events", "general", "app"].includes(topic) || !!opts.fullProgram);
   const big = all.length > exh.length;
