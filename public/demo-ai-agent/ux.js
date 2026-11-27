@@ -117,6 +117,7 @@
   }
 
   // ---------- sponsor carousel: banner ads + sponsored exhibitors; each card stays for its paid time ----------
+  const logoUrl = (v) => (/^(https:\/\/|\/demo-ai-agent\/logos\/)/i.test(String(v || '')) ? String(v) : '');
   function spots(box, m) {
     const base = Math.max(5, m.ad_interval || 12);
     const items = [];
@@ -128,13 +129,13 @@
     for (let i = 0; i < Math.max(ads.length, ex.length); i++) { if (ads[i]) list.push(ads[i]); if (ex[i]) list.push(ex[i]); }
     const card = (it) => {
       if (it.k === 'ad') {
-        const a = it.a, u = C.safeUrl(a.url), img = /^https:\/\//i.test(a.image || '') ? a.image : '';
-        return '<div class="sp"><span class="sptag">' + esc(t('ad')) + '</span>' + (img ? '<img src="' + esc(img) + '" alt="" loading="lazy">' : '<span class="spic">📣</span>') +
+        const a = it.a, u = C.safeUrl(a.url), img = logoUrl(a.logo || a.image);
+        return '<div class="sp"><span class="sptag">' + esc(t('ad')) + '</span>' + (img ? '<img src="' + esc(img) + '" alt="" loading="lazy" onerror="this.outerHTML=\'<span class=spic>📣</span>\'">' : '<span class="spic">📣</span>') +
           '<div class="spb"><b>' + esc(a.text || '') + '</b>' + (u ? '<a class="spa" href="' + esc(u) + '" target="_blank" rel="noopener sponsored">' + esc(a.cta || '→') + ' →</a>' : '') + '</div></div>';
       }
       const f = it.f, u = C.safeUrl(f.website), h = C.hallsIn(f.stand)[0];
       const tr = Number(f.tier) || 1, tn = tr >= 5 ? ['t5', 'Premium'] : tr >= 3 ? ['t3', 'Gold'] : tr >= 2 ? ['t2', 'Silver'] : null;
-      return '<div class="sp"><span class="sptag">' + esc(t('ad')) + '</span><span class="spic">' + esc(String(f.name || '?').trim().slice(0, 1).toUpperCase()) + '</span><div class="spb"><b>' + esc(f.name) + (tn ? '<span class="sptier ' + tn[0] + '">' + tn[1] + '</span>' : '') + '</b>' + (f.stand ? ' <small>' + esc(C.T.stand + ' ' + f.stand) + '</small>' : '') +
+      return '<div class="sp"><span class="sptag">' + esc(t('ad')) + '</span>' + (logoUrl(f.logo) ? '<img src="' + esc(logoUrl(f.logo)) + '" alt="" loading="lazy" onerror="this.outerHTML=\'<span class=spic>' + esc(String(f.name || '?').trim().slice(0, 1).toUpperCase()) + '</span>\'">' : '<span class="spic">' + esc(String(f.name || '?').trim().slice(0, 1).toUpperCase()) + '</span>') + '<div class="spb"><b>' + esc(f.name) + (tn ? '<span class="sptier ' + tn[0] + '">' + tn[1] + '</span>' : '') + '</b>' + (f.stand ? ' <small>' + esc(C.T.stand + ' ' + f.stand) + '</small>' : '') +
         (f.description ? '<small class="spd">' + esc(f.description) + '</small>' : '') + '<span class="spx">' +
         (u ? '<a class="spa" href="' + esc(u) + '" target="_blank" rel="noopener sponsored">' + esc(C.T.more) + '</a>' : '') +
         (h ? '<button type="button" data-h="' + esc(h) + '">📍 ' + esc(C.T.map) + '</button>' : '') +

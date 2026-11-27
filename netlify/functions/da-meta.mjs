@@ -35,7 +35,7 @@ export default async (req) => {
   if (!fair) return json({ error: "unknown_fair" }, 404);
   const exh = fair.exhibitors || [], sectors = {}, full = {};
   for (const e of exh) { const s = String(e.sector || "").split("/")[0].trim(); if (s) (sectors[s] ??= []).push(e.name); const fs = String(e.sector || "").trim(); if (fs) full[fs] = (full[fs] || 0) + 1; }
-  const featured = exh.filter((e) => e.sponsored).map((e) => ({ name: e.name, stand: e.stand || "", sector: e.sector || "", website: e.website || "", description: String(e.description || "").slice(0, 160), tier: Math.max(1, Math.min(10, Number(e.tier) || 1)) }));
+  const featured = exh.filter((e) => e.sponsored).map((e) => ({ name: e.name, stand: e.stand || "", sector: e.sector || "", website: e.website || "", logo: String(e.logo || "").slice(0, 200), description: String(e.description || "").slice(0, 160), tier: Math.max(1, Math.min(10, Number(e.tier) || 1)) }));
   const lang = String(new URL(req.url).searchParams.get("lang") || "").slice(0, 2);
   let ads = fair.ads || [], questions = fair.questions || [], welcome = fair.welcome || "", tr = "";
   if (lang && lang !== "de" && LANGS[lang]) {
